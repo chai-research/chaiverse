@@ -9,6 +9,7 @@ from chai_guanaco.submit import submit_model, SUBMISSION_URL
 def mock_post():
     with patch("chai_guanaco.submit.requests.post") as func:
         func.return_value.status_code = 200
+        func.return_value.json.return_value = {"submission_id": "name_123456"}
         yield func
 
 
@@ -48,3 +49,10 @@ def test_submit_end_to_end_posts_raises_for_failed_post(mock_post, mock_submissi
         response = submit_model(mock_submission)
     msg = "some error"
     assert msg in str(e)
+
+
+def test_submit_end_to_end_posts_returns_correct_subimission_id(mock_post, mock_submission):
+    mock_post.return_value.json.return_value = {'submission_id': 'name_654321'}
+    response = submit_model(mock_submission)
+    expected_submission_id = "name_654321"
+    assert response == {"submission_id": expected_submission_id}
