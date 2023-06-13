@@ -31,4 +31,4 @@ def get_submission_url():
 
 
 def get_info_url():
-   return INFO_URL
+    return INFO_URL
