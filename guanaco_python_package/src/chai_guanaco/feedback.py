@@ -1,8 +1,7 @@
 import os
 import requests
 
-#BASE_URL = "https://guanaco-feedback.chai-research.com"
-BASE_URL = "http://localhost:8080"
+BASE_URL = "https://guanaco-feedback.chai-research.com"
 FEEDBACK_ENDPOINT = "/feedback/{model_name}"
 
 FEEDBACK_URL = BASE_URL + FEEDBACK_ENDPOINT
