@@ -10,7 +10,20 @@ SUBMISSION_URL = BASE_URL + SUBMISSION_ENDPOINT
 INFO_URL = BASE_URL + INFO_ENDPOINT
 
 
-def submit_model(model_submission, developer_key):
+def submit_model(model_submission: dict, developer_key: str):
+    """
+        Submits a model to the Guanaco service and exposes it to beta-testers on the Chai app.
+        developer_key: str
+        model_submission: dict
+            model_repo: str - HuggingFace repo
+            developer_uid: str
+            generation_params: dict
+                temperature: float
+                top_p: float
+                top_k: int
+                repetition_penalty: float
+            formatter: str - "PygmalionFormatter"
+    """
     submission_url = get_submission_url()
     headers = {'developer_key': developer_key}
     response = requests.post(url=submission_url, json=model_submission, headers=headers)
