@@ -2,7 +2,8 @@ import requests
 import os
 
 
-BASE_URL = "https://guanaco-submitter.chai-research.com"
+#BASE_URL = "https://guanaco-submitter.chai-research.com"
+BASE_URL = "http://localhost:8080"
 SUBMISSION_ENDPOINT = "/models/submit"
 INFO_ENDPOINT = "/models/{submission_id}"
 
