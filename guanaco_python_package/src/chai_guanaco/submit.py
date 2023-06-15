@@ -23,7 +23,6 @@ def submit_model(model_submission: dict, developer_key: str):
                 top_p: float
                 top_k: int
                 repetition_penalty: float
-            formatter: str - "PygmalionFormatter"
     """
     submission_url = get_submission_url()
     headers = {'developer_key': developer_key}
