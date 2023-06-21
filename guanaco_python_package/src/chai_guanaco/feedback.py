@@ -2,22 +2,16 @@ import os
 import requests
 
 BASE_URL = "https://guanaco-feedback.chai-research.com"
-FEEDBACK_ENDPOINT = "/feedback/{model_name}"
+FEEDBACK_ENDPOINT = "/feedback/{submission_id}"
 
 FEEDBACK_URL = BASE_URL + FEEDBACK_ENDPOINT
 
 
-FEEDBACK_ENDPOINT = "/feedback/{model_name}"
-
-FEEDBACK_URL = BASE_URL + FEEDBACK_ENDPOINT
-
-
-def get_feedback(feedback_request):
+def get_feedback(submission_id: str, developer_key: str):
     headers = {
-        "developer_uid": feedback_request["developer_uid"],
-        "developer_key": feedback_request["developer_key"],
+        "developer_key": developer_key,
     }
-    url = FEEDBACK_URL.format(model_name=feedback_request["model_name"])
+    url = FEEDBACK_URL.format(submission_id=submission_id)
     resp = requests.get(url, headers=headers)
     assert resp.status_code == 200, resp.json()
     return resp
