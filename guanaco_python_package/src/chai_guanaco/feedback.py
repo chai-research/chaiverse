@@ -16,7 +16,7 @@ def get_feedback(submission_id: str, developer_key: str):
     url = FEEDBACK_URL.format(submission_id=submission_id)
     resp = requests.get(url, headers=headers)
     assert resp.status_code == 200, resp.json()
-    return resp
+    return resp.json()
 
 
 def display_leaderboard(developer_key: str):
