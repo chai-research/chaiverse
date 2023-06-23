@@ -25,7 +25,6 @@ def mock_get():
 def mock_submission():
     submission = {
         "model_repo": "ChaiML/test_model",
-        "developer_uid": "name",
         "generation_params": {
             "temperature": 1.0,
             "top_p": 1.0,
@@ -45,7 +44,7 @@ def test_client(mock_post, mock_submission):
 
 def test_submit_client_posts_with_correct_payload(mock_post, mock_submission):
     submit_model(mock_submission, developer_key="mock-key")
-    headers={"developer_key": "mock-key"}
+    headers={"Authorization": "Bearer mock-key"}
     mock_post.assert_called_once_with(url=SUBMISSION_URL, json=mock_submission, headers=headers)
 
 
@@ -75,7 +74,7 @@ def test_get_model_info_called_with_correct_url(mock_get):
     get_model_info('name_123456', developer_key='key')
     mock_get.assert_called_once_with(
         url=INFO_URL.format(submission_id='name_123456'),
-        headers={"developer_key": "key"}
+        headers={"Authorization": "Bearer key"}
     )
 
 
