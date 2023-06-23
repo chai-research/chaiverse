@@ -104,3 +104,12 @@ def test_get_my_submissions_raises(mock_get):
         submit.get_my_submissions('dev_key')
     msg = "bad dev key"
     assert msg in str(e)
+
+
+def test_deactivate_model(mock_get):
+    mock_get.return_value.status_code = 200
+    mock_get.return_value.json.return_value = ""
+    submit.deactivate_model("test_model", developer_key="dev_key")
+    expected_headers = {"Authorization": "Bearer dev_key"}
+    expected_url = submit.DEACTIVATE_URL.format(submission_id = "test_model")
+    mock_get.assert_called_once_with(url=expected_url, headers=expected_headers)

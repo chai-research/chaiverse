@@ -6,10 +6,12 @@ BASE_URL = "https://guanaco-submitter.chai-research.com"
 SUBMISSION_ENDPOINT = "/models/submit"
 ALL_SUBMISSION_STATUS_ENDPOINT = "/models/"
 INFO_ENDPOINT = "/models/{submission_id}"
+DEACTIVATE_ENDPOINT = "/models/{submission_id}/deactivate"
 
 SUBMISSION_URL = BASE_URL + SUBMISSION_ENDPOINT
 MY_SUBMISSIONS_STATUS_URL = BASE_URL + ALL_SUBMISSION_STATUS_ENDPOINT
 INFO_URL = BASE_URL + INFO_ENDPOINT
+DEACTIVATE_URL = BASE_URL + DEACTIVATE_ENDPOINT
 
 
 def submit_model(model_submission: dict, developer_key: str):
@@ -47,6 +49,16 @@ def get_my_submissions(developer_key):
     return response.json()
 
 
+def deactivate_model(submission_id, developer_key):
+    url = get_deactivate_url().format(submission_id=submission_id)
+    headers = {'Authorization': f"Bearer {developer_key}"}
+    response = requests.get(url=url, headers=headers)
+    assert response.status_code == 200, response.json()
+    print(response.json())
+    return response.json()
+
+
+
 def get_my_submissions_url():
     return MY_SUBMISSIONS_STATUS_URL
 
@@ -57,3 +69,7 @@ def get_submission_url():
 
 def get_info_url():
     return INFO_URL
+
+
+def get_deactivate_url():
+    return DEACTIVATE_URL
