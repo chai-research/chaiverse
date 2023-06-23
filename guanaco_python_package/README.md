@@ -14,10 +14,11 @@ It's the world's first open community challenge with real-user evaluations. You 
 
 🕵️ **Real-time user feedback:** After your model is deployed, it will go through an safety + integrity checker, once passed, it will be deployed directly to our users who will provide written feedback that you can view via the pip package.
 
-
 🤖 **Model requirements:** Currently, we support *any* models based off [GPT-J 6B](https://huggingface.co/EleutherAI/gpt-j-6b) (i.e. 6B parameters with GPT2 tokenizer). All you need to do is push your model directly to huggingface. Support for more model types is coming soon!
 
 ⚙️ **Sampling parameters:** During submission, we allow for custom model generation parameters such as temperature. Once your model is deployed on our platform, it will be using the parameters you've provided to generate chat completions.
+
+📚 **Rules:** By default, 1 developer key per person, each key can deploy 1 model to users at a time. Message in discord if you would like the limit bumped up 😀
 
 
 ## How Does It Work?
@@ -54,7 +55,8 @@ from chai_guanaco.submit import submit_model
 
 model_url = "EleutherAI/gpt-j-6b" # Your model URL
 developer_key = "CR_XXXX" # Your developer key
-submission_parameters = {'model_repo': model_url}
+generation_params = {'temperature': 0.75, 'repetition_penalty': 1.13, 'top_p': 0, "top_k": 0}
+submission_parameters = {'model_repo': model_url, 'generation_params': generation_parameters}
 response = submit_model(submission_parameters, developer_key)
 submission_id = response['submission_id']
 print(submission_id)
