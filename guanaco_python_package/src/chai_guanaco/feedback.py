@@ -1,11 +1,88 @@
-import os
 import requests
+
+import pandas as pd
 
 
 BASE_URL = "https://guanaco-feedback.chai-research.com"
 FEEDBACK_ENDPOINT = "/feedback/{submission_id}"
 
 FEEDBACK_URL = BASE_URL + FEEDBACK_ENDPOINT
+
+
+class Feedback():
+    def __init__(self, raw_data):
+        self.raw_data = raw_data
+
+    @property
+    def df(self):
+        raw_feedback = self.raw_data['feedback']
+        feedback = self._extract_feedback_as_rows(raw_feedback)
+        return pd.DataFrame(feedback)
+
+    def sample(self):
+        df = self.df
+        single_row = df.sample()
+        self.pprint_row(single_row)
+
+    def pprint_row(self, row):
+        data = row.to_dict(orient='records')[0]
+        self._print_color('### Conversation ###', 'yellow')
+        print(data['conversation'])
+        self._print_color('###', 'yellow')
+        thumbs_up = "👍" if data['thumbs_up'] else "👎"
+        self._print_color(f'Feedback {thumbs_up}: {data["feedback"]}', 'green')
+        self._print_color(f'Conversation ID: {data["conversation_id"]}', 'blue')
+        self._print_color(f'User ID: {data["user_id"]}', 'blue')
+        self._print_color(f'Bot ID: {data["bot_id"]}', 'blue')
+
+    def _print_color(self, text, color):
+        colors = {'blue': '\033[94m', 'cyan': '\033[96m', 'green': '\033[92m', 'yellow': '\033[93m'}
+        assert color in colors.keys()
+        print(f'{colors[color]}{text}\033[0m')
+
+    def _extract_feedback_as_rows(self, feedback):
+        rows = [self._extract_feedback_data(cid, data) for cid, data in feedback.items()]
+        return rows
+
+    def _extract_feedback_data(self, convo_id, message_data):
+        convo = self._extract_conversation_from_messages(message_data['messages'])
+        bot_id = self._extract_bot_id(convo_id)
+        user_id = self._extract_user_id(convo_id)
+        data = {
+                'conversation_id': convo_id,
+                'bot_id': bot_id,
+                'user_id': user_id,
+                'conversation': convo,
+                'thumbs_up': message_data['thumbs_up'],
+                'feedback': message_data['text'],
+                'model_name': message_data['model_name']
+        }
+        return data
+
+    def _extract_bot_id(self, convo_id):
+        return '_'.join(convo_id.split('_')[:3])
+
+    def _extract_user_id(self, convo_id):
+        return convo_id.split('_')[3]
+
+    def _extract_conversation_from_messages(self, messages):
+        conversation = []
+        messages = self._get_sorted_messages(messages)
+        for message in messages:
+            sender = self._get_sender_tag(message)
+            message_content = message['content'].strip()
+            conversation.append(f'{sender}: {message_content}')
+        return '\n'.join(conversation)
+
+    def _get_sorted_messages(self, messages):
+        sorted_messages = sorted(messages, key=lambda x: x['sent_date'])
+        return sorted_messages
+
+    def _get_sender_tag(self, message):
+        sender = message['sender']['name'].strip()
+        if message['deleted']:
+            sender = f'{sender} (deleted)'
+        return sender
 
 
 def get_feedback(submission_id: str, developer_key: str):
@@ -15,4 +92,5 @@ def get_feedback(submission_id: str, developer_key: str):
     url = FEEDBACK_URL.format(submission_id=submission_id)
     resp = requests.get(url, headers=headers)
     assert resp.status_code == 200, resp.json()
-    return resp.json()
+    feedback = Feedback(resp.json())
+    return feedback

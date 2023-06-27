@@ -1,5 +1,4 @@
 import requests
-import os
 
 import pandas as pd
 
@@ -97,7 +96,6 @@ def _sort_leaderboard_by_ratio(leaderboard):
     sorted_leaderboard = sorted(leaderboard.items(), key=sort_key, reverse=True)
     sorted_leaderboard = dict(sorted_leaderboard)
     return sorted_leaderboard
-
 
 
 def get_my_submissions_url():
