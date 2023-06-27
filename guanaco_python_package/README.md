@@ -1,4 +1,4 @@
-[![Guanaco Banner](https://imgur.com/uba9Jce.png)](https://www.chai-research.com/competition.html)
+[![Guanaco Banner](https://imgur.com/wJHIeAU.png)](https://www.chai-research.com/competition.html)
 
 [![Pull Requests Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat)](http://makeapullrequest.com)
 [![first-timers-only Friendly](https://img.shields.io/badge/first--timers--only-friendly-blue.svg)](http://www.firsttimersonly.com/)
@@ -56,7 +56,7 @@ from chai_guanaco.submit import submit_model
 model_url = "EleutherAI/gpt-j-6b" # Your model URL
 developer_key = "CR_XXXX" # Your developer key
 generation_params = {'temperature': 0.75, 'repetition_penalty': 1.13, 'top_p': 0, "top_k": 0}
-submission_parameters = {'model_repo': model_url, 'generation_params': generation_parameters}
+submission_parameters = {'model_repo': model_url, 'generation_params': generation_params}
 response = submit_model(submission_parameters, developer_key)
 submission_id = response['submission_id']
 print(submission_id)
@@ -81,10 +81,25 @@ Once your model has been submitted, it is automatically deployed to the Chai Pla
 from chai_guanaco.feedback import get_feedback
 
 model_feedback = get_feedback(submission_id, developer_key)
-print(model_feedback)
+print(model_feedback.df)
 ```
 
 Here, you will find a pandas dataframe with all the user feedback for your model, including the conversation each user has had with your model.
+
+You can print samples from your model's user feedbacks by running
+
+```python
+model_feedback.sample()
+```
+
+Which will print out a user's conversation, together with meta information associated with the conversation (i.e. rating and user feedback).
+
+(Advanced): You can also access the raw feedback data by running
+
+```python
+raw_data = model_feedback.raw_data
+```
+
 
 **Getting Live Leaderboard**
 
@@ -119,17 +134,6 @@ print(submission_ids)
 ```
 Here you will see all your model submission_ids along with their status, which is either `failed`, `inactive` or `deployed`.
 
-**Advanced Submission**
-
-You can tweak the model generation sampling parameters by passing the parameters you want during model submission, for example:
-
-```python
-from chai_guanaco.submit import submit_model
-
-generation_params= {"temperature": 1.0, "top_p": 1.0, "top_k": 40, "repetition_penalty": 1.0}
-submission_parameters = {'model_repo': model_url, 'generation_params': generation_params}
-response = submit_model(submission_parameters, developer_key)
-```
 
 ## Resources
 |                                                                        |                                                                                                 |
@@ -144,6 +148,6 @@ response = submit_model(submission_parameters, developer_key)
 
 ## 🦙 Hosted & Sponsored By
 
-<a href="https://www.chai-research.com/"><img src="https://i.imgur.com/optjNAw.png" alt="Chai Logo" height="70"/></a>
+<a href="https://www.chai-research.com/"><img src="https://imgur.com/u3rOQDJ.png" alt="Chai Logo" height="90"/></a>
 
 <a href="https://www.coreweave.com/"><img src="https://imgur.com/oJyuH8q.png" alt="Coreweave Logo" height="70"/></a>
