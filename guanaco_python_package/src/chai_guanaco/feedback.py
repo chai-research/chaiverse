@@ -2,6 +2,8 @@ import requests
 
 import pandas as pd
 
+from chai_guanaco.utils import print_color
+
 
 BASE_URL = "https://guanaco-feedback.chai-research.com"
 FEEDBACK_ENDPOINT = "/feedback/{submission_id}"
@@ -26,19 +28,14 @@ class Feedback():
 
     def pprint_row(self, row):
         data = row.to_dict(orient='records')[0]
-        self._print_color('### Conversation ###', 'yellow')
+        print_color('### Conversation ###', 'yellow')
         print(data['conversation'])
-        self._print_color('###', 'yellow')
+        print_color('###', 'yellow')
         thumbs_up = "👍" if data['thumbs_up'] else "👎"
-        self._print_color(f'Feedback {thumbs_up}: {data["feedback"]}', 'green')
-        self._print_color(f'Conversation ID: {data["conversation_id"]}', 'blue')
-        self._print_color(f'User ID: {data["user_id"]}', 'blue')
-        self._print_color(f'Bot ID: {data["bot_id"]}', 'blue')
-
-    def _print_color(self, text, color):
-        colors = {'blue': '\033[94m', 'cyan': '\033[96m', 'green': '\033[92m', 'yellow': '\033[93m'}
-        assert color in colors.keys()
-        print(f'{colors[color]}{text}\033[0m')
+        print_color(f'Feedback {thumbs_up}: {data["feedback"]}', 'green')
+        print_color(f'Conversation ID: {data["conversation_id"]}', 'blue')
+        print_color(f'User ID: {data["user_id"]}', 'blue')
+        print_color(f'Bot ID: {data["bot_id"]}', 'blue')
 
     def _extract_feedback_as_rows(self, feedback):
         rows = [self._extract_feedback_data(cid, data) for cid, data in feedback.items()]

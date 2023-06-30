@@ -1,6 +1,11 @@
+import itertools
 import requests
+import sys
+import time
 
 import pandas as pd
+
+from chai_guanaco.utils import print_color
 
 
 BASE_URL = "https://guanaco-submitter.chai-research.com"
@@ -17,18 +22,92 @@ DEACTIVATE_URL = BASE_URL + DEACTIVATE_ENDPOINT
 LEADERBOARD_URL = BASE_URL + LEADERBOARD_ENDPOINT
 
 
-def submit_model(model_submission: dict, developer_key: str):
+class ModelSubmitter:
     """
-        Submits a model to the Guanaco service and exposes it to beta-testers on the Chai app.
-        developer_key: str
-        model_submission: dict
+    Submits a model to the Guanaco service and exposes it to beta-testers on the Chai app.
+
+    Attributes
+    --------------
+    developer_key : str
+
+    Methods
+    --------------
+    submit(submission_params)
+    Submits the model to the Guanaco service.
+
+    Example usage:
+    --------------
+    submitter = ModelSubmitter(developer_key)
+    submitter.submit(submission_params)
+    """
+    def __init__(self, developer_key):
+        self.developer_key = developer_key
+        self._animation = self._spinner_animation_generator()
+        self._progress = 0
+        self._sleep_time = 0.5
+        self._get_request_interval = int(10 / self._sleep_time)
+
+    def submit(self, submission_params):
+        """
+        Submits the model to the Guanaco service and wait for the deployment to finish.
+
+        submission_params: dict
             model_repo: str - HuggingFace repo
             generation_params: dict
                 temperature: float
                 top_p: float
                 top_k: int
                 repetition_penalty: float
-    """
+        """
+        submission_id = self._get_submission_id(submission_params)
+        self._print_submission_header(submission_id)
+        status = self._wait_for_model_submission(submission_id)
+        self._print_submission_result(status)
+        self._progress = 0
+        return submission_id
+
+    def _get_submission_id(self, submission_params):
+        response = submit_model(submission_params, self.developer_key)
+        return response.get('submission_id')
+
+    def _wait_for_model_submission(self, submission_id):
+        status = 'pending'
+        while status not in {'deployed', 'failed', 'inactive'}:
+            status = self._get_submission_status(submission_id)
+            self._display_animation(status)
+            time.sleep(self._sleep_time)
+        return status
+
+    def _get_submission_status(self, submission_id):
+        self._progress += 1
+        status = 'pending'
+        if self._progress % self._get_request_interval == 0:
+            model_info = get_model_info(submission_id, self.developer_key)
+            status = model_info.get('status')
+        return status
+
+    def _spinner_animation_generator(self):
+        animations = ['⣾', '⣽', '⣻', '⢿', '⡿', '⣟', '⣯', '⣷']
+        return itertools.cycle(animations)
+
+    def _display_animation(self, status):
+        sys.stdout.write(f" \r{next(self._animation)} {status}...")
+        sys.stdout.flush()
+
+    def _print_submission_header(self, submission_id):
+        print_color(f'\nModel Submission ID: {submission_id}', 'green')
+        print("Your model is being deployed to Chai Guanaco, please wait for approximately 10 minutes...")
+
+    def _print_submission_result(self, status):
+        success = status == 'deployed'
+        text_success = 'Model successfully deployed!'
+        text_failed = 'Model deployment failed, please seek help on our Discord channel'
+        text = text_success if success else text_failed
+        color = 'green' if success else 'red'
+        print_color(f'\n{text}', color)
+
+
+def submit_model(model_submission: dict, developer_key: str):
     submission_url = get_submission_url()
     headers = {'Authorization': f"Bearer {developer_key}"}
     response = requests.post(url=submission_url, json=model_submission, headers=headers)

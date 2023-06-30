@@ -17,7 +17,16 @@ def mock_post():
 def mock_get():
     with patch("chai_guanaco.submit.requests.get") as func:
         func.return_value.status_code = 200
-        func.return_value.json.return_value = {"name_123456": {'status': 'pending'}}
+        func.return_value.json.return_value = {'name_123456': {'status': 'pending'}}
+        yield func
+
+
+@pytest.fixture()
+def mock_get_pending_to_success():
+    responses = [{'status': 'pending'}] * 2 + [{'status': 'deployed'}]
+    with patch("chai_guanaco.submit.requests.get") as func:
+        func.return_value.status_code = 200
+        func.return_value.json.side_effect = responses
         yield func
 
 
@@ -34,6 +43,17 @@ def mock_submission():
         "formatter": "PygmalionFormatter",
     }
     return submission
+
+
+def test_model_submitter(mock_submission, mock_post, mock_get_pending_to_success):
+    model_submitter = submit.ModelSubmitter("mock-key")
+    model_submitter._sleep_time = 0
+    model_submitter._get_request_interval = 1
+    submission_id = model_submitter.submit(mock_submission)
+    headers = {"Authorization": "Bearer mock-key"}
+    mock_post.assert_called_once_with(url=submit.SUBMISSION_URL, json=mock_submission, headers=headers)
+    assert mock_get_pending_to_success.call_count == 3
+    assert submission_id == "name_123456"
 
 
 def test_client(mock_post, mock_submission):

@@ -51,34 +51,27 @@ Upload any GPT-J 6B based language model *with a tokenizer* to huggingface, i.e.
 To submit model simply run:
 
 ```python
-from chai_guanaco.submit import submit_model
+from chai_guanaco import ModelSubmitter
 
 model_url = "EleutherAI/gpt-j-6b" # Your model URL
 developer_key = "CR_XXXX" # Your developer key
+
 generation_params = {'temperature': 0.75, 'repetition_penalty': 1.13, 'top_p': 0, "top_k": 0}
 submission_parameters = {'model_repo': model_url, 'generation_params': generation_params}
-response = submit_model(submission_parameters, developer_key)
-submission_id = response['submission_id']
-print(submission_id)
+
+submitter = ModelSubmitter(developer_key)
+submission_id = submitter.submit(submission_parameters)
 ````
-which outputs your submission id, unique to your model submission.
 
-To verify the status of a submission, you can use the following command:
-
-```python
-from chai_guanaco.submit import get_model_info
-
-model_info = get_model_info(submission_id, developer_key)
-print(model_info)
-```
-Once the `status` field shows `success` it means your model has been successfully submitted. A submission typically takes around 10 minutes for the tritonisation process to complete.
+This will display an animation while your model is being deployed, a typical
+deployment takes approximately 10 minutes.
 
 **Getting User Feedback**
 
 Once your model has been submitted, it is automatically deployed to the Chai Platform where real-life users will evaluate your model performance. To view their feedback, run:
 
 ```python
-from chai_guanaco.feedback import get_feedback
+from chai_guanaco import get_feedback
 
 model_feedback = get_feedback(submission_id, developer_key)
 print(model_feedback.df)
@@ -105,7 +98,7 @@ raw_data = model_feedback.raw_data
 
 To see how your model performs against other models, run:
 ```python
-from chai_guanaco.feedback import display_leaderboard
+from chai_guanaco import display_leaderboard
 
 display_leaderboard(developer_key)
 ```
@@ -116,7 +109,7 @@ which prints out the current leaderboard, with your models positions highlighted
 Because it is a competition, you are allowed to test a single model at any given time. However, you can deactivate a model and submit a new one. To do this, simply run:
 
 ```python
-from chai_guanaco.submit import deactivate_model
+from chai_guanaco import deactivate_model
 
 deactivate_model(submission_id, developer_key)
 ```
@@ -127,7 +120,7 @@ Which will deactive your model, don't worry, all the model feedback will still b
 In case you have forgotten your submission ids / want to view all past submissions, run:
 
 ```python
-from chai_guanaco.submit import get_my_submissions
+from chai_guanaco import get_my_submissions
 
 submission_ids = get_my_submissions(developer_key)
 print(submission_ids)
@@ -140,7 +133,7 @@ Here you will see all your model submission_ids along with their status, which i
 | ---------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------|
 | 📒 [Fine tuning guide](https://huggingface.co/docs/transformers/training) | Guide on language model finetuning                                                           |
 | 💾 [Datasets](https://dataset-ideas.tiiny.site/) | Curated list of open-sourced datasets to get started with finetuning                                                  |
-| 💖 [Guanaco Discord](https://haystack.deepset.ai/tutorials)                   | Our Guanaco competition discord                                                          |
+| 💖 [Guanaco Discord](https://discord.gg/7mXdjAkw2s)                   | Our Guanaco competition discord                                                          |
 |🚀 [Deepspeed Guide](https://huggingface.co/docs/transformers/main_classes/deepspeed)     | Guide for training with Deepspeed (faster training without GPU bottleneck)    |
 |💬 [Example Conversations](https://huggingface.co/docs/transformers/main_classes/deepspeed)     | Here you can find 1000 example conversations from the Chai Platform     |
 | ⚒️ [Build with us](https://boards.greenhouse.io/nexus/jobs/5319721003)| If you think what we are building is cool, join us!|
