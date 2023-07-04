@@ -38,7 +38,7 @@ It's the world's first open community challenge with real-user evaluations. You 
 Join the [competition discord](https://discord.gg/7mXdjAkw2s), introduce yourself and ask for a developer key. Login-based authentication is coming next 🤗
 
 
-**Submitting A Model**
+**Installation**
 
 Use [pip](https://github.com/pypa/pip) to install the Chai Guanaco package
 
@@ -46,20 +46,29 @@ Use [pip](https://github.com/pypa/pip) to install the Chai Guanaco package
 pip install chai-guanaco
 ```
 
+For one-off authentication run the following in your terminal:
+
+```sh
+chai-guanaco login
+```
+
+And pass in your developer key when prompted, you can always logout using `chai-guanaco logout`.
+
+**Model Submission**
+
 Upload any GPT-J 6B based language model *with a tokenizer* to huggingface, i.e. [EleutherAI/gpt-j-6b](https://huggingface.co/EleutherAI/gpt-j-6b). Read [this guide](https://huggingface.co/docs/transformers/model_sharing) if you are unsure. Click the *Use in Transformers* button in huggingface to get the your huggingface model ID (i.e. "EleutherAI/gpt-j-6b")
 
 To submit model simply run:
 
 ```python
-from chai_guanaco import ModelSubmitter
+import chai_guanaco as chai
 
 model_url = "EleutherAI/gpt-j-6b" # Your model URL
-developer_key = "CR_XXXX" # Your developer key
 
 generation_params = {'temperature': 0.75, 'repetition_penalty': 1.13, 'top_p': 0, "top_k": 0}
 submission_parameters = {'model_repo': model_url, 'generation_params': generation_params}
 
-submitter = ModelSubmitter(developer_key)
+submitter = chai.ModelSubmitter()
 submission_id = submitter.submit(submission_parameters)
 ````
 
@@ -71,36 +80,26 @@ deployment takes approximately 10 minutes.
 Once your model has been submitted, it is automatically deployed to the Chai Platform where real-life users will evaluate your model performance. To view their feedback, run:
 
 ```python
-from chai_guanaco import get_feedback
-
-model_feedback = get_feedback(submission_id, developer_key)
-print(model_feedback.df)
-```
-
-Here, you will find a pandas dataframe with all the user feedback for your model, including the conversation each user has had with your model.
-
-You can print samples from your model's user feedbacks by running
-
-```python
+model_feedback = chai.get_feedback(submission_id)
 model_feedback.sample()
 ```
 
-Which will print out a user's conversation, together with meta information associated with the conversation (i.e. rating and user feedback).
+Which will print out one of the users' conversation, together with meta information associated with the conversation (i.e. rating and user feedback).
 
-(Advanced): You can also access the raw feedback data by running
+To get all the feedback for your model, run...
 
 ```python
-raw_data = model_feedback.raw_data
+df = model_feedback.df
+print(df)
 ```
 
+This outputs a Pandas `DataFrame`, where each row corresponds to a user conversation with your model, together with their feedback.
 
 **Getting Live Leaderboard**
 
 To see how your model performs against other models, run:
 ```python
-from chai_guanaco import display_leaderboard
-
-display_leaderboard(developer_key)
+chai.display_leaderboard()
 ```
 which prints out the current leaderboard, with your models positions highlighted
 
@@ -109,9 +108,7 @@ which prints out the current leaderboard, with your models positions highlighted
 Because it is a competition, you are allowed to test a single model at any given time. However, you can deactivate a model and submit a new one. To do this, simply run:
 
 ```python
-from chai_guanaco import deactivate_model
-
-deactivate_model(submission_id, developer_key)
+chai.deactivate_model(submission_id)
 ```
 Which will deactive your model, don't worry, all the model feedback will still be saved, it just means the model will no longer be exposed to users. You can then re-submit by repeating the model submission step.
 
@@ -120,12 +117,19 @@ Which will deactive your model, don't worry, all the model feedback will still b
 In case you have forgotten your submission ids / want to view all past submissions, run:
 
 ```python
-from chai_guanaco import get_my_submissions
-
-submission_ids = get_my_submissions(developer_key)
+submission_ids = chai.get_my_submissions()
 print(submission_ids)
 ```
 Here you will see all your model submission_ids along with their status, which is either `failed`, `inactive` or `deployed`.
+
+**Advanced Usage**
+- This package caches various data, such as your developer key, in the folder `~/.chai-guanaco`. To change this, you can set the environment variable `GUANACO_DATA_DIR` to point to a different folder. You may need to re-run `chai-guanaco login` to update the cached developer key.
+- You can also access the raw feedback data by running
+	```python
+	model_feedback = chai.get_feedback(submission_id)
+	raw_data = model_feedback.raw_data
+	```
+
 
 
 ## Resources

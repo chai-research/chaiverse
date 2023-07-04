@@ -6,6 +6,7 @@ import time
 import pandas as pd
 
 from chai_guanaco.utils import print_color
+from chai_guanaco.login_cli import auto_authenticate
 
 
 BASE_URL = "https://guanaco-submitter.chai-research.com"
@@ -40,7 +41,8 @@ class ModelSubmitter:
     submitter = ModelSubmitter(developer_key)
     submitter.submit(submission_params)
     """
-    def __init__(self, developer_key):
+    @auto_authenticate
+    def __init__(self, developer_key=None):
         self.developer_key = developer_key
         self._animation = self._spinner_animation_generator()
         self._progress = 0
@@ -107,7 +109,8 @@ class ModelSubmitter:
         print_color(f'\n{text}', color)
 
 
-def submit_model(model_submission: dict, developer_key: str):
+@auto_authenticate
+def submit_model(model_submission: dict, developer_key=None):
     submission_url = get_submission_url()
     headers = {'Authorization': f"Bearer {developer_key}"}
     response = requests.post(url=submission_url, json=model_submission, headers=headers)
@@ -115,7 +118,8 @@ def submit_model(model_submission: dict, developer_key: str):
     return response.json()
 
 
-def get_model_info(submission_id, developer_key):
+@auto_authenticate
+def get_model_info(submission_id, developer_key=None):
     url = get_info_url().format(submission_id=submission_id)
     headers = {'Authorization': f"Bearer {developer_key}"}
     response = requests.get(url=url, headers=headers)
@@ -123,7 +127,8 @@ def get_model_info(submission_id, developer_key):
     return response.json()
 
 
-def get_my_submissions(developer_key):
+@auto_authenticate
+def get_my_submissions(developer_key=None):
     url = get_my_submissions_url()
     headers = {'Authorization': f"Bearer {developer_key}"}
     response = requests.get(url=url, headers=headers)
@@ -131,7 +136,8 @@ def get_my_submissions(developer_key):
     return response.json()
 
 
-def deactivate_model(submission_id, developer_key):
+@auto_authenticate
+def deactivate_model(submission_id, developer_key=None):
     url = get_deactivate_url().format(submission_id=submission_id)
     headers = {'Authorization': f"Bearer {developer_key}"}
     response = requests.get(url=url, headers=headers)
@@ -140,7 +146,8 @@ def deactivate_model(submission_id, developer_key):
     return response.json()
 
 
-def display_leaderboard(developer_key: str):
+@auto_authenticate
+def display_leaderboard(developer_key=None):
     leaderboard = get_leaderboard(developer_key)
     df = pd.DataFrame(leaderboard).T
     df.reset_index(inplace=True, drop=False)
@@ -148,7 +155,8 @@ def display_leaderboard(developer_key: str):
     print(df)
 
 
-def get_leaderboard(developer_key: str):
+@auto_authenticate
+def get_leaderboard(developer_key=None):
     headers = {
         "developer_key": developer_key,
     }

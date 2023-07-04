@@ -3,6 +3,7 @@ import requests
 import pandas as pd
 
 from chai_guanaco.utils import print_color
+from chai_guanaco.login_cli import auto_authenticate
 
 
 BASE_URL = "https://guanaco-feedback.chai-research.com"
@@ -82,7 +83,8 @@ class Feedback():
         return sender
 
 
-def get_feedback(submission_id: str, developer_key: str):
+@auto_authenticate
+def get_feedback(submission_id: str, developer_key=None):
     headers = {
         "developer_key": developer_key,
     }

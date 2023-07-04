@@ -5,6 +5,9 @@ from setuptools import find_packages, setup
 current_dir = Path(__file__).parent
 long_description = (current_dir / "README.md").read_text()
 
+with open('requirements.txt') as f:
+    requirements = f.read().splitlines()
+
 if os.environ.get('CI_COMMIT_TAG', None):
     version = os.environ['CI_COMMIT_TAG']
 else:
@@ -23,5 +26,8 @@ setup(
     zip_safe=False,
     long_description=long_description,
     long_description_content_type='text/markdown',
-    install_requires=['requests']
+    install_requires=requirements,
+    entry_points={
+        'console_scripts': ['chai-guanaco = chai_guanaco.login_cli:cli'],
+    },
 )
