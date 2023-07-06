@@ -75,6 +75,30 @@ submission_id = submitter.submit(submission_parameters)
 This will display an animation while your model is being deployed, a typical
 deployment takes approximately 10 minutes.
 
+
+**Chat With Your Model Submission**
+
+Once your model is deployed, you can verify its behaviour and raw input by running:
+
+```python
+chatbot = chai.ChatWithSubmission(submission_id)
+chatbot.chat('nerd_girl', show_model_input=False)
+```
+
+Here you can have a dialog with one of the bots we have provided. To quit the chat, simply enter "exit". Note that, in order to prevent spamming, each model submission is limited to 1000 chat messages from the Chai Guanaco pip package.
+
+You can get a list of avaliable bots by running:
+
+```python
+chatbot.show_avaliable_bots()
+```
+
+Finally, to enter a chat session that prints out the raw input that was fed into your model at each turn of the conversation, you can run:
+
+```python
+chatbot.chat('nerd_girl', show_model_input=True)
+```
+
 **Getting User Feedback**
 
 Once your model has been submitted, it is automatically deployed to the Chai Platform where real-life users will evaluate your model performance. To view their feedback, run:
