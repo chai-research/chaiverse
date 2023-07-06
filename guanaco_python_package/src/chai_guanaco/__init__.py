@@ -5,3 +5,4 @@ from .submit import (
     get_my_submissions
 )
 from .feedback import get_feedback
+from .chat import SubmissionChatbot
