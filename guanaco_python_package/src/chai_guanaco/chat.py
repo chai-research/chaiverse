@@ -10,7 +10,7 @@ from chai_guanaco.utils import print_color
 BASE_URL = "https://guanaco-submitter.chai-research.com"
 
 REPO_PATH = os.path.dirname(os.path.abspath(__file__))
-RESOURCE_DIR = os.path.join(REPO_PATH, '..', '..', 'resources', 'bot_config')
+RESOURCE_DIR = os.path.join(REPO_PATH, 'resources', 'bot_config')
 
 
 class SubmissionChatbot():

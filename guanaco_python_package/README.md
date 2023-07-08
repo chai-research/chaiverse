@@ -5,7 +5,11 @@
 
 [Chai Guanaco](https://www.chai-research.com/competition.html) is part of the Chai Guanaco Competition, accelerating community AGI.
 
-It's the world's first open community challenge with real-user evaluations. You can submit any GPT-J based 6B models, it will be directly deployed on the [Chai App](https://apps.apple.com/us/app/chai-chat-with-ai-bots/id1544750895) where our over 500K daily active users will be providing live feedback. Get to top of the leaderboard and share the $1 million cash prize!
+It's the world's first open community challenge with real-user evaluations. You can submit any GPT-J based 6B models, it will be directly deployed on the [Chai App](http://tosto.re/chaiapp) where our over 500K daily active users will be providing live feedback. Get to top of the leaderboard and share the $1 million cash prize!
+
+## Quick Start
+
+[Chai Guanaco Jupyter Notebook Quickstart](https://datalore.jetbrains.com/notebook/ABxxIKqVGejPnF8zH6zFpx/WQd6vDlfCDux5wzuoAeF8m)
 
 
 ## The Guanaco Guide
@@ -81,7 +85,7 @@ deployment takes approximately 10 minutes.
 Once your model is deployed, you can verify its behaviour and raw input by running:
 
 ```python
-chatbot = chai.ChatWithSubmission(submission_id)
+chatbot = chai.SubmissionChatbot(submission_id)
 chatbot.chat('nerd_girl', show_model_input=False)
 ```
 
@@ -163,7 +167,7 @@ Here you will see all your model submission_ids along with their status, which i
 | 💾 [Datasets](https://dataset-ideas.tiiny.site/) | Curated list of open-sourced datasets to get started with finetuning                                                  |
 | 💖 [Guanaco Discord](https://discord.gg/7mXdjAkw2s)                   | Our Guanaco competition discord                                                          |
 |🚀 [Deepspeed Guide](https://huggingface.co/docs/transformers/main_classes/deepspeed)     | Guide for training with Deepspeed (faster training without GPU bottleneck)    |
-|💬 [Example Conversations](https://huggingface.co/docs/transformers/main_classes/deepspeed)     | Here you can find 1000 example conversations from the Chai Platform     |
+|💬 [Example Conversations](https://huggingface.co/datasets/ChaiML/100_example_conversations)     | Here you can find 100 example conversations from the Chai Platform     |
 | ⚒️ [Build with us](https://boards.greenhouse.io/nexus/jobs/5319721003)| If you think what we are building is cool, join us!|
 
 

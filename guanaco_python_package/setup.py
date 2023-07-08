@@ -11,7 +11,7 @@ with open('requirements.txt') as f:
 if os.environ.get('CI_COMMIT_TAG', None):
     version = os.environ['CI_COMMIT_TAG']
 else:
-    version = "0.0.26"
+    version = "0.0.41"
 
 setup(
     name='chai-guanaco',
@@ -20,14 +20,16 @@ setup(
     author='Chai Research Corp.',
     author_email='hello@chai-research.com',
     license='MIT',
-    packages=["chai_guanaco"],
-    package_dir={"chai_guanaco": "./src/chai_guanaco/"},
+    packages=find_packages(where='src'),
+    package_dir={"": "src"},
+    package_data={"chai_guanaco": ["resources/*"]},
     url='https://www.chai-research.com',
     zip_safe=False,
     long_description=long_description,
     long_description_content_type='text/markdown',
     install_requires=requirements,
+    include_package_data=True,
     entry_points={
-        'console_scripts': ['chai-guanaco = chai_guanaco.login_cli:cli'],
+        'console_scripts': ['chai-guanaco=chai_guanaco.login_cli:cli'],
     },
 )

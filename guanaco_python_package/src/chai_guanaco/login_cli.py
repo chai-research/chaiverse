@@ -14,13 +14,7 @@ def cli():
 
 @cli.command()
 def login():
-    cached_key_path = _get_cached_key_path()
-    text = f"""Welcome to Chai Guanaco 🚀!
-By logging in, we will create a file under {cached_key_path}.
-Please enter your developer key: """
-    developer_key = input(text)
-    with open(cached_key_path, 'w') as file:
-        file.write(developer_key)
+    return developer_login()
 
 
 @cli.command()
@@ -29,6 +23,16 @@ def logout():
     if os.path.exists(cached_key_path):
         os.remove(cached_key_path)
     print('Logged out!')
+
+
+def developer_login():
+    cached_key_path = _get_cached_key_path()
+    text = f"""Welcome to Chai Guanaco 🚀!
+By logging in, we will create a file under {cached_key_path}.
+Please enter your developer key: """
+    developer_key = input(text)
+    with open(cached_key_path, 'w') as file:
+        file.write(developer_key)
 
 
 def auto_authenticate(func):

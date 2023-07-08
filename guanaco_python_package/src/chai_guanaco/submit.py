@@ -93,8 +93,7 @@ class ModelSubmitter:
         return itertools.cycle(animations)
 
     def _display_animation(self, status):
-        sys.stdout.write(f" \r{next(self._animation)} {status}...")
-        sys.stdout.flush()
+        print(f" {next(self._animation)} {status}...", end='\r')
 
     def _print_submission_header(self, submission_id):
         print_color(f'\nModel Submission ID: {submission_id}', 'green')
@@ -106,6 +105,7 @@ class ModelSubmitter:
         text_failed = 'Model deployment failed, please seek help on our Discord channel'
         text = text_success if success else text_failed
         color = 'green' if success else 'red'
+        print('\n')
         print_color(f'\n{text}', color)
 
 
@@ -153,6 +153,7 @@ def display_leaderboard(developer_key=None):
     df.reset_index(inplace=True, drop=False)
     df.index += 1
     print(df)
+    return df
 
 
 @auto_authenticate
