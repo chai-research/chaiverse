@@ -59,7 +59,9 @@ class ModelSubmitter:
                 top_p: float
                 top_k: int
                 repetition_penalty: float
+            formatter: PromptFormatter
         """
+        submission_params = self._preprocess_submission(submission_params)
         submission_id = self._get_submission_id(submission_params)
         self._print_submission_header(submission_id)
         status = self._wait_for_model_submission(submission_id)
@@ -70,6 +72,12 @@ class ModelSubmitter:
     def _get_submission_id(self, submission_params):
         response = submit_model(submission_params, self.developer_key)
         return response.get('submission_id')
+
+    def _preprocess_submission(self, submission_params):
+        if submission_params.get("formatter", None):
+            submission_params = submission_params.copy()
+            submission_params["formatter"] = submission_params["formatter"].dict()
+        return submission_params
 
     def _wait_for_model_submission(self, submission_id):
         status = 'pending'
