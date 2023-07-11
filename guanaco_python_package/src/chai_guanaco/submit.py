@@ -16,11 +16,10 @@ INFO_ENDPOINT = "/models/{submission_id}"
 DEACTIVATE_ENDPOINT = "/models/{submission_id}/deactivate"
 LEADERBOARD_ENDPOINT = "/leaderboard"
 
-SUBMISSION_URL = BASE_URL + SUBMISSION_ENDPOINT
-MY_SUBMISSIONS_STATUS_URL = BASE_URL + ALL_SUBMISSION_STATUS_ENDPOINT
-INFO_URL = BASE_URL + INFO_ENDPOINT
-DEACTIVATE_URL = BASE_URL + DEACTIVATE_ENDPOINT
-LEADERBOARD_URL = BASE_URL + LEADERBOARD_ENDPOINT
+
+def get_url(endpoint):
+    base_url = BASE_URL
+    return base_url + endpoint
 
 
 class ModelSubmitter:
@@ -111,7 +110,7 @@ class ModelSubmitter:
 
 @auto_authenticate
 def submit_model(model_submission: dict, developer_key=None):
-    submission_url = get_submission_url()
+    submission_url = get_url(SUBMISSION_ENDPOINT)
     headers = {'Authorization': f"Bearer {developer_key}"}
     response = requests.post(url=submission_url, json=model_submission, headers=headers)
     assert response.status_code == 200, response.json()
@@ -120,7 +119,8 @@ def submit_model(model_submission: dict, developer_key=None):
 
 @auto_authenticate
 def get_model_info(submission_id, developer_key=None):
-    url = get_info_url().format(submission_id=submission_id)
+    url = get_url(INFO_ENDPOINT)
+    url = url.format(submission_id=submission_id)
     headers = {'Authorization': f"Bearer {developer_key}"}
     response = requests.get(url=url, headers=headers)
     assert response.status_code == 200, response.json()
@@ -129,7 +129,7 @@ def get_model_info(submission_id, developer_key=None):
 
 @auto_authenticate
 def get_my_submissions(developer_key=None):
-    url = get_my_submissions_url()
+    url = get_url(ALL_SUBMISSION_STATUS_ENDPOINT)
     headers = {'Authorization': f"Bearer {developer_key}"}
     response = requests.get(url=url, headers=headers)
     assert response.status_code == 200, response.json()
@@ -138,7 +138,8 @@ def get_my_submissions(developer_key=None):
 
 @auto_authenticate
 def deactivate_model(submission_id, developer_key=None):
-    url = get_deactivate_url().format(submission_id=submission_id)
+    url = get_url(DEACTIVATE_ENDPOINT)
+    url = url.format(submission_id=submission_id)
     headers = {'Authorization': f"Bearer {developer_key}"}
     response = requests.get(url=url, headers=headers)
     assert response.status_code == 200, response.json()
@@ -161,7 +162,8 @@ def get_leaderboard(developer_key=None):
     headers = {
         "developer_key": developer_key,
     }
-    resp = requests.get(LEADERBOARD_URL, headers=headers)
+    url = get_url(LEADERBOARD_ENDPOINT)
+    resp = requests.get(url, headers=headers)
     assert resp.status_code == 200, resp.json()
     leaderboard = resp.json()
     leaderboard = _add_ratios_to_leaderboard(leaderboard)
@@ -186,17 +188,3 @@ def _sort_leaderboard_by_ratio(leaderboard):
     return sorted_leaderboard
 
 
-def get_my_submissions_url():
-    return MY_SUBMISSIONS_STATUS_URL
-
-
-def get_submission_url():
-    return SUBMISSION_URL
-
-
-def get_info_url():
-    return INFO_URL
-
-
-def get_deactivate_url():
-    return DEACTIVATE_URL

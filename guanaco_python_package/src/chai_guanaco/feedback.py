@@ -9,7 +9,9 @@ from chai_guanaco.login_cli import auto_authenticate
 BASE_URL = "https://guanaco-feedback.chai-research.com"
 FEEDBACK_ENDPOINT = "/feedback/{submission_id}"
 
-FEEDBACK_URL = BASE_URL + FEEDBACK_ENDPOINT
+
+def get_url(endpoint):
+    return BASE_URL + endpoint
 
 
 class Feedback():
@@ -88,8 +90,11 @@ def get_feedback(submission_id: str, developer_key=None):
     headers = {
         "developer_key": developer_key,
     }
-    url = FEEDBACK_URL.format(submission_id=submission_id)
+    url = get_url(FEEDBACK_ENDPOINT)
+    url = url.format(submission_id=submission_id)
     resp = requests.get(url, headers=headers)
     assert resp.status_code == 200, resp.json()
     feedback = Feedback(resp.json())
     return feedback
+
+
