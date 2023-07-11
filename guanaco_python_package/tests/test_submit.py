@@ -2,7 +2,7 @@ from mock import patch
 
 import pytest
 
-from chai_guanaco import submit
+from chai_guanaco import submit, formatters
 
 
 @pytest.fixture(autouse="session")
@@ -39,8 +39,9 @@ def mock_submission():
             "top_p": 1.0,
             "top_k": 40,
             "repetition_penalty": 1.0,
+            "eos_token_id": 198,
         },
-        "formatter": "PygmalionFormatter",
+        "formatter": formatters.PygmalionFormatter().dict(),
     }
     return submission
 
@@ -49,7 +50,18 @@ def test_model_submitter(mock_submission, mock_post, mock_get_pending_to_success
     model_submitter = submit.ModelSubmitter("mock-key")
     model_submitter._sleep_time = 0
     model_submitter._get_request_interval = 1
-    submission_id = model_submitter.submit(mock_submission)
+    model_submitter_params = {
+        "model_repo": "ChaiML/test_model",
+        "generation_params": {
+            "temperature": 1.0,
+            "top_p": 1.0,
+            "top_k": 40,
+            "repetition_penalty": 1.0,
+            "eos_token_id": 198,
+        },
+        "formatter": formatters.PygmalionFormatter(),
+    }
+    submission_id = model_submitter.submit(model_submitter_params)
     headers = {"Authorization": "Bearer mock-key"}
     expected_url = submit.get_url(submit.SUBMISSION_ENDPOINT)
     mock_post.assert_called_once_with(url=expected_url, json=mock_submission, headers=headers)

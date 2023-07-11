@@ -157,6 +157,8 @@ Here you will see all your model submission_ids along with their status, which i
 	model_feedback = chai.get_feedback(submission_id)
 	raw_data = model_feedback.raw_data
 	```
+- To submit your model with custom formatting, you can create your own
+  `PromptFormatter`. For more details and examples, please see [here](https://wild-chatter-b52.notion.site/Guanaco-Custom-Formatters-1f64f94b9cf54c819a341988aec5766a).
 
 
 
