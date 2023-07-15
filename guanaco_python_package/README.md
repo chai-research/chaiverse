@@ -69,7 +69,7 @@ import chai_guanaco as chai
 
 model_url = "EleutherAI/gpt-j-6b" # Your model URL
 
-generation_params = {'temperature': 0.75, 'repetition_penalty': 1.13, 'top_p': 0, "top_k": 0}
+generation_params = {'temperature': 0.75, 'repetition_penalty': 1.13, 'top_p': 0.2, "top_k": 40, "stopping_words": ['\n']}
 submission_parameters = {'model_repo': model_url, 'generation_params': generation_params}
 
 submitter = chai.ModelSubmitter()

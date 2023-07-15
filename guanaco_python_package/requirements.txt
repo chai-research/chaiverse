@@ -1,5 +1,6 @@
-requests
 click
+numpy
 pandas
-requests
 pydantic<2.0
+requests
+tqdm
