@@ -40,7 +40,7 @@ def mock_submission():
             "top_p": 1.0,
             "top_k": 40,
             "repetition_penalty": 1.0,
-            "eos_token_id": 198,
+            "stopping_words": ["\n"],
         },
         "formatter": formatters.PygmalionFormatter().dict(),
     }
@@ -58,7 +58,7 @@ def test_model_submitter(mock_submission, mock_post, mock_get_pending_to_success
             "top_p": 1.0,
             "top_k": 40,
             "repetition_penalty": 1.0,
-            "eos_token_id": 198,
+            "stopping_words": ["\n"],
         },
         "formatter": formatters.PygmalionFormatter(),
     }
