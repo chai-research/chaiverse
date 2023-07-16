@@ -127,9 +127,9 @@ This outputs a Pandas `DataFrame`, where each row corresponds to a user conversa
 
 To see how your model performs against other models, run:
 ```python
-chai.display_leaderboard()
+df = chai.display_leaderboard()
 ```
-which prints out the current leaderboard, with your models positions highlighted
+which prints out the current leaderboard according to the most recent competition metrics, you can also access raw leaderboard is dumped to `df`
 
 **Re-Submitting Models**
 
