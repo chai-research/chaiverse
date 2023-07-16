@@ -1,5 +1,5 @@
-import requests
 from datetime import datetime
+import requests
 
 import numpy as np
 import pandas as pd
@@ -8,7 +8,7 @@ from tqdm import tqdm
 from chai_guanaco.feedback import get_feedback
 from chai_guanaco.login_cli import auto_authenticate
 from chai_guanaco.submit import get_url
-from chai_guanaco.utils import print_color
+from chai_guanaco.utils import print_color, cache_leaderboard
 
 
 LEADERBOARD_ENDPOINT = "/leaderboard"
@@ -23,6 +23,7 @@ def display_leaderboard(developer_key=None):
     return df
 
 
+@cache_leaderboard
 @auto_authenticate
 def get_leaderboard(developer_key=None):
     submission_ids = _get_leaderboard_submission_ids(developer_key)
