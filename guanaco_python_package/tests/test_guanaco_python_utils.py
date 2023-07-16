@@ -3,37 +3,42 @@ import time
 import pickle
 from unittest.mock import patch
 
-from chai_guanaco.utils import cache_leaderboard
+from chai_guanaco.utils import cache
 
 
-@cache_leaderboard
-def get_leaderboard(developer_key=None):
-    return 'leaderboard'
+@cache
+def add(a, b):
+    return a + b
 
 
 def test_cache_leaderboard_returns_from_cache(tmpdir):
     with patch('chai_guanaco.utils.guanaco_data_dir', return_value=tmpdir):
-        assert get_leaderboard() == 'leaderboard'
-        cache_file = os.path.join(tmpdir, 'cache', 'leaderboard_cache.pkl')
-        assert load_from_file(cache_file) == 'leaderboard'
+        assert add(1, 2) == 3
+        cache_file = os.path.join(tmpdir, 'cache', 'add(a=1, b=2).pkl')
+        assert load_from_file(cache_file) == 3
 
         # on second run, get_leaderboard loads from cache
-        dump_to_file(cache_file, 'leaderboard_changed')
-        assert get_leaderboard() == 'leaderboard_changed'
+        dump_to_file(cache_file, 4)
+        assert add(1, 2) == 4
+
+        # making sure function is re-ran with different input args
+        assert add(2, 2) == 4
+        cache_file = os.path.join(tmpdir, 'cache', 'add(a=2, b=2).pkl')
+        assert load_from_file(cache_file) == 4
 
 
 def test_cache_leaderboard_regenerates_cache_after_12_hours(tmpdir):
     with patch('chai_guanaco.utils.guanaco_data_dir', return_value=tmpdir), \
          patch('os.path.getmtime', return_value=mock_time_past_hours(13)):
-        assert get_leaderboard() == 'leaderboard'
-        cache_file = os.path.join(tmpdir, 'cache', 'leaderboard_cache.pkl')
-        assert load_from_file(cache_file) == 'leaderboard'
+        assert add(1, 2) == 3
+        cache_file = os.path.join(tmpdir, 'cache', 'add(a=1, b=2).pkl')
+        assert load_from_file(cache_file) == 3
 
         # on second run, get leaderboard does not read from cache as it is
         # after 12 hour
-        dump_to_file(cache_file, 'leaderboard_changed')
-        assert get_leaderboard() == 'leaderboard'
-        assert load_from_file(cache_file) == 'leaderboard'
+        dump_to_file(cache_file, 4)
+        assert add(1, 2) == 3
+        assert load_from_file(cache_file) == 3
 
 
 def load_from_file(filepath):

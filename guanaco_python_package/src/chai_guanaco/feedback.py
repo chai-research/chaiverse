@@ -96,5 +96,3 @@ def get_feedback(submission_id: str, developer_key=None):
     assert resp.status_code == 200, resp.json()
     feedback = Feedback(resp.json())
     return feedback
-
-

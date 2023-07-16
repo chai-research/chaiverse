@@ -1,8 +1,9 @@
 import os
+import inspect
 import pickle
-import time
+from time import time
 
-CACHE_UPDATE_WINDOW_HOURS = 12
+CACHE_UPDATE_HOURS = 12
 
 
 def guanaco_data_dir():
@@ -22,38 +23,25 @@ def print_color(text, color):
     print(f'{colors[color]}{text}\033[0m')
 
 
-def cache_leaderboard(get_leaderboard):
-    def wrapper(developer_key=None):
-        file_path = _get_cache_file_path()
-        if _can_return_from_cache(file_path):
+def cache(func):
+    def wrapper(*args, **kwargs):
+        file_path = _get_cache_file_path(func, args, kwargs)
+        try:
             result = _load_from_cache(file_path)
-        else:
-            result = get_leaderboard(developer_key=developer_key)
+            # ensuring file is less than N hours old, otherwise regenerate
+            assert (time() - os.path.getmtime(file_path)) < 3600 * CACHE_UPDATE_HOURS
+        except (FileNotFoundError, AssertionError):
+            result = func(*args, **kwargs)
             _save_to_cache(file_path, result)
         return result
     return wrapper
 
 
-def _get_cache_file_path():
+def _get_cache_file_path(func, args, kwargs):
     cache_dir = os.path.join(guanaco_data_dir(), 'cache')
     os.makedirs(cache_dir, exist_ok=True)
-    return os.path.join(cache_dir, 'leaderboard_cache.pkl')
-
-
-def _can_return_from_cache(file_path):
-    if not os.path.isfile(file_path):
-        can_cache = False
-    else:
-        can_cache = _cache_file_within_time_window(file_path)
-    return can_cache
-
-
-def _cache_file_within_time_window(file_path):
-    current_time = time.time()
-    file_time = os.path.getmtime(file_path)
-    cache_duration_hours = (current_time - file_time) // 3600
-    can_cache = cache_duration_hours < CACHE_UPDATE_WINDOW_HOURS
-    return can_cache
+    fname = _func_call_as_string(func, args, kwargs)
+    return os.path.join(cache_dir, f'{fname}.pkl')
 
 
 def _load_from_cache(file_path):
@@ -64,3 +52,11 @@ def _load_from_cache(file_path):
 def _save_to_cache(file_path, data):
     with open(file_path, 'wb') as f:
         pickle.dump(data, f)
+
+
+def _func_call_as_string(func, args, kwargs):
+    func_name = func.__name__
+    param_names = list(inspect.signature(func).parameters.keys())
+    arg_strs = [f'{name}={value!r}' for name, value in zip(param_names, args)]
+    arg_strs += [f'{name}={value!r}' for name, value in kwargs.items()]
+    return f"{func_name}({', '.join(arg_strs)})"
