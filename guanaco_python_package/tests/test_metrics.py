@@ -12,9 +12,11 @@ RESOURCE_DIR = os.path.join(os.path.abspath(os.path.join(__file__, '..')), 'reso
 
 
 @mock.patch('chai_guanaco.metrics._get_leaderboard_submission_ids')
+@mock.patch('chai_guanaco.utils.guanaco_data_dir')
 @freeze_time('2023-07-14 19:00:00')
 @vcr.use_cassette(os.path.join(RESOURCE_DIR, 'test_get_leaderboard.yaml'))
-def test_get_leaderboard(get_ids_mock):
+def test_get_leaderboard(data_dir_mock, get_ids_mock, tmpdir):
+    data_dir_mock.return_value = str(tmpdir)
     get_ids_mock.return_value = [
             'wizard-vicuna-13b-bo4',
             'psiilu-funny-bunny-1-1-1-1-1_1688985871',
