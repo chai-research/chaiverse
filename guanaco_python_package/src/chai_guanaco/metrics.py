@@ -14,6 +14,7 @@ from chai_guanaco.utils import print_color, cache
 LEADERBOARD_ENDPOINT = "/leaderboard"
 FEEDBACK_CUTOFF_DAYS = 7
 MINIMUM_FEEDBACK_NUMBER_TO_DISPLAY = 50
+SUBMISSION_CUTOFF = datetime(2023, 7, 15)
 
 
 @auto_authenticate
@@ -105,6 +106,8 @@ def _get_leaderboard_submission_ids(developer_key):
 
 
 def _print_formatted_leaderboard(df):
+    df = _filter_old_submissions(df)
+    df = _filter_duplicated_submissions(df)
     df = _get_filtered_leaderboard(df)
     df['engagement_score'] = _get_engagement_score(df.mcl, df.user_response_length)
     df['overall_rank'] = _get_overall_rank(df.engagement_score, df.thumbs_up_ratio)
@@ -113,6 +116,28 @@ def _print_formatted_leaderboard(df):
     _print_engagement_prize(df)
     _print_thumbs_up_prize(df)
     return df
+
+
+def _filter_old_submissions(df):
+    timestamps = df.submission_id.apply(lambda x: x.split('_')[-1])
+    return df[timestamps.apply(_is_after_submission_start_time)]
+
+
+def _filter_duplicated_submissions(df):
+    df = df.sort_values(['total_feedback_count'], ascending=False)
+    df['model_name'] = df.submission_id.apply(lambda x: '_'.join(x.split('_')[:-1]))
+    df = df.drop_duplicates('model_name', keep='first')
+    df.drop('model_name', axis=1, inplace=True)
+    return df
+
+
+def _is_after_submission_start_time(timestamp):
+    try:
+        timestamp = datetime.fromtimestamp(int(timestamp))
+        is_after_cutoff = timestamp >= SUBMISSION_CUTOFF
+    except ValueError:
+        is_after_cutoff = False
+    return is_after_cutoff
 
 
 def _get_engagement_score(mcl, user_response_length):
