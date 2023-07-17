@@ -27,7 +27,7 @@ class SubmissionChatbot():
     chat(bot_config_file_name, show_model_input=False)
     Launch a chat session with the bot profile specified in bot_config_file_name
 
-    show_avaliable_bots()
+    show_available_bots()
     Displays the list of bots that are available for chat that can be passed into chat()
 
     Example usage:
@@ -57,8 +57,8 @@ class SubmissionChatbot():
             user_input = input("You: ")
 
     @staticmethod
-    def show_avaliable_bots():
-        avaliable_bots = get_avaliable_bots()
+    def show_available_bots():
+        avaliable_bots = get_available_bots()
         print_color('Avaliable Bots:', 'yellow')
         print(avaliable_bots)
 
@@ -139,7 +139,7 @@ class Bot:
         return [{"sender": self.bot_config.bot_label, "message": self.bot_config.first_message}]
 
 
-def get_avaliable_bots():
+def get_available_bots():
     bots = os.listdir(RESOURCE_DIR)
     avaliable_bots = '\n'.join([bot.replace('.json', '') for bot in bots if bot.endswith('.json')])
     return avaliable_bots

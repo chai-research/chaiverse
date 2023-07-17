@@ -89,17 +89,21 @@ def test_conversation_metrics():
 
 def test_print_formatted_leaderboard():
     data = {
-        'total_feedback_count': [10, 60, 100],
-        'mcl': [1.0, 2.0, 3.0],
-        'user_response_length': [500, 600, 700],
-        'thumbs_up_ratio': [0.1, 0.5, 0.8],
+        'submission_id': ['tom_1689542168', 'tom_1689404889', 'val_1689051887', 'zl_1689542168'],
+        'total_feedback_count': [10, 60, 100, 51],
+        'mcl': [1.0, 2.0, 3.0, 4.0],
+        'user_response_length': [500, 600, 700, 800],
+        'thumbs_up_ratio': [0.1, 0.5, 0.8, 0.2],
     }
     all_metrics_df = pd.DataFrame(data)
 
     df = metrics._print_formatted_leaderboard(all_metrics_df)
 
     assert len(df) == 2
-    expected_columns = ['mcl', 'user_response_length', 'thumbs_up_ratio', 'engagement_score', 'overall_rank']
+    expected_columns = [
+            'submission_id', 'mcl', 'user_response_length',
+            'thumbs_up_ratio', 'engagement_score', 'overall_rank'
+        ]
     assert list(df.columns) == expected_columns
     assert pd.api.types.is_integer_dtype(df['overall_rank'])
     pd.testing.assert_frame_equal(all_metrics_df, pd.DataFrame(data))
