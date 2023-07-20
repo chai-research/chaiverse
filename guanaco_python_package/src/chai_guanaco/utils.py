@@ -3,7 +3,7 @@ import inspect
 import pickle
 from time import time
 
-CACHE_UPDATE_HOURS = 12
+CACHE_UPDATE_HOURS = 6
 
 
 def guanaco_data_dir():
@@ -23,11 +23,12 @@ def print_color(text, color):
     print(f'{colors[color]}{text}\033[0m')
 
 
-def cache(func):
+def cache(func, regenerate=False):
     def wrapper(*args, **kwargs):
         file_path = _get_cache_file_path(func, args, kwargs)
         try:
             result = _load_from_cache(file_path)
+            assert not regenerate
             # ensuring file is less than N hours old, otherwise regenerate
             assert (time() - os.path.getmtime(file_path)) < 3600 * CACHE_UPDATE_HOURS
         except (FileNotFoundError, AssertionError):
