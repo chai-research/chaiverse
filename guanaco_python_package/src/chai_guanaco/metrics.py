@@ -18,16 +18,16 @@ SUBMISSION_CUTOFF = datetime(2023, 7, 15)
 
 
 @auto_authenticate
-def display_leaderboard(developer_key=None):
-    df = get_leaderboard(developer_key)
+def display_leaderboard(developer_key=None, regenerate=False):
+    df = cache(get_leaderboard, regenerate)(developer_key)
     _print_formatted_leaderboard(df)
     return df
 
 
-@cache
 @auto_authenticate
 def get_leaderboard(developer_key=None):
-    submission_ids = _get_leaderboard_submission_ids(developer_key)
+    submission_ids = get_all_historical_submissions(developer_key)
+    submission_ids = _filter_old_submissions(submission_ids)
     leaderboard = []
     for submission_id in tqdm(submission_ids, 'Getting Metrics'):
         metrics = get_submission_metrics(submission_id, developer_key)
@@ -47,6 +47,16 @@ def get_submission_metrics(submission_id, developer_key):
         'total_feedback_count': feedback_metrics.total_feedback_count
     }
     return metrics
+
+
+def get_all_historical_submissions(developer_key):
+    headers = {
+        "developer_key": developer_key,
+    }
+    url = get_url(LEADERBOARD_ENDPOINT)
+    resp = requests.get(url, headers=headers)
+    assert resp.status_code == 200, resp.json()
+    return list(resp.json().keys())
 
 
 class FeedbackMetrics():
@@ -95,18 +105,7 @@ class ConversationMetrics():
         return '_bot' not in message['sender']['uid']
 
 
-def _get_leaderboard_submission_ids(developer_key):
-    headers = {
-        "developer_key": developer_key,
-    }
-    url = get_url(LEADERBOARD_ENDPOINT)
-    resp = requests.get(url, headers=headers)
-    assert resp.status_code == 200, resp.json()
-    return resp.json().keys()
-
-
 def _print_formatted_leaderboard(df):
-    df = _filter_old_submissions(df)
     df = _filter_duplicated_submissions(df)
     df = _get_filtered_leaderboard(df)
     df['engagement_score'] = _get_engagement_score(df.mcl, df.user_response_length)
@@ -118,9 +117,9 @@ def _print_formatted_leaderboard(df):
     return df
 
 
-def _filter_old_submissions(df):
-    timestamps = df.submission_id.apply(lambda x: x.split('_')[-1])
-    return df[timestamps.apply(_is_after_submission_start_time)]
+def _filter_old_submissions(submission_ids):
+    filtered_submissions = [k for k in submission_ids if _is_after_submission_start_time(k)]
+    return filtered_submissions
 
 
 def _filter_duplicated_submissions(df):
@@ -131,7 +130,8 @@ def _filter_duplicated_submissions(df):
     return df
 
 
-def _is_after_submission_start_time(timestamp):
+def _is_after_submission_start_time(submission_id):
+    timestamp = submission_id.split('_')[-1]
     try:
         timestamp = datetime.fromtimestamp(int(timestamp))
         is_after_cutoff = timestamp >= SUBMISSION_CUTOFF

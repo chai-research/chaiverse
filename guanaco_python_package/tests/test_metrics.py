@@ -11,7 +11,8 @@ from chai_guanaco import metrics
 RESOURCE_DIR = os.path.join(os.path.abspath(os.path.join(__file__, '..')), 'resources')
 
 
-@mock.patch('chai_guanaco.metrics._get_leaderboard_submission_ids')
+@mock.patch('chai_guanaco.metrics.get_all_historical_submissions')
+@mock.patch('chai_guanaco.metrics._filter_old_submissions')
 @mock.patch('chai_guanaco.utils.guanaco_data_dir')
 @freeze_time('2023-07-14 19:00:00')
 @vcr.use_cassette(os.path.join(RESOURCE_DIR, 'test_get_leaderboard.yaml'))
@@ -99,7 +100,7 @@ def test_print_formatted_leaderboard():
 
     df = metrics._print_formatted_leaderboard(all_metrics_df)
 
-    assert len(df) == 2
+    assert len(df) == 3
     expected_columns = [
             'submission_id', 'mcl', 'user_response_length',
             'thumbs_up_ratio', 'engagement_score', 'overall_rank'
