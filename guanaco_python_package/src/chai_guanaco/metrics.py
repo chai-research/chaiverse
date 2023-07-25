@@ -85,7 +85,7 @@ class FeedbackMetrics():
 
     @property
     def user_response_length(self):
-        return np.mean([m.user_response_length for m in self.convo_metrics])
+        return np.median([m.user_response_length for m in self.convo_metrics])
 
 
 class ConversationMetrics():
@@ -99,7 +99,7 @@ class ConversationMetrics():
     @property
     def user_response_length(self):
         response_length = [len(m['content']) for m in self.messages if self._is_from_user(m)]
-        return np.mean(response_length)
+        return np.sum(response_length)
 
     def _is_from_user(self, message):
         return '_bot' not in message['sender']['uid']
@@ -108,8 +108,7 @@ class ConversationMetrics():
 def _print_formatted_leaderboard(df):
     df = _filter_duplicated_submissions(df)
     df = _get_filtered_leaderboard(df)
-    df['engagement_score'] = _get_engagement_score(df.mcl, df.user_response_length)
-    df['overall_rank'] = _get_overall_rank(df.engagement_score, df.thumbs_up_ratio)
+    df['overall_rank'] = _get_overall_rank(df.user_response_length, df.thumbs_up_ratio)
     df = df.sort_values('overall_rank').reset_index(drop=True)
     _print_grand_prize(df)
     _print_engagement_prize(df)
@@ -140,10 +139,6 @@ def _is_after_submission_start_time(submission_id):
     return is_after_cutoff
 
 
-def _get_engagement_score(mcl, user_response_length):
-    return mcl * user_response_length
-
-
 def _get_filtered_leaderboard(df):
     filtered_df = df[df.total_feedback_count > MINIMUM_FEEDBACK_NUMBER_TO_DISPLAY]
     filtered_df = filtered_df.drop(['total_feedback_count'], axis=1)
@@ -172,7 +167,7 @@ def _print_thumbs_up_prize(df):
 
 def _print_engagement_prize(df):
     print_color('\n😎 Engagement Prize Contenders:', 'red')
-    df = df.sort_values('engagement_score', ascending=False).reset_index(drop=True)
+    df = df.sort_values('user_response_length', ascending=False).reset_index(drop=True)
     print(df.round(3).head(15))
 
 

@@ -36,21 +36,21 @@ def test_get_leaderboard(data_dir_mock, get_ids_mock, tmpdir):
         'submission_id': 'wizard-vicuna-13b-bo4',
         'thumbs_up_ratio': 0.7464789,
         'mcl': 31.5070,
-        'user_response_length': 33.5366,
+        'user_response_length': 354.,
         'total_feedback_count': 71
      },
      {
         'submission_id': 'psiilu-funny-bunny-1-1-1-1-1_1688985871',
         'thumbs_up_ratio': 0.61538,
         'mcl': 11.282051282051283,
-        'user_response_length': 25.6599,
+        'user_response_length': 48.,
         'total_feedback_count': 39
       },
      {
         'submission_id': 'pygmalionai-pygmalion-6b_1688673204',
         'thumbs_up_ratio': 0.60227,
         'mcl': 17.3977,
-        'user_response_length': 38.105,
+        'user_response_length': 122.,
         'total_feedback_count': 88
         }
      ]
@@ -64,7 +64,7 @@ def test_get_submission_metrics():
     expected_metrics = {
             'thumbs_up_ratio': 0.7464788732394366,
             'mcl': 31.507042253521128,
-            'user_response_length': 33.53655529171172,
+            'user_response_length': 354.,
             'total_feedback_count': 71
         }
     assert results == expected_metrics
@@ -85,7 +85,7 @@ def test_conversation_metrics():
     ]
     convo_metrics = metrics.ConversationMetrics(messages)
     assert convo_metrics.mcl == 5
-    assert convo_metrics.user_response_length == 4.5
+    assert convo_metrics.user_response_length == 9
 
 
 def test_print_formatted_leaderboard():
@@ -103,7 +103,7 @@ def test_print_formatted_leaderboard():
     assert len(df) == 3
     expected_columns = [
             'submission_id', 'mcl', 'user_response_length',
-            'thumbs_up_ratio', 'engagement_score', 'overall_rank'
+            'thumbs_up_ratio', 'overall_rank'
         ]
     assert list(df.columns) == expected_columns
     assert pd.api.types.is_integer_dtype(df['overall_rank'])
