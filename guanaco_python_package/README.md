@@ -70,14 +70,14 @@ import chai_guanaco as chai
 model_url = "EleutherAI/gpt-j-6b" # Your model URL
 
 generation_params = {'temperature': 0.75, 'repetition_penalty': 1.13, 'top_p': 0.2, "top_k": 40, "stopping_words": ['\n']}
-submission_parameters = {'model_repo': model_url, 'generation_params': generation_params}
+submission_parameters = {'model_repo': model_url, 'generation_params': generation_params, 'model_name': 'my-awesome-gptj-6b'}
 
 submitter = chai.ModelSubmitter()
 submission_id = submitter.submit(submission_parameters)
-````
+```
 
 This will display an animation while your model is being deployed, a typical
-deployment takes approximately 10 minutes.
+deployment takes approximately 10 minutes. Note the `model_name` parameter is used for show-casing your model on the leaderboard and it should help you with identifying your model
 
 
 **Chat With Your Model Submission**

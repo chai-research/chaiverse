@@ -1,9 +1,6 @@
 import itertools
 import requests
-import sys
 import time
-
-import pandas as pd
 
 from chai_guanaco.utils import print_color
 from chai_guanaco.login_cli import auto_authenticate
@@ -58,7 +55,8 @@ class ModelSubmitter:
                 top_p: float
                 top_k: int
                 repetition_penalty: float
-            formatter: PromptFormatter
+            formatter (optional): PromptFormatter
+            model_name (optional): str - custom alias for your model
         """
         submission_params = self._preprocess_submission(submission_params)
         submission_id = self._get_submission_id(submission_params)
