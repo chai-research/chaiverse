@@ -14,24 +14,30 @@ from chai_guanaco.utils import print_color, cache
 LEADERBOARD_ENDPOINT = "/leaderboard"
 FEEDBACK_CUTOFF_DAYS = 7
 MINIMUM_FEEDBACK_NUMBER_TO_DISPLAY = 50
-SUBMISSION_CUTOFF = datetime(2023, 7, 15)
+LEADERBOARD_DISPLAY_COLS = [
+    'developer_uid',
+    'model_name',
+    'thumbs_up_ratio',
+    'user_response_length',
+    'overall_rank',
+]
 
 
 @auto_authenticate
-def display_leaderboard(developer_key=None, regenerate=False):
+def display_leaderboard(developer_key=None, regenerate=False, detailed=False):
     df = cache(get_leaderboard, regenerate)(developer_key)
-    _print_formatted_leaderboard(df)
+    _print_formatted_leaderboard(df, detailed)
     return df
 
 
 @auto_authenticate
 def get_leaderboard(developer_key=None):
-    submission_ids = get_all_historical_submissions(developer_key)
-    submission_ids = _filter_old_submissions(submission_ids)
+    submission_data = get_all_historical_submissions(developer_key)
     leaderboard = []
-    for submission_id in tqdm(submission_ids, 'Getting Metrics'):
+    for submission_id, meta_data in tqdm(submission_data.items(), 'Getting Metrics'):
         metrics = get_submission_metrics(submission_id, developer_key)
-        leaderboard.append({'submission_id': submission_id, **metrics})
+        meta_data.update(metrics)
+        leaderboard.append({'submission_id': submission_id, **meta_data})
     return pd.DataFrame(leaderboard)
 
 
@@ -56,7 +62,7 @@ def get_all_historical_submissions(developer_key):
     url = get_url(LEADERBOARD_ENDPOINT)
     resp = requests.get(url, headers=headers)
     assert resp.status_code == 200, resp.json()
-    return list(resp.json().keys())
+    return resp.json()
 
 
 class FeedbackMetrics():
@@ -105,69 +111,62 @@ class ConversationMetrics():
         return '_bot' not in message['sender']['uid']
 
 
-def _print_formatted_leaderboard(df):
-    df = _filter_duplicated_submissions(df)
-    df = _get_filtered_leaderboard(df)
-    df['overall_rank'] = _get_overall_rank(df.user_response_length, df.thumbs_up_ratio)
-    df = df.sort_values('overall_rank').reset_index(drop=True)
-    _print_grand_prize(df)
-    _print_engagement_prize(df)
-    _print_thumbs_up_prize(df)
+def _print_formatted_leaderboard(raw_df, detailed):
+    df = _get_processed_leaderboard(raw_df)
+    if not detailed:
+        df = _get_df_with_unique_hf_repo(df)
+        df = df[LEADERBOARD_DISPLAY_COLS].copy()
+    _pprint_leaderboard(df, '💎 Grand Prize Contenders:', 'overall_rank', detailed, ascending=True)
+    _pprint_leaderboard(df, '😎 Engagement Prize Contenders:', 'user_response_length', detailed, ascending=False)
+    _pprint_leaderboard(df, '👍 Thumbs Up Prize Contenders:', 'thumbs_up_ratio', detailed, ascending=False)
     return df
 
 
-def _filter_old_submissions(submission_ids):
-    filtered_submissions = [k for k in submission_ids if _is_after_submission_start_time(k)]
-    return filtered_submissions
+def _get_processed_leaderboard(df):
+    # maintain backwards compatibility with model_name field
+    df['model_name'] = df['model_name'].fillna(df['submission_id'])
+    df = _format_leaderboard_date(df)
+    df = _filter_submissions_with_few_feedback(df)
+    df = _add_overall_rank(df)
+    return df
 
 
-def _filter_duplicated_submissions(df):
+def _format_leaderboard_date(df):
+    df['date'] = pd.to_datetime(df['timestamp']).dt.date
+    df.drop(['timestamp'], axis=1, inplace=True)
+    return df
+
+
+def _get_df_with_unique_hf_repo(df):
     df = df.sort_values(['total_feedback_count'], ascending=False)
-    df['model_name'] = df.submission_id.apply(lambda x: '_'.join(x.split('_')[:-1]))
-    df = df.drop_duplicates('model_name', keep='first')
-    df.drop('model_name', axis=1, inplace=True)
+    df = df.drop_duplicates('model_repo', keep='first')
     return df
 
 
-def _is_after_submission_start_time(submission_id):
-    timestamp = submission_id.split('_')[-1]
-    try:
-        timestamp = datetime.fromtimestamp(int(timestamp))
-        is_after_cutoff = timestamp >= SUBMISSION_CUTOFF
-    except ValueError:
-        is_after_cutoff = False
-    return is_after_cutoff
-
-
-def _get_filtered_leaderboard(df):
+def _filter_submissions_with_few_feedback(df):
     filtered_df = df[df.total_feedback_count > MINIMUM_FEEDBACK_NUMBER_TO_DISPLAY]
-    filtered_df = filtered_df.drop(['total_feedback_count'], axis=1)
     return filtered_df
 
 
-def _get_overall_rank(engagement_score, thumbs_up_ratio):
-    engagement_rank = engagement_score.rank(ascending=False)
-    thumbs_up_rank = thumbs_up_ratio.rank(ascending=False)
-    overall_score = (engagement_rank + thumbs_up_rank) / 2
-    overall_rank = overall_score.rank().astype(int)
-    return overall_rank
-
-
-def _print_grand_prize(df):
-    print_color('\n💎 Grand Prize Contenders:', 'red')
+def _add_overall_rank(df):
+    response_len, thumbs_up = df['user_response_length'], df['thumbs_up_ratio']
+    response_len_rank = response_len.rank(ascending=False)
+    thumbs_up_rank = thumbs_up.rank(ascending=False)
+    overall_score = (response_len_rank + thumbs_up_rank) / 2
+    df['overall_rank'] = overall_score.rank().astype(int)
     df = df.sort_values('overall_rank').reset_index(drop=True)
-    print(df.round(3).head(15))
+    return df
 
 
-def _print_thumbs_up_prize(df):
-    print_color('\n👍 Thumbs Up Prize Contenders:', 'red')
-    df = df.sort_values('thumbs_up_ratio', ascending=False).reset_index(drop=True)
-    print(df.round(3).head(15))
+def _get_df_with_unique_dev_id(df):
+    out = df.drop_duplicates('developer_uid', keep='first').reset_index(drop=True)
+    return out
 
 
-def _print_engagement_prize(df):
-    print_color('\n😎 Engagement Prize Contenders:', 'red')
-    df = df.sort_values('user_response_length', ascending=False).reset_index(drop=True)
+def _pprint_leaderboard(df, title, sort_by, detailed=False, ascending=True):
+    print_color(f'\n{title}', 'red')
+    df = df.sort_values(sort_by, ascending=ascending).reset_index(drop=True)
+    df = df if detailed else _get_df_with_unique_dev_id(df)
     print(df.round(3).head(15))
 
 
