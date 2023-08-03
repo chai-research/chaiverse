@@ -108,7 +108,7 @@ def test_conversation_metrics():
 def test_print_formatted_leaderboard():
     data = {
         'submission_id': ['tom_1689542168', 'tom_1689404889', 'val_1689051887', 'zl_1689542168'],
-        'total_feedback_count': [10, 60, 100, 51],
+        'total_feedback_count': [130, 160, 140, 51],
         'mcl': [1.0, 2.0, 3.0, 4.0],
         'user_response_length': [500, 600, 700, 800],
         'thumbs_up_ratio': [0.1, 0.5, 0.8, 0.2],

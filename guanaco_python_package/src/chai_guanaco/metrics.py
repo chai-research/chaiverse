@@ -13,7 +13,7 @@ from chai_guanaco.utils import print_color, cache
 
 LEADERBOARD_ENDPOINT = "/leaderboard"
 FEEDBACK_CUTOFF_DAYS = 7
-MINIMUM_FEEDBACK_NUMBER_TO_DISPLAY = 50
+MINIMUM_FEEDBACK_NUMBER_TO_DISPLAY = 120
 LEADERBOARD_DISPLAY_COLS = [
     'developer_uid',
     'model_name',
