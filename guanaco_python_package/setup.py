@@ -20,7 +20,7 @@ setup(
     author='Chai Research Corp.',
     author_email='hello@chai-research.com',
     license='MIT',
-    packages=find_packages(where='src'),
+    packages=['chai_guanaco'],
     package_dir={"": "src"},
     package_data={"chai_guanaco": ["resources/*"]},
     url='https://www.chai-research.com',
