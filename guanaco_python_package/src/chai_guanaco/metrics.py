@@ -18,7 +18,8 @@ LEADERBOARD_DISPLAY_COLS = [
     'developer_uid',
     'model_name',
     'thumbs_up_ratio',
-    'user_response_length',
+    'user_engagement',
+    'retry_score',
     'overall_rank',
 ]
 
@@ -47,10 +48,13 @@ def get_submission_metrics(submission_id, developer_key):
     feedback_metrics = FeedbackMetrics(feedback.raw_data)
 
     metrics = {
-        'thumbs_up_ratio': feedback_metrics.thumbs_up_ratio,
         'mcl': feedback_metrics.mcl,
-        'user_response_length': feedback_metrics.user_response_length,
-        'total_feedback_count': feedback_metrics.total_feedback_count
+        'thumbs_up_ratio': feedback_metrics.thumbs_up_ratio,
+        'thumbs_up_ratio_se': feedback_metrics.thumbs_up_ratio_se,
+        'retry_score': feedback_metrics.retry_score,
+        'user_engagement': feedback_metrics.mean_user_engagement,
+        'user_engagement_se': feedback_metrics.user_engagement_se,
+        'total_feedback_count': feedback_metrics.total_feedback_count,
     }
     return metrics
 
@@ -78,8 +82,15 @@ class FeedbackMetrics():
     def thumbs_up_ratio(self):
         is_thumbs_up = [feedback['thumbs_up'] for feedback in self.feedbacks]
         thumbs_up = sum(is_thumbs_up)
-        thumbs_up_ratio = 0 if not thumbs_up else thumbs_up / len(is_thumbs_up)
+        thumbs_up_ratio = np.nan if not thumbs_up else thumbs_up / len(is_thumbs_up)
         return thumbs_up_ratio
+
+    @property
+    def thumbs_up_ratio_se(self):
+        num = self.thumbs_up_ratio * (1 - self.thumbs_up_ratio)
+        denom = self.total_feedback_count**0.5
+        se = np.nan if self.total_feedback_count < 2 else num / denom
+        return se
 
     @property
     def total_feedback_count(self):
@@ -90,8 +101,26 @@ class FeedbackMetrics():
         return np.mean([m.mcl for m in self.convo_metrics])
 
     @property
-    def user_response_length(self):
-        return np.median([m.user_response_length for m in self.convo_metrics])
+    def mean_user_engagement(self):
+        # taking geometric mean over user response length
+        log_engagement = [np.log(m.user_engagement+1) for m in self.convo_metrics]
+        geometric_mean = np.exp(np.mean(log_engagement))
+        return geometric_mean
+
+    @property
+    def user_engagement_se(self):
+        log_engagement = [np.log(m.user_engagement+1) for m in self.convo_metrics]
+        log_mean = np.mean(log_engagement)
+        log_se = np.std(log_engagement) / len(log_engagement)**0.5
+        mean = np.exp(log_mean)
+        se = mean * log_se
+        return se
+
+    @property
+    def retry_score(self):
+        total_retries = sum([m.num_retries for m in self.convo_metrics])
+        total_bot_responses = sum([m.num_model_responses for m in self.convo_metrics])
+        return 0 if (total_bot_responses) == 0 else total_retries / total_bot_responses
 
 
 class ConversationMetrics():
@@ -103,7 +132,16 @@ class ConversationMetrics():
         return len([m for m in self.messages if not m['deleted']])
 
     @property
-    def user_response_length(self):
+    def num_retries(self):
+        return len([m for m in self.messages if m['deleted']])
+
+    @property
+    def num_model_responses(self):
+        user_messages = [m for m in self.messages if self._is_from_user(m)]
+        return len(self.messages) - len(user_messages)
+
+    @property
+    def user_engagement(self):
         response_length = [len(m['content']) for m in self.messages if self._is_from_user(m)]
         return np.sum(response_length)
 
@@ -116,9 +154,7 @@ def _print_formatted_leaderboard(raw_df, detailed):
     if not detailed:
         df = _get_df_with_unique_hf_repo(df)
         df = df[LEADERBOARD_DISPLAY_COLS].copy()
-    _pprint_leaderboard(df, '💎 Grand Prize Contenders:', 'overall_rank', detailed, ascending=True)
-    _pprint_leaderboard(df, '😎 Engagement Prize Contenders:', 'user_response_length', detailed, ascending=False)
-    _pprint_leaderboard(df, '👍 Thumbs Up Prize Contenders:', 'thumbs_up_ratio', detailed, ascending=False)
+    _pprint_leaderboard(df, '💎 Leaderboard:', 'overall_rank', detailed, ascending=True)
     return df
 
 
@@ -149,10 +185,13 @@ def _filter_submissions_with_few_feedback(df):
 
 
 def _add_overall_rank(df):
-    response_len, thumbs_up = df['user_response_length'], df['thumbs_up_ratio']
+    response_len = df['user_engagement']
+    thumbs_up = df['thumbs_up_ratio']
+    retry_score = df['retry_score']
     response_len_rank = response_len.rank(ascending=False)
     thumbs_up_rank = thumbs_up.rank(ascending=False)
-    overall_score = (response_len_rank + thumbs_up_rank) / 2
+    retry_rate_rank = retry_score.rank(ascending=True)
+    overall_score = (response_len_rank + thumbs_up_rank + retry_rate_rank) / 3
     df['overall_rank'] = overall_score.rank().astype(int)
     df = df.sort_values('overall_rank').reset_index(drop=True)
     return df
@@ -167,7 +206,7 @@ def _pprint_leaderboard(df, title, sort_by, detailed=False, ascending=True):
     print_color(f'\n{title}', 'red')
     df = df.sort_values(sort_by, ascending=ascending).reset_index(drop=True)
     df = df if detailed else _get_df_with_unique_dev_id(df)
-    print(df.round(3).head(15))
+    print(df.round(3).head(30))
 
 
 def _filter_feedbacks(feedbacks):

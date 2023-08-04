@@ -22,55 +22,65 @@ def test_get_leaderboard(data_dir_mock, get_ids_mock, tmpdir):
     expected_cols = [
         'submission_id',
         'thumbs_up_ratio',
-        'mcl',
-        'user_response_length'
+        'retry_score',
+        'total_feedback_count',
+        'user_engagement'
         ]
     for col in expected_cols:
         assert col in df.columns, f'{col} not found in leaderboard'
     expected_data = [
-            {
-                'submission_id': 'alekseykorshuk-exp-sy_1690222960',
-                'timestamp': '2023-07-24 18:22:40+00:00',
-                'status': 'inactive',
-                'model_repo': 'AlekseyKorshuk/exp-syn-friendly-cp475',
-                'developer_uid': 'aleksey',
-                'model_name': 'None',
-                'thumbs_down': 42,
-                'thumbs_up': 33,
-                'thumbs_up_ratio': 0.45454545454545453,
-                'mcl': 12.0,
-                'user_response_length': 75.0,
-                'total_feedback_count': 33
-                },
-            {
-                'submission_id': 'psiilu-funny-bunny-1-_1689922219',
-                'timestamp': '2023-07-21 06:50:19+00:00',
-                'status': 'inactive',
-                'model_repo': 'psiilu/funny-bunny-1-1-1-1-1',
-                'developer_uid': 'philipp',
-                'model_name': 'None',
-                'thumbs_down': 306,
-                'thumbs_up': 187,
-                'thumbs_up_ratio': 0.41148325358851673,
-                'mcl': 9.191387559808613,
-                'user_response_length': 84.0,
-                'total_feedback_count': 209
-                },
-            {
-                'submission_id': 'tehvenom-dolly-shygma_1690135695',
-                'timestamp': '2023-07-23 18:08:15+00:00',
-                'status': 'inactive',
-                'model_repo': 'TehVenom/Dolly_Shygmalion-6b-Dev_V8P2',
-                'developer_uid': 'tehvenom',
-                'model_name': 'None',
-                'thumbs_down': 76,
-                'thumbs_up': 79,
-                'thumbs_up_ratio': 0.48214285714285715,
-                'mcl': 13.053571428571429,
-                'user_response_length': 98.5,
-                'total_feedback_count': 56
-                }
-            ]
+        {
+            'submission_id': 'alekseykorshuk-exp-sy_1690222960',
+            'timestamp': '2023-07-24 18:22:40+00:00',
+            'status': 'inactive',
+            'model_repo': 'AlekseyKorshuk/exp-syn-friendly-cp475',
+            'developer_uid': 'aleksey',
+            'model_name': 'None',
+            'thumbs_down': 42,
+            'thumbs_up': 33,
+            'mcl': 12.0,
+            'thumbs_up_ratio': 0.45454545454545453,
+            'thumbs_up_ratio_se': 0.043159749410503594,
+            'retry_score': 0.14741035856573706,
+            'user_engagement': 67.34005746050721,
+            'user_engagement_se': 18.57789825723364,
+            'total_feedback_count': 33
+            },
+        {
+            'submission_id': 'psiilu-funny-bunny-1-_1689922219',
+            'timestamp': '2023-07-21 06:50:19+00:00',
+            'status': 'inactive',
+            'model_repo': 'psiilu/funny-bunny-1-1-1-1-1',
+            'developer_uid': 'philipp',
+            'model_name': 'None',
+            'thumbs_down': 306,
+            'thumbs_up': 187,
+            'mcl': 9.191387559808613,
+            'thumbs_up_ratio': 0.41148325358851673,
+            'thumbs_up_ratio_se': 0.016750888484181537,
+            'retry_score': 0.22954380883417813,
+            'user_engagement': 75.09995515460673,
+            'user_engagement_se': 6.7271173705601095,
+            'total_feedback_count': 209
+            },
+        {
+            'submission_id': 'tehvenom-dolly-shygma_1690135695',
+            'timestamp': '2023-07-23 18:08:15+00:00',
+            'status': 'inactive',
+            'model_repo': 'TehVenom/Dolly_Shygmalion-6b-Dev_V8P2',
+            'developer_uid': 'tehvenom',
+            'model_name': 'None',
+            'thumbs_down': 76,
+            'thumbs_up': 79,
+            'mcl': 13.053571428571429,
+            'thumbs_up_ratio': 0.48214285714285715,
+            'thumbs_up_ratio_se': 0.03336504343390119,
+            'retry_score': 0.20647773279352227,
+            'user_engagement': 86.49293170787536,
+            'user_engagement_se': 15.430467887932489,
+            'total_feedback_count': 56
+            }
+    ]
     pd.testing.assert_frame_equal(df, pd.DataFrame(expected_data))
 
 
@@ -79,11 +89,14 @@ def test_get_leaderboard(data_dir_mock, get_ids_mock, tmpdir):
 def test_get_submission_metrics():
     results = metrics.get_submission_metrics('wizard-vicuna-13b-bo4')
     expected_metrics = {
-            'thumbs_up_ratio': 0.7464788732394366,
             'mcl': 31.507042253521128,
-            'user_response_length': 354.,
+            'thumbs_up_ratio': 0.7464788732394366,
+            'thumbs_up_ratio_se': 0.022459625112416903,
+            'retry_score': 0.08716323296354993,
+            'user_engagement': 328.08592882430924,
+            'user_engagement_se': 31.498130560129095,
             'total_feedback_count': 71
-        }
+            }
     assert results == expected_metrics
 
 
@@ -102,7 +115,7 @@ def test_conversation_metrics():
     ]
     convo_metrics = metrics.ConversationMetrics(messages)
     assert convo_metrics.mcl == 5
-    assert convo_metrics.user_response_length == 9
+    assert convo_metrics.user_engagement == 9
 
 
 def test_print_formatted_leaderboard():
@@ -110,7 +123,8 @@ def test_print_formatted_leaderboard():
         'submission_id': ['tom_1689542168', 'tom_1689404889', 'val_1689051887', 'zl_1689542168'],
         'total_feedback_count': [130, 160, 140, 51],
         'mcl': [1.0, 2.0, 3.0, 4.0],
-        'user_response_length': [500, 600, 700, 800],
+        'user_engagement': [500, 600, 700, 800],
+        'retry_score': [.5, .6, .7, .8],
         'thumbs_up_ratio': [0.1, 0.5, 0.8, 0.2],
         'model_name': ['psutil', 'htop', 'watch', 'gunzip'],
         'developer_uid': ['tom', 'tom', 'val', 'zl'],
@@ -126,7 +140,8 @@ def test_print_formatted_leaderboard():
             'submission_id',
             'total_feedback_count',
             'mcl',
-            'user_response_length',
+            'user_engagement',
+            'retry_score',
             'thumbs_up_ratio',
             'model_name',
             'developer_uid',

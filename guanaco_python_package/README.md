@@ -60,17 +60,17 @@ And pass in your developer key when prompted, you can always logout using `chai-
 
 **Model Submission**
 
-Upload any GPT-J 6B based language model *with a tokenizer* to huggingface, i.e. [EleutherAI/gpt-j-6b](https://huggingface.co/EleutherAI/gpt-j-6b). Read [this guide](https://huggingface.co/docs/transformers/model_sharing) if you are unsure. Click the *Use in Transformers* button in huggingface to get the your huggingface model ID (i.e. "EleutherAI/gpt-j-6b")
+Upload any Llama based language model *with a tokenizer* to huggingface, i.e. [NousResearch/Llama-2-7b-chat-hf](https://huggingface.co/NousResearch/Llama-2-7b-chat-hf). Read [this guide](https://huggingface.co/docs/transformers/model_sharing) if you are unsure. Click the *Use in Transformers* button in huggingface to get the your huggingface model ID (i.e. "NousResearch/Llama-2-7b-chat-hf")
 
 To submit model simply run:
 
 ```python
 import chai_guanaco as chai
 
-model_url = "EleutherAI/gpt-j-6b" # Your model URL
+model_url = "NousResearch/Llama-2-7b-chat-hf" # Your model URL
 
 generation_params = {'temperature': 0.75, 'repetition_penalty': 1.13, 'top_p': 0.2, "top_k": 40, "stopping_words": ['\n']}
-submission_parameters = {'model_repo': model_url, 'generation_params': generation_params, 'model_name': 'my-awesome-gptj-6b'}
+submission_parameters = {'model_repo': model_url, 'generation_params': generation_params, 'model_name': 'my-awesome-llama'}
 
 submitter = chai.ModelSubmitter()
 submission_id = submitter.submit(submission_parameters)
@@ -125,9 +125,14 @@ This outputs a Pandas `DataFrame`, where each row corresponds to a user conversa
 
 **Getting Live Leaderboard**
 
+To view the public leaderboard used to determine prizes (which only shows the best model submitted by each developer):
+```python
+df = chai.display_leaderboard(detailed=False)
+```
+
 To see how your model performs against other models, run:
 ```python
-df = chai.display_leaderboard()
+df = chai.display_leaderboard(detailed=True)
 ```
 which prints out the current leaderboard according to the most recent competition metrics, you can also access raw leaderboard is dumped to `df`
 
