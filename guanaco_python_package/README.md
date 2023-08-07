@@ -69,7 +69,7 @@ import chai_guanaco as chai
 
 model_url = "NousResearch/Llama-2-7b-chat-hf" # Your model URL
 
-generation_params = {'temperature': 0.75, 'repetition_penalty': 1.13, 'top_p': 0.2, "top_k": 40, "stopping_words": ['\n']}
+generation_params = {'temperature': 0.75, 'frequency_penalty': 0.2, 'presence_penalty': 0.2, 'top_p': 0.2, "top_k": 40, "stopping_words": ['\n']}
 submission_parameters = {'model_repo': model_url, 'generation_params': generation_params, 'model_name': 'my-awesome-llama'}
 
 submitter = chai.ModelSubmitter()
