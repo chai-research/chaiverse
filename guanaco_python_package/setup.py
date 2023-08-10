@@ -11,7 +11,7 @@ with open('requirements.txt') as f:
 if os.environ.get('CI_COMMIT_TAG', None):
     version = os.environ['CI_COMMIT_TAG']
 else:
-    version = "0.0.42"
+    version = "1.1.7"
 
 setup(
     name='chai-guanaco',

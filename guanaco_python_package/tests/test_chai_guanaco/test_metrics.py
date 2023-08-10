@@ -89,13 +89,13 @@ def test_get_leaderboard(data_dir_mock, get_ids_mock, tmpdir):
 def test_get_submission_metrics():
     results = metrics.get_submission_metrics('wizard-vicuna-13b-bo4')
     expected_metrics = {
-            'mcl': 31.507042253521128,
-            'thumbs_up_ratio': 0.7464788732394366,
-            'thumbs_up_ratio_se': 0.022459625112416903,
-            'retry_score': 0.08716323296354993,
-            'user_engagement': 328.08592882430924,
-            'user_engagement_se': 31.498130560129095,
-            'total_feedback_count': 71
+            'mcl': 28.849162011173185,
+            'thumbs_up_ratio': 0.7560521415270018,
+            'thumbs_up_ratio_se': 0.00795905700008803,
+            'retry_score': 0.12822466528790682,
+            'user_engagement': 218.09694431688567,
+            'user_engagement_se': 12.29193183255007,
+            'total_feedback_count': 537
             }
     assert results == expected_metrics
 

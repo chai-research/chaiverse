@@ -1,4 +1,3 @@
-from datetime import datetime
 import requests
 
 import numpy as np
@@ -12,20 +11,24 @@ from chai_guanaco.utils import print_color, cache
 
 
 LEADERBOARD_ENDPOINT = "/leaderboard"
-FEEDBACK_CUTOFF_DAYS = 7
-MINIMUM_FEEDBACK_NUMBER_TO_DISPLAY = 120
+PUBLIC_LEADERBOARD_MINIMUM_FEEDBACK_COUNT = 100
 LEADERBOARD_DISPLAY_COLS = [
     'developer_uid',
     'model_name',
     'thumbs_up_ratio',
     'user_engagement',
     'retry_score',
+    'total_feedback_count',
     'overall_rank',
 ]
 
 
 @auto_authenticate
-def display_leaderboard(developer_key=None, regenerate=False, detailed=False):
+def display_leaderboard(
+        developer_key=None,
+        regenerate=False,
+        detailed=False,
+        ):
     df = cache(get_leaderboard, regenerate)(developer_key)
     _print_formatted_leaderboard(df, detailed)
     return df
@@ -46,16 +49,17 @@ def get_leaderboard(developer_key=None):
 def get_submission_metrics(submission_id, developer_key):
     feedback = get_feedback(submission_id, developer_key)
     feedback_metrics = FeedbackMetrics(feedback.raw_data)
-
-    metrics = {
-        'mcl': feedback_metrics.mcl,
-        'thumbs_up_ratio': feedback_metrics.thumbs_up_ratio,
-        'thumbs_up_ratio_se': feedback_metrics.thumbs_up_ratio_se,
-        'retry_score': feedback_metrics.retry_score,
-        'user_engagement': feedback_metrics.mean_user_engagement,
-        'user_engagement_se': feedback_metrics.user_engagement_se,
-        'total_feedback_count': feedback_metrics.total_feedback_count,
-    }
+    metrics = {}
+    if len(feedback_metrics.convo_metrics) > 0:
+        metrics = {
+            'mcl': feedback_metrics.mcl,
+            'thumbs_up_ratio': feedback_metrics.thumbs_up_ratio,
+            'thumbs_up_ratio_se': feedback_metrics.thumbs_up_ratio_se,
+            'retry_score': feedback_metrics.retry_score,
+            'user_engagement': feedback_metrics.mean_user_engagement,
+            'user_engagement_se': feedback_metrics.user_engagement_se,
+            'total_feedback_count': feedback_metrics.total_feedback_count,
+        }
     return metrics
 
 
@@ -71,7 +75,7 @@ def get_all_historical_submissions(developer_key):
 
 class FeedbackMetrics():
     def __init__(self, feedback_data):
-        feedbacks = _filter_feedbacks(feedback_data['feedback'])
+        feedbacks = feedback_data['feedback']
         self.feedbacks = feedbacks.values()
 
     @property
@@ -163,6 +167,7 @@ def _get_processed_leaderboard(df):
     df['model_name'] = df['model_name'].fillna(df['submission_id'])
     df = _format_leaderboard_date(df)
     df = _filter_submissions_with_few_feedback(df)
+    df = df.reset_index(drop=True)
     df = _add_overall_rank(df)
     return df
 
@@ -174,13 +179,13 @@ def _format_leaderboard_date(df):
 
 
 def _get_df_with_unique_hf_repo(df):
-    df = df.sort_values(['total_feedback_count'], ascending=False)
+    df = df.sort_values(['overall_rank'], ascending=True)
     df = df.drop_duplicates('model_repo', keep='first')
     return df
 
 
 def _filter_submissions_with_few_feedback(df):
-    filtered_df = df[df.total_feedback_count > MINIMUM_FEEDBACK_NUMBER_TO_DISPLAY]
+    filtered_df = df[df.total_feedback_count >= PUBLIC_LEADERBOARD_MINIMUM_FEEDBACK_COUNT]
     return filtered_df
 
 
@@ -207,21 +212,3 @@ def _pprint_leaderboard(df, title, sort_by, detailed=False, ascending=True):
     df = df.sort_values(sort_by, ascending=ascending).reset_index(drop=True)
     df = df if detailed else _get_df_with_unique_dev_id(df)
     print(df.round(3).head(30))
-
-
-def _filter_feedbacks(feedbacks):
-    out = {k: v for k, v in feedbacks.items() if _is_n_days_within_current_date(k)}
-    return out
-
-
-def _is_n_days_within_current_date(convo_id):
-    timestamp = _get_timestamp_from_convo_id(convo_id)
-    current_utc = datetime.utcnow()
-    delta = current_utc - timestamp
-    return delta.days <= FEEDBACK_CUTOFF_DAYS
-
-
-def _get_timestamp_from_convo_id(convo_id):
-    timestamp = int(convo_id.split('_')[-1])
-    timestamp = datetime.utcfromtimestamp(timestamp)
-    return timestamp
