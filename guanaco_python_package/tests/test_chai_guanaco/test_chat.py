@@ -33,7 +33,8 @@ def test_submission_chatbot(mock_requests, mock_input, tmpdir):
             ],
             'bot_name': 'Tom',
             'user_name': 'You'
-        }
+        },
+        timeout=20
     )
 
 
@@ -56,7 +57,7 @@ def test_chat(mock_request):
     response.status_code = 200
     response.json.return_value = output
 
-    out = bot.response('hey!')
+    out = bot.get_response('hey!')
     assert out == output
 
     expected_payload = {
@@ -74,9 +75,11 @@ def test_chat(mock_request):
     mock_request.post.assert_called_once_with(
         url=expected_url,
         json=expected_payload,
-        headers=expected_headers)
+        headers=expected_headers,
+        timeout=20
+    )
 
-    bot.response('I am fine')
+    bot.get_response('I am fine')
     expected_payload = {
         "memory": 'Bot memory',
         "prompt": 'Bot prompt',
@@ -92,7 +95,9 @@ def test_chat(mock_request):
     mock_request.post.assert_called_with(
         url=expected_url,
         json=expected_payload,
-        headers=expected_headers)
+        headers=expected_headers,
+        timeout=20
+    )
 
 
 def create_dummy_bot_config(save_dir):

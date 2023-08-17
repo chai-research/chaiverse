@@ -52,7 +52,7 @@ class SubmissionChatbot():
         self._print_greetings_header(bot_config)
         user_input = input("You: ")
         while user_input != 'exit':
-            response = bot.response(user_input)
+            response = bot.get_response(user_input)
             self._print_bot_response(bot_config, response, show_model_input)
             user_input = input("You: ")
 
@@ -107,13 +107,15 @@ class Bot:
         self.bot_config = bot_config
         self._chat_history = self._init_chat_history()
 
-    def response(self, user_input):
-        self._update_chat_history(user_input, 'user')
-        response = self._get_response()
-        self._update_chat_history(response['model_output'], self.bot_config.bot_label)
-        return response
+    def get_response(self, user_input):
+        response = self._get_raw_response(user_input)
+        assert response.status_code == 200, response.text
+        model_output = response.json()['model_output']
+        self._update_chat_history(model_output, self.bot_config.bot_label)
+        return response.json()
 
-    def _get_response(self):
+    def _get_raw_response(self, user_input):
+        self._update_chat_history(user_input, 'user')
         payload = {
             "memory": self.bot_config.memory,
             "prompt": self.bot_config.prompt,
@@ -122,9 +124,8 @@ class Bot:
             "user_name": "You"
         }
         headers = {"Authorization": f"Bearer {self.developer_key}"}
-        response = requests.post(url=self._url, json=payload, headers=headers)
-        assert response.status_code == 200, response.text
-        return response.json()
+        response = requests.post(url=self._url, json=payload, headers=headers, timeout=20)
+        return response
 
     @property
     def _url(self):
