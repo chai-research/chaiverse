@@ -2,7 +2,7 @@ import mock
 import os
 import json
 
-from chai_guanaco.chat import Bot, BotConfig, SubmissionChatbot
+from chai_guanaco.chat import Bot, BotConfig, SubmissionChatbot, get_chat_endpoint_url
 
 
 @mock.patch('builtins.input')
@@ -41,7 +41,7 @@ def test_submission_chatbot(mock_requests, mock_input, tmpdir):
 
 @mock.patch('chai_guanaco.chat.requests')
 def test_chat(mock_request):
-    submission_id = 'test-model'
+    url = 'http://guanaco/test-model/chat'
     developer_key = 'CR-devkey'
 
     config_bot = BotConfig(
@@ -50,7 +50,7 @@ def test_chat(mock_request):
         first_message='this is the first message',
         bot_label='Bot name')
 
-    bot = Bot(submission_id, developer_key, config_bot)
+    bot = Bot(url, developer_key, config_bot)
 
     output = {'model_input': 'some_input', 'model_output': 'how are you?'}
     response = mock_request.post.return_value
@@ -70,10 +70,9 @@ def test_chat(mock_request):
         "bot_name": 'Bot name',
         "user_name": "You",
     }
-    expected_url = "https://guanaco-submitter.chai-research.com/models/test-model/chat"
     expected_headers = {"Authorization": "Bearer CR-devkey"}
     mock_request.post.assert_called_once_with(
-        url=expected_url,
+        url=url,
         json=expected_payload,
         headers=expected_headers,
         timeout=20
@@ -93,7 +92,7 @@ def test_chat(mock_request):
         "user_name": "You",
     }
     mock_request.post.assert_called_with(
-        url=expected_url,
+        url=url,
         json=expected_payload,
         headers=expected_headers,
         timeout=20
@@ -109,3 +108,9 @@ def create_dummy_bot_config(save_dir):
     save_path = os.path.join(save_dir, 'dummy_bot.json')
     with open(save_path, 'w') as f:
         json.dump(bot_config, f)
+
+
+def test_get_chat_endpoint_url():
+    url = get_chat_endpoint_url('my-submission_v2')
+    expected_url = "https://guanaco-submitter.chai-research.com/models/my-submission_v2/chat"
+    assert url == expected_url

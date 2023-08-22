@@ -48,7 +48,8 @@ class SubmissionChatbot():
         show_model_input: bool - whether to display the raw model input to your language model
         """
         bot_config = self._get_bot_config(bot_config_file_name)
-        bot = Bot(self.submission_id, self.developer_key, bot_config)
+        url = get_chat_endpoint_url(self.submission_id)
+        bot = Bot(url, self.developer_key, bot_config)
         self._print_greetings_header(bot_config)
         user_input = input("You: ")
         while user_input != 'exit':
@@ -59,7 +60,7 @@ class SubmissionChatbot():
     @staticmethod
     def show_available_bots():
         avaliable_bots = get_available_bots()
-        print_color('Avaliable Bots:', 'yellow')
+        print_color('Available Bots:', 'yellow')
         print(avaliable_bots)
 
     @staticmethod
@@ -99,10 +100,10 @@ class Bot:
 
     def __init__(
             self,
-            submission_id,
+            url_endpoint,
             developer_key,
             bot_config):
-        self.submission_id = submission_id
+        self.url = url_endpoint
         self.developer_key = developer_key
         self.bot_config = bot_config
         self._chat_history = self._init_chat_history()
@@ -124,13 +125,8 @@ class Bot:
             "user_name": "You"
         }
         headers = {"Authorization": f"Bearer {self.developer_key}"}
-        response = requests.post(url=self._url, json=payload, headers=headers, timeout=20)
+        response = requests.post(url=self.url, json=payload, headers=headers, timeout=20)
         return response
-
-    @property
-    def _url(self):
-        endpoint = f'/models/{self.submission_id}/chat'
-        return BASE_URL + endpoint
 
     def _update_chat_history(self, message, sender):
         message = {"sender": sender, "message": message}
@@ -138,6 +134,11 @@ class Bot:
 
     def _init_chat_history(self):
         return [{"sender": self.bot_config.bot_label, "message": self.bot_config.first_message}]
+
+
+def get_chat_endpoint_url(submission_id):
+    endpoint = f'/models/{submission_id}/chat'
+    return BASE_URL + endpoint
 
 
 def get_available_bots():
