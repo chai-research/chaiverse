@@ -8,10 +8,6 @@
 [![Collaboration Banner](https://imgur.com/8oJSWan.png)](https://github.com/OpenAccess-AI-Collective/axolotl)
 
 
-## Sponsored By
-[![Sponsorship Banner](https://imgur.com/yovi11c.png)](https://www.coreweave.com/)
-
-
 ## Quick Start
 
 To train a LLaMA7b model and push it to huggingface it's just 5 lines of code 🥳
@@ -54,3 +50,8 @@ submission_parameters = {'model_repo': model_url, 'generation_params': generatio
 submitter = chai.ModelSubmitter()
 submission_id = submitter.submit(submission_parameters)
 ```
+
+## Sponsored By
+[![Sponsorship Banner](https://imgur.com/yovi11c.png)](https://www.coreweave.com/)
+
+
