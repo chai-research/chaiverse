@@ -7,6 +7,11 @@
 ## A Collaboration Between
 [![Collaboration Banner](https://imgur.com/8oJSWan.png)](https://github.com/OpenAccess-AI-Collective/axolotl)
 
+## Jupyter Quick Start + RunPod
+1. Go to runpod, create account
+2. During pod creation, edit the container image to `chaiverse/runpod` instead,
+   be sure to use 200GB for both container disk and volume disk
+3. Just run the Quickstart jupyter notebook, everything you need will be there 🚀
 
 ## Quick Start
 
