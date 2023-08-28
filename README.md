@@ -1,8 +1,15 @@
-[![Guanaco Banner](https://imgur.com/vUn3OXJ.png)](https://www.chai-research.com/competition.html)
+[![Chaiverse Banner](https://imgur.com/vUn3OXJ.png)](https://www.chai-research.com/competition.html)
 [![Pull Requests Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat)](http://makeapullrequest.com)
 [![first-timers-only Friendly](https://img.shields.io/badge/first--timers--only-friendly-blue.svg)](http://www.firsttimersonly.com/)
 
 [ChaiVerse](https://www.chai-research.com/competition.html) is the community's one-stop repository for large language model training, deployment and LIVE USERS evaluation package. Train models and win prizes!
+
+## A Collaboration Between
+[![Collaboration Banner](https://imgur.com/8oJSWan.png)](https://github.com/OpenAccess-AI-Collective/axolotl)
+
+
+## Sponsored By
+[![Sponsorship Banner](https://imgur.com/yovi11c.png)](https://www.coreweave.com/)
 
 
 ## Quick Start
