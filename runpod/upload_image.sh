@@ -12,5 +12,5 @@ fi
 IMAGE="chaiverse/runpod:$TAG"
 echo "Building image '$IMAGE'"
 
-docker build -t "$IMAGE" .
+docker build --no-cache -t "$IMAGE" .
 docker push "$IMAGE"
