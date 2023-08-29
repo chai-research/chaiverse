@@ -8,7 +8,7 @@
 [![Collaboration Banner](https://imgur.com/8oJSWan.png)](https://github.com/OpenAccess-AI-Collective/axolotl)
 
 ## Quick Start With Run Pod
-Just watch the following 3 minutes tutorial, our repo is made to run on runpod 🚀🚀 
+### Just watch the following 3 minutes tutorial, our repo is made to run on runpod 🚀🚀 
 [![Watch this video](https://imgur.com/mBwiQby.png)](https://vimeo.com/858817518?share=copy)
 
 ## Model Training
