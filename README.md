@@ -7,15 +7,11 @@
 ## A Collaboration Between
 [![Collaboration Banner](https://imgur.com/8oJSWan.png)](https://github.com/OpenAccess-AI-Collective/axolotl)
 
-## Jupyter Quick Start + RunPod
-[![Watch this video](https://imgur.com/uBRrVY7.png)](https://vimeo.com/858817518?share=copy)
-1. Go to runpod, create account
-2. During pod creation, edit the container image to `chaiverse/runpod` instead,
-   be sure to use 200GB for both container disk and volume disk
-3. Just run the Quickstart jupyter notebook, everything you need will be there 🚀
+## Quick Start With Run Pod
+Just watch the following 3 minutes tutorial, our repo is made to run on runpod 🚀🚀 
+[![Watch this video](https://imgur.com/mBwiQby.png)](https://vimeo.com/858817518?share=copy)
 
-## Quick Start
-
+## Model Training
 To train a LLaMA7b model and push it to huggingface it's just 5 lines of code 🥳
 
 ```python
