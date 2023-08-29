@@ -44,8 +44,8 @@ generation_params = {
         'top_p': 0.2,
         "top_k": 40,
         "stopping_words": ['\n'],
-        "presence_penalty": 0.,
-        "frequency_penalty": 0.
+        "presence_penalty": 1.5,
+        "frequency_penalty": 1.5
         }
 submission_parameters = {'model_repo': model_url, 'generation_params': generation_params, 'model_name': 'my-awesome-llama'}
 
