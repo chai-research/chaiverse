@@ -16,7 +16,7 @@ def mock_get():
 def test_feedback_object(example_feedback):
     data = example_feedback
     user_feedback = feedback.Feedback(data)
-    expected_cols = ['conversation_id', 'bot_id', 'user_id', 'conversation', 'thumbs_up', 'feedback', 'model_name']
+    expected_cols = ['conversation_id', 'bot_id', 'user_id', 'conversation', 'thumbs_up', 'feedback', 'model_name', 'public']
     assert all(user_feedback.df.columns == expected_cols)
     expected_conversation = 'Bot: hello!\nUser: emmm hi?\nBot (deleted): I hate u!'
     assert all(user_feedback.df.conversation == expected_conversation)

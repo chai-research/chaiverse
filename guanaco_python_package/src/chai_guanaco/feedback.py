@@ -26,7 +26,7 @@ class Feedback():
 
     def sample(self):
         df = self.df
-        single_row = df.sample()
+        single_row = df[df.public].sample()
         self.pprint_row(single_row)
 
     def pprint_row(self, row):
@@ -55,7 +55,8 @@ class Feedback():
                 'conversation': convo,
                 'thumbs_up': message_data['thumbs_up'],
                 'feedback': message_data['text'],
-                'model_name': message_data['model_name']
+                'model_name': message_data['model_name'],
+                'public': message_data.get('public', False),
         }
         return data
 
