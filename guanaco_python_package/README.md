@@ -14,7 +14,7 @@ It's the world's first open community challenge with real-user evaluations. You 
 
 # 🚀 Quick Start
 
-[Chai Guanaco Jupyter Notebook Quickstart](https://datalore.jetbrains.com/notebook/ABxxIKqVGejPnF8zH6zFpx/WQd6vDlfCDux5wzuoAeF8m)
+[Chai Guanaco Jupyter Notebook Quickstart](https://colab.research.google.com/drive/1FyCamT6icUo5Wlt6qqogHbyREHQQkAY8?usp=sharing)
 
 
 ## The Guanaco Guide
