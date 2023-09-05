@@ -1,7 +1,8 @@
 [![Guanaco Banner](https://imgur.com/vUn3OXJ.png)](https://www.chai-research.com/competition.html)
 
-[![Pull Requests Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat)](http://makeapullrequest.com)
+[![PyPI version](https://badge.fury.io/py/chai-guanaco.svg)](https://badge.fury.io/py/chai-guanaco)
 [![first-timers-only Friendly](https://img.shields.io/badge/first--timers--only-friendly-blue.svg)](http://www.firsttimersonly.com/)
+[![Pull Requests Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat)](http://makeapullrequest.com)
 
 
 # 🦙 Hosted By
