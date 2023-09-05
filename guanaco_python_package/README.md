@@ -5,7 +5,7 @@
 
 
 # 🦙 Hosted & Sponsored By
-<a href="https://www.chai-research.com/"><img src="https://imgur.com/u3rOQDJ.png" alt="Chai Logo" height="90"/></a>
+<a href="https://www.chai-research.com/"><img src="https://imgur.com/odX7Jz4.png" alt="Chai Logo" height="90"/></a>
 
 [Chai Guanaco](https://www.chai-research.com/competition.html) is part of the Chai Guanaco Competition, accelerating community AGI.
 
