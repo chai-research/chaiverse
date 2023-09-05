@@ -11,7 +11,7 @@
 
 It's the world's first open community challenge with real-user evaluations. You models will be directly deployed on the [Chai App](http://tosto.re/chaiapp) where our over 500K daily active users will be providing live feedback. Get to top of the leaderboard and share the $1 million cash prize!
 
-# Quick Start
+# 🚀 Quick Start
 
 [Chai Guanaco Jupyter Notebook Quickstart](https://datalore.jetbrains.com/notebook/ABxxIKqVGejPnF8zH6zFpx/WQd6vDlfCDux5wzuoAeF8m)
 
@@ -39,7 +39,7 @@ It's the world's first open community challenge with real-user evaluations. You 
 
 [![Chai Pipeline](https://imgur.com/LtMWOAq.png)](https://www.chai-research.com/competition.html)
 
-## 🚀 Getting Started
+## Getting Started
 
 **Getting Developer Key**
 
