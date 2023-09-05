@@ -42,6 +42,7 @@ def test_get_leaderboard(data_dir_mock, get_ids_mock, tmpdir):
             'thumbs_up_ratio': 0.45454545454545453,
             'thumbs_up_ratio_se': 0.043159749410503594,
             'retry_score': 0.14741035856573706,
+            'repetition': 0.093097,
             'user_engagement': 67.34005746050721,
             'user_engagement_se': 18.57789825723364,
             'total_feedback_count': 33
@@ -59,6 +60,7 @@ def test_get_leaderboard(data_dir_mock, get_ids_mock, tmpdir):
             'thumbs_up_ratio': 0.41148325358851673,
             'thumbs_up_ratio_se': 0.016750888484181537,
             'retry_score': 0.22954380883417813,
+            'repetition': 0.262566,
             'user_engagement': 75.09995515460673,
             'user_engagement_se': 6.7271173705601095,
             'total_feedback_count': 209
@@ -76,9 +78,10 @@ def test_get_leaderboard(data_dir_mock, get_ids_mock, tmpdir):
             'thumbs_up_ratio': 0.48214285714285715,
             'thumbs_up_ratio_se': 0.03336504343390119,
             'retry_score': 0.20647773279352227,
+            'repetition': 0.072080,
             'user_engagement': 86.49293170787536,
             'user_engagement_se': 15.430467887932489,
-            'total_feedback_count': 56
+            'total_feedback_count': 56,
             }
     ]
     pd.testing.assert_frame_equal(df, pd.DataFrame(expected_data))
@@ -93,6 +96,7 @@ def test_get_submission_metrics():
             'thumbs_up_ratio': 0.7560521415270018,
             'thumbs_up_ratio_se': 0.00795905700008803,
             'retry_score': 0.12822466528790682,
+            'repetition': 0.11065323789826058,
             'user_engagement': 218.09694431688567,
             'user_engagement_se': 12.29193183255007,
             'total_feedback_count': 537
@@ -151,6 +155,44 @@ def test_print_formatted_leaderboard():
         ]
     assert list(df.columns) == expected_columns
     assert pd.api.types.is_integer_dtype(df['overall_rank'])
+
+
+def test_get_repetition_score_is_one_if_all_responses_are_the_same():
+    responses = ['Hi', 'Hi', 'hi']
+    score = metrics.get_repetition_score(responses)
+    assert score == 1.
+
+
+def test_get_repetition_score_is_zero_if_all_responses_are_different():
+    responses = ['Hi', 'Hey', 'How are you?']
+    score = metrics.get_repetition_score(responses)
+    assert score == 0.
+
+
+def test_get_repetition_score_ignores_repetition():
+    responses = ['Hi !', '...Hi', 'hi']
+    score = metrics.get_repetition_score(responses)
+    assert score == 1.
+
+
+def test_get_repetition_score_handels_corrupt_responses():
+    responses = ['! !', '...', '.']
+    score = metrics.get_repetition_score(responses)
+    assert score == 1.
+
+
+def test_get_repetition_score_handels_semi_corrupt_responses():
+    responses = ['Heya', '...', '...']
+    score = metrics.get_repetition_score(responses)
+    assert score == 0.5
+
+
+def test_get_repetition_score():
+    bad_responses = ['Hi! I am Tom', 'Hey! I am Val', 'Hi, im tOM']
+    good_responses = ['Hey! I am Tom', 'Hello there, I am Val', 'Byee~~~']
+    bad_score = metrics.get_repetition_score(bad_responses)
+    good_score = metrics.get_repetition_score(good_responses)
+    assert bad_score > good_score
 
 
 def historical_submisions():
