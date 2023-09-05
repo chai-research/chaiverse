@@ -1,4 +1,5 @@
 import requests
+from datetime import datetime
 import string
 
 import numpy as np
@@ -67,9 +68,7 @@ def get_submission_metrics(submission_id, developer_key):
 
 
 def get_all_historical_submissions(developer_key):
-    headers = {
-        "developer_key": developer_key,
-    }
+    headers = {"developer_key": developer_key}
     url = get_url(LEADERBOARD_ENDPOINT)
     resp = requests.get(url, headers=headers)
     assert resp.status_code == 200, resp.json()
@@ -214,7 +213,8 @@ def _get_processed_leaderboard(df):
 
 
 def _format_leaderboard_date(df):
-    df['date'] = pd.to_datetime(df['timestamp']).dt.date
+    df['timestamp'] = df.apply(lambda x: datetime.fromisoformat(x['timestamp']), axis=1)
+    df['date'] = df['timestamp'].dt.date
     df.drop(['timestamp'], axis=1, inplace=True)
     return df
 

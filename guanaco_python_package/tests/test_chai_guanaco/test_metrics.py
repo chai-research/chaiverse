@@ -132,7 +132,7 @@ def test_print_formatted_leaderboard():
         'thumbs_up_ratio': [0.1, 0.5, 0.8, 0.2],
         'model_name': ['psutil', 'htop', 'watch', 'gunzip'],
         'developer_uid': ['tom', 'tom', 'val', 'zl'],
-        'timestamp': ['2023-07-24 18:22:40+00:00'] * 4,
+        'timestamp': ['2023-07-24 18:22:40+00:00'] * 3 + ['2023-07-24T18:22:40+00:00'],
         'model_repo': ['psutil', 'psutil', 'watch', 'gunzip']
     }
     all_metrics_df = pd.DataFrame(data)
