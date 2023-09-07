@@ -1,10 +1,14 @@
 import itertools
+import sys
+
 import requests
 import time
 
 from chai_guanaco import utils
 from chai_guanaco.login_cli import auto_authenticate
 
+if 'ipykernel' in sys.modules:
+    from IPython.display import clear_output
 
 BASE_URL = "https://guanaco-submitter.chai-research.com"
 SUBMISSION_ENDPOINT = "/models/submit"
@@ -33,6 +37,7 @@ class ModelSubmitter:
     submitter = ModelSubmitter(developer_key)
     submitter.submit(submission_params)
     """
+
     @auto_authenticate
     def __init__(self, developer_key=None, verbose=False):
         self.developer_key = developer_key
@@ -97,7 +102,12 @@ class ModelSubmitter:
         return itertools.cycle(animations)
 
     def _display_animation(self, status):
-        print(f" {next(self._animation)} {status}...", end='\r')
+        end = '\r'
+        if 'ipykernel' in sys.modules:
+            end = ''
+            clear_output(wait=True)
+            print("TEEE")
+        print(f" {next(self._animation)} {status}...", end=end)
 
     def _print_submission_header(self, submission_id):
         utils.print_color(f'\nModel Submission ID: {submission_id}', 'green')
