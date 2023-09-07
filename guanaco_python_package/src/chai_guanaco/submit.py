@@ -106,7 +106,6 @@ class ModelSubmitter:
         if 'ipykernel' in sys.modules:
             end = ''
             clear_output(wait=True)
-            print("TEEE")
         print(f" {next(self._animation)} {status}...", end=end)
 
     def _print_submission_header(self, submission_id):
