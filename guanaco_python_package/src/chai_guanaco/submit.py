@@ -4,18 +4,22 @@ import sys
 import requests
 import time
 
-from chai_guanaco import utils
+from chai_guanaco.utils import print_color
 from chai_guanaco.login_cli import auto_authenticate
 
 if 'ipykernel' in sys.modules:
-    from IPython.display import clear_output
+    from IPython.core.display import display, HTML
 
 BASE_URL = "https://guanaco-submitter.chai-research.com"
 SUBMISSION_ENDPOINT = "/models/submit"
 ALL_SUBMISSION_STATUS_ENDPOINT = "/models/"
 INFO_ENDPOINT = "/models/{submission_id}"
 DEACTIVATE_ENDPOINT = "/models/{submission_id}/deactivate"
-TEARDOWN_ENDPOINT = "/models/{submission_id}/teardown"
+
+
+def get_url(endpoint):
+    base_url = BASE_URL
+    return base_url + endpoint
 
 
 class ModelSubmitter:
@@ -25,7 +29,6 @@ class ModelSubmitter:
     Attributes
     --------------
     developer_key : str
-    verbose       : str - Print deployment logs
 
     Methods
     --------------
@@ -39,14 +42,12 @@ class ModelSubmitter:
     """
 
     @auto_authenticate
-    def __init__(self, developer_key=None, verbose=False):
+    def __init__(self, developer_key=None):
         self.developer_key = developer_key
-        self.verbose = verbose
         self._animation = self._spinner_animation_generator()
         self._progress = 0
         self._sleep_time = 0.5
         self._get_request_interval = int(10 / self._sleep_time)
-        self._logs_cache = []
 
     def submit(self, submission_params):
         """
@@ -82,9 +83,12 @@ class ModelSubmitter:
 
     def _wait_for_model_submission(self, submission_id):
         status = 'pending'
+        if 'ipykernel' in sys.modules:
+            _display_colab_loading_spinner_with_text()
         while status not in {'deployed', 'failed', 'inactive'}:
             status = self._get_submission_status(submission_id)
-            self._display_animation(status)
+            if 'ipykernel' not in sys.modules:
+                self._display_terminal_animation(status)
             time.sleep(self._sleep_time)
         return status
 
@@ -93,7 +97,6 @@ class ModelSubmitter:
         status = 'pending'
         if self._progress % self._get_request_interval == 0:
             model_info = get_model_info(submission_id, self.developer_key)
-            self._print_latest_logs(model_info)
             status = model_info.get('status')
         return status
 
@@ -101,15 +104,11 @@ class ModelSubmitter:
         animations = ['⣾', '⣽', '⣻', '⢿', '⡿', '⣟', '⣯', '⣷']
         return itertools.cycle(animations)
 
-    def _display_animation(self, status):
-        end = '\r'
-        if 'ipykernel' in sys.modules:
-            end = ''
-            clear_output(wait=True)
-        print(f" {next(self._animation)} {status}...", end=end)
+    def _display_terminal_animation(self, status):
+        print(f" {next(self._animation)} {status}...", end='\r')
 
     def _print_submission_header(self, submission_id):
-        utils.print_color(f'\nModel Submission ID: {submission_id}', 'green')
+        print_color(f'\nModel Submission ID: {submission_id}', 'green')
         print("Your model is being deployed to Chai Guanaco, please wait for approximately 10 minutes...")
 
     def _print_submission_result(self, status):
@@ -119,17 +118,7 @@ class ModelSubmitter:
         text = text_success if success else text_failed
         color = 'green' if success else 'red'
         print('\n')
-        utils.print_color(f'\n{text}', color)
-
-    def _print_latest_logs(self, model_info):
-        if self.verbose:
-            logs = model_info.get("logs", [])
-            num_new_logs = len(logs) - len(self._logs_cache)
-            new_logs = logs[-num_new_logs:] if num_new_logs else []
-            self._logs_cache += new_logs
-            for log in new_logs:
-                message = utils.parse_log_entry(log)
-                print(message)
+        print_color(f'\n{text}', color)
 
 
 @auto_authenticate
@@ -171,12 +160,34 @@ def deactivate_model(submission_id, developer_key=None):
     return response.json()
 
 
-@auto_authenticate
-def teardown_model(submission_id, developer_key=None):
-    url = get_url(TEARDOWN_ENDPOINT)
-    url = url.format(submission_id=submission_id)
-    headers = {'Authorization': f"Bearer {developer_key}"}
-    response = requests.get(url=url, headers=headers)
-    assert response.status_code == 200, response.json()
-    print(response.json())
-    return response.json()
+def _display_colab_loading_spinner_with_text(status="Pending"):
+    spinner_css = """
+    .spinner-container {
+      display: flex;
+      align-items: center;
+    }
+
+    .spinner {
+      border: 2px solid rgba(255, 255, 255, 0.3);
+      border-radius: 50%;
+      border-top: 2px solid #000;
+      width: 12px;
+      height: 12px;
+      animation: spin 1s linear infinite;
+      margin-right: 8px;
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+    """
+
+    spinner_html = f"""
+    <div class="spinner-container">
+      <div class="spinner"></div>
+      <span>{status}...</span>
+    </div>
+    """
+
+    display(HTML(f"<style>{spinner_css}</style>{spinner_html}"))
