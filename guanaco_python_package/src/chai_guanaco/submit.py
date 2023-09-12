@@ -48,6 +48,7 @@ class ModelSubmitter:
         self._progress = 0
         self._sleep_time = 0.5
         self._get_request_interval = int(10 / self._sleep_time)
+        self._colab_display = None
 
     def submit(self, submission_params):
         """
@@ -83,12 +84,9 @@ class ModelSubmitter:
 
     def _wait_for_model_submission(self, submission_id):
         status = 'pending'
-        if 'ipykernel' in sys.modules:
-            _display_colab_loading_spinner_with_text()
         while status not in {'deployed', 'failed', 'inactive'}:
             status = self._get_submission_status(submission_id)
-            if 'ipykernel' not in sys.modules:
-                self._display_terminal_animation(status)
+            self._display_animation(status)
             time.sleep(self._sleep_time)
         return status
 
@@ -104,8 +102,25 @@ class ModelSubmitter:
         animations = ['⣾', '⣽', '⣻', '⢿', '⡿', '⣟', '⣯', '⣷']
         return itertools.cycle(animations)
 
+    def _display_animation(self, status):
+        if 'ipykernel' in sys.modules:
+            self._display_colab_animation(status)
+        else:
+            self._display_terminal_animation(status)
+
     def _display_terminal_animation(self, status):
-        print(f" {next(self._animation)} {status}...", end='\r')
+        text = self._get_animation_text(status)
+        print(text, end='\r')
+
+    def _display_colab_animation(self, status):
+        text = self._get_animation_text(status)
+        if not self._colab_display:
+            self._colab_display = display(text, display_id=True)
+        else:
+            self._colab_display.update(text)
+
+    def _get_animation_text(self, status):
+        return f" {next(self._animation)} {status}..."
 
     def _print_submission_header(self, submission_id):
         print_color(f'\nModel Submission ID: {submission_id}', 'green')
@@ -158,36 +173,3 @@ def deactivate_model(submission_id, developer_key=None):
     assert response.status_code == 200, response.json()
     print(response.json())
     return response.json()
-
-
-def _display_colab_loading_spinner_with_text(status="Pending"):
-    spinner_css = """
-    .spinner-container {
-      display: flex;
-      align-items: center;
-    }
-
-    .spinner {
-      border: 2px solid rgba(255, 255, 255, 0.3);
-      border-radius: 50%;
-      border-top: 2px solid #000;
-      width: 12px;
-      height: 12px;
-      animation: spin 1s linear infinite;
-      margin-right: 8px;
-    }
-
-    @keyframes spin {
-      0% { transform: rotate(0deg); }
-      100% { transform: rotate(360deg); }
-    }
-    """
-
-    spinner_html = f"""
-    <div class="spinner-container">
-      <div class="spinner"></div>
-      <span>{status}...</span>
-    </div>
-    """
-
-    display(HTML(f"<style>{spinner_css}</style>{spinner_html}"))
