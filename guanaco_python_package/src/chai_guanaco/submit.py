@@ -8,7 +8,7 @@ from chai_guanaco.utils import print_color
 from chai_guanaco.login_cli import auto_authenticate
 
 if 'ipykernel' in sys.modules:
-    from IPython.core.display import display, HTML
+    from IPython.core.display import display
 
 BASE_URL = "https://guanaco-submitter.chai-research.com"
 SUBMISSION_ENDPOINT = "/models/submit"
