@@ -48,7 +48,6 @@ class ModelSubmitter:
         self._progress = 0
         self._sleep_time = 0.5
         self._get_request_interval = int(10 / self._sleep_time)
-        self._colab_display = None
 
     def submit(self, submission_params):
         """
@@ -103,21 +102,17 @@ class ModelSubmitter:
         return itertools.cycle(animations)
 
     def _display_animation(self, status):
-        if 'ipykernel' in sys.modules:
-            self._display_colab_animation(status)
-        else:
-            self._display_terminal_animation(status)
-
-    def _display_terminal_animation(self, status):
         text = self._get_animation_text(status)
+        if 'ipykernel' in sys.modules:
+            self._display_colab_animation(text)
+        else:
+            self._display_terminal_animation(text)
+
+    def _display_terminal_animation(self, text):
         print(text, end='\r')
 
-    def _display_colab_animation(self, status):
-        text = self._get_animation_text(status)
-        if not self._colab_display:
-            self._colab_display = display(text, display_id=True)
-        else:
-            self._colab_display.update(text)
+    def _display_colab_animation(self, text):
+        display(text, display_id="animation")
 
     def _get_animation_text(self, status):
         return f" {next(self._animation)} {status}..."
