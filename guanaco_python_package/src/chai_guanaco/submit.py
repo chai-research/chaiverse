@@ -102,20 +102,11 @@ class ModelSubmitter:
         return itertools.cycle(animations)
 
     def _display_animation(self, status):
-        text = self._get_animation_text(status)
+        text = f" {next(self._animation)} {status}..."
         if 'ipykernel' in sys.modules:
-            self._display_colab_animation(text)
+            display(text, display_id="animation")
         else:
-            self._display_terminal_animation(text)
-
-    def _display_terminal_animation(self, text):
-        print(text, end='\r')
-
-    def _display_colab_animation(self, text):
-        display(text, display_id="animation")
-
-    def _get_animation_text(self, status):
-        return f" {next(self._animation)} {status}..."
+            print(text, end='\r')
 
     def _print_submission_header(self, submission_id):
         print_color(f'\nModel Submission ID: {submission_id}', 'green')
