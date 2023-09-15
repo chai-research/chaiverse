@@ -1,0 +1,6 @@
+click
+numpy
+pandas
+pydantic<2.0
+requests
+tqdm
