@@ -1,4 +1,6 @@
 import requests
+from datetime import datetime
+import string
 
 import numpy as np
 import pandas as pd
@@ -18,6 +20,7 @@ LEADERBOARD_DISPLAY_COLS = [
     'thumbs_up_ratio',
     'user_engagement',
     'retry_score',
+    'repetition',
     'total_feedback_count',
     'overall_rank',
 ]
@@ -56,6 +59,7 @@ def get_submission_metrics(submission_id, developer_key):
             'thumbs_up_ratio': feedback_metrics.thumbs_up_ratio,
             'thumbs_up_ratio_se': feedback_metrics.thumbs_up_ratio_se,
             'retry_score': feedback_metrics.retry_score,
+            'repetition': feedback_metrics.repetition_score,
             'user_engagement': feedback_metrics.mean_user_engagement,
             'user_engagement_se': feedback_metrics.user_engagement_se,
             'total_feedback_count': feedback_metrics.total_feedback_count,
@@ -64,9 +68,7 @@ def get_submission_metrics(submission_id, developer_key):
 
 
 def get_all_historical_submissions(developer_key):
-    headers = {
-        "developer_key": developer_key,
-    }
+    headers = {"developer_key": developer_key}
     url = get_url(LEADERBOARD_ENDPOINT)
     resp = requests.get(url, headers=headers)
     assert resp.status_code == 200, resp.json()
@@ -126,6 +128,12 @@ class FeedbackMetrics():
         total_bot_responses = sum([m.num_model_responses for m in self.convo_metrics])
         return 0 if (total_bot_responses) == 0 else total_retries / total_bot_responses
 
+    @property
+    def repetition_score(self):
+        scores = np.array([m.repetition_score for m in self.convo_metrics])
+        is_public = np.array([feedback.get('public', True) for feedback in self.feedbacks])
+        return np.nanmean(scores[is_public])
+
 
 class ConversationMetrics():
     def __init__(self, messages):
@@ -149,8 +157,40 @@ class ConversationMetrics():
         response_length = [len(m['content']) for m in self.messages if self._is_from_user(m)]
         return np.sum(response_length)
 
+    @property
+    def repetition_score(self):
+        responses = [m['content'] for m in self.messages if not self._is_from_user(m)]
+        score = np.nan if len(responses) < 2 else get_repetition_score(responses)
+        return score
+
     def _is_from_user(self, message):
         return '_bot' not in message['sender']['uid']
+
+
+def get_repetition_score(responses):
+    # average jaccard similarities over unigrams
+    list_of_tokens = _tokenize_responses(responses)
+    pairs = zip(list_of_tokens[:-1], list_of_tokens[1:])
+    similarities = [_get_jaccard_similarity(set1, set2) for set1, set2 in pairs]
+    return np.mean(similarities)
+
+
+def _get_jaccard_similarity(set1, set2):
+    intersection_len = len(set1.intersection(set2))
+    union_len = len(set1.union(set2))
+    return intersection_len / union_len
+
+
+def _tokenize_responses(responses):
+    return [set(_remove_punctuation(text).split()) for text in responses]
+
+
+def _remove_punctuation(text):
+    translation_table = str.maketrans('', '', string.punctuation)
+    cleaned_text = text.translate(translation_table)
+    if len(cleaned_text.split()) == 0:
+        cleaned_text = '...'
+    return cleaned_text.lower()
 
 
 def _print_formatted_leaderboard(raw_df, detailed):
@@ -173,7 +213,8 @@ def _get_processed_leaderboard(df):
 
 
 def _format_leaderboard_date(df):
-    df['date'] = pd.to_datetime(df['timestamp']).dt.date
+    df['timestamp'] = df.apply(lambda x: datetime.fromisoformat(x['timestamp']), axis=1)
+    df['date'] = df['timestamp'].dt.date
     df.drop(['timestamp'], axis=1, inplace=True)
     return df
 

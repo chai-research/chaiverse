@@ -1,13 +1,18 @@
-[![Guanaco Banner](https://imgur.com/wJHIeAU.png)](https://www.chai-research.com/competition.html)
+[![Guanaco Banner](https://imgur.com/vUn3OXJ.png)](https://www.chai-research.com/competition.html)
 
-[![Pull Requests Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat)](http://makeapullrequest.com)
+[![PyPI version](https://badge.fury.io/py/chai-guanaco.svg)](https://badge.fury.io/py/chai-guanaco)
 [![first-timers-only Friendly](https://img.shields.io/badge/first--timers--only-friendly-blue.svg)](http://www.firsttimersonly.com/)
+[![Pull Requests Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat)](http://makeapullrequest.com)
+
+
+# 🦙 Hosted By
+<a href="https://www.chai-research.com/"><img src="https://imgur.com/odX7Jz4.png" alt="Chai Logo" height="90"/></a>
 
 [Chai Guanaco](https://www.chai-research.com/competition.html) is part of the Chai Guanaco Competition, accelerating community AGI.
 
 It's the world's first open community challenge with real-user evaluations. You models will be directly deployed on the [Chai App](http://tosto.re/chaiapp) where our over 500K daily active users will be providing live feedback. Get to top of the leaderboard and share the $1 million cash prize!
 
-## Quick Start
+# 🚀 Quick Start
 
 [Chai Guanaco Jupyter Notebook Quickstart](https://colab.research.google.com/drive/1FyCamT6icUo5Wlt6qqogHbyREHQQkAY8?usp=sharing)
 
@@ -35,7 +40,7 @@ It's the world's first open community challenge with real-user evaluations. You 
 
 [![Chai Pipeline](https://imgur.com/LtMWOAq.png)](https://www.chai-research.com/competition.html)
 
-## 🚀 Getting Started
+## Getting Started
 
 **Getting Developer Key**
 
@@ -186,8 +191,6 @@ Here you will see all your model submission_ids along with their status, which i
 | ⚒️ [Build with us](https://boards.greenhouse.io/nexus/jobs/5319721003)| If you think what we are building is cool, join us!|
 
 
-## 🦙 Hosted & Sponsored By
-
-<a href="https://www.chai-research.com/"><img src="https://imgur.com/u3rOQDJ.png" alt="Chai Logo" height="90"/></a>
+# 🦙 Sponsored By
 
 <a href="https://www.coreweave.com/"><img src="https://imgur.com/oJyuH8q.png" alt="Coreweave Logo" height="70"/></a>
