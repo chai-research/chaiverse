@@ -17,4 +17,3 @@ def login(app: Application):
 
     app.credentials_file.parent.mkdir(parents=True, exist_ok=True)
     app.credentials_file.write_text(json.dumps({'api_key': api_key}), encoding='utf-8')
-    app.set_api_key(api_key)

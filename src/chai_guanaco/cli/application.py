@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import os
 from functools import cached_property
 from pathlib import Path
 
@@ -15,6 +16,9 @@ class Application:
 
     @cached_property
     def data_dir(self) -> Path:
+        if data_dir := os.getenv('GUANACO_DATA_DIR'):
+            return Path(data_dir)
+
         from platformdirs import user_data_dir
 
         return Path(user_data_dir('chai_guanaco', appauthor=False))

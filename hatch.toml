@@ -1,6 +1,8 @@
 [envs.default]
 dependencies = [
   "coverage[toml]>=6.2",
+  "freezegun",
+  "mock",
   "pytest",
   "pytest-mock",
   "vcrpy",

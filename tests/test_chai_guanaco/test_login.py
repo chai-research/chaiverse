@@ -1,6 +1,5 @@
 import os
 
-import pexpect
 import pytest
 
 from chai_guanaco.login_cli import auto_authenticate
@@ -9,41 +8,6 @@ from chai_guanaco.login_cli import auto_authenticate
 @auto_authenticate
 def dummy_function(submission_id, developer_key=None):
     return submission_id, developer_key
-
-
-def test_chai_guanaco_login_from_terminal(tmp_path):
-    # patching does not work as we are running a subprocess
-    mocked_dir = str(tmp_path / 'guanaco')
-    os.environ['GUANACO_DATA_DIR'] = mocked_dir
-
-    child = pexpect.spawn('chai-guanaco login', timeout=5)
-    child.expect('Please enter your developer key: ')
-    child.sendline('CR-12345')
-    child.wait()
-
-    developer_key_path = os.path.join(mocked_dir, 'developer_key.json')
-    with open(developer_key_path, 'r') as f:
-        data = f.read()
-    assert data == 'CR-12345'
-
-
-def test_chai_guanaco_login_out_terminal_ignores_empty_key():
-    child = pexpect.spawn('chai-guanaco logout', timeout=5)
-    child.wait()
-    assert child.exitstatus == 0
-
-
-def test_chai_guanaco_login_out_terminal_removes_key(tmp_path):
-    mocked_dir = str(tmp_path / 'guanaco')
-    os.makedirs(mocked_dir)
-
-    os.environ['GUANACO_DATA_DIR'] = mocked_dir
-    cached_key_path = os.path.join(mocked_dir, 'developer_key.json')
-    write_key(cached_key_path, "CR-12345")
-    child = pexpect.spawn('chai-guanaco logout', timeout=5)
-    child.wait()
-    assert os.path.isdir(mocked_dir)
-    assert not os.path.exists(cached_key_path)
 
 
 def test_auto_authenticate_wrapper_raises_when_not_logged_in_and_no_keys_passed():

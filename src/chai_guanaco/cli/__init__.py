@@ -1,7 +1,5 @@
 from __future__ import annotations
 
-from pathlib import Path
-
 import click
 
 from chai_guanaco.cli.leaderboard import leaderboard
@@ -23,6 +21,7 @@ def chai_guanaco(ctx: click.Context):
      \\____|_| |_|\\__,_|_|
     """
     import json
+    from pathlib import Path
 
     from chai_guanaco.cli.application import Application
 
