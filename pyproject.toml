@@ -16,13 +16,15 @@ dependencies = [
   "click",
   "numpy",
   "pandas",
+  "platformdirs",
   "pydantic<2.0",
   "requests",
+  "rich",
   "tqdm",
 ]
 
 [project.scripts]
-chai-guanaco = "chai_guanaco.login_cli:cli"
+chai-guanaco = "chai_guanaco.cli:main"
 
 [project.urls]
 Homepage = "https://www.chai-research.com"
