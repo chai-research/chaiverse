@@ -1,0 +1,22 @@
+# Global directories
+__pycache__/
+
+# Global files
+*.py[cod]
+*.dll
+*.so
+*.log
+*.DS_Store
+*.swp
+
+# Root directories
+/.benchmarks/
+/.idea/
+/.mypy_cache/
+/.pytest_cache/
+/.ruff_cache/
+/.vscode/
+/dist/
+
+# Root files
+/.coverage*

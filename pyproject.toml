@@ -1,0 +1,39 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "chai-guanaco"
+dynamic = ["version"]
+description = "Chai Guanaco"
+readme = "README.md"
+license = "MIT"
+requires-python = ">=3.8"
+authors = [
+  { name = "Chai Research Corp.", email = "hello@chai-research.com" },
+]
+dependencies = [
+  "click",
+  "numpy",
+  "pandas",
+  "pydantic<2.0",
+  "requests",
+  "tqdm",
+]
+
+[project.scripts]
+chai-guanaco = "chai_guanaco.login_cli:cli"
+
+[project.urls]
+Homepage = "https://www.chai-research.com"
+
+[tool.hatch.build.targets.sdist]
+include = [
+  "/src",
+]
+
+[tool.hatch.build.targets.wheel]
+only-include = ["src"]
+sources = ["src"]
+
+[tool.hatch.metadata.hooks.custom]
