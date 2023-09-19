@@ -102,7 +102,8 @@ class Bot:
             self,
             url_endpoint,
             developer_key,
-            bot_config):
+            bot_config
+    ):
         self.url = url_endpoint
         self.developer_key = developer_key
         self.bot_config = bot_config
