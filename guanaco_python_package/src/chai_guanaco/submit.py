@@ -21,6 +21,7 @@ class ModelSubmitter:
     Attributes
     --------------
     developer_key : str
+    verbose       : str - Print deployment logs
 
     Methods
     --------------
@@ -33,7 +34,7 @@ class ModelSubmitter:
     submitter.submit(submission_params)
     """
     @auto_authenticate
-    def __init__(self, developer_key=None):
+    def __init__(self, verbose=False, developer_key=None):
         self.developer_key = developer_key
         self._animation = self._spinner_animation_generator()
         self._progress = 0
@@ -111,13 +112,14 @@ class ModelSubmitter:
         utils.print_color(f'\n{text}', color)
 
     def _print_latest_logs(self, model_info):
-        logs = model_info.get("logs", [])
-        num_new_logs = len(logs) - len(self._logs_cache)
-        new_logs = logs[-num_new_logs:] if num_new_logs else []
-        self._logs_cache += new_logs
-        for log in new_logs:
-            message = utils.parse_log_entry(log)
-            print(message)
+        if self.verbose:
+            logs = model_info.get("logs", [])
+            num_new_logs = len(logs) - len(self._logs_cache)
+            new_logs = logs[-num_new_logs:] if num_new_logs else []
+            self._logs_cache += new_logs
+            for log in new_logs:
+                message = utils.parse_log_entry(log)
+                print(message)
 
 
 @auto_authenticate
