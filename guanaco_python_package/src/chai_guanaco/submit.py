@@ -6,7 +6,7 @@ from chai_guanaco import utils
 from chai_guanaco.login_cli import auto_authenticate
 
 
-BASE_URL = "http://localhost:5051"
+BASE_URL = "https://guanaco-submitter.chai-research.com"
 SUBMISSION_ENDPOINT = "/models/submit"
 ALL_SUBMISSION_STATUS_ENDPOINT = "/models/"
 INFO_ENDPOINT = "/models/{submission_id}"
@@ -34,8 +34,9 @@ class ModelSubmitter:
     submitter.submit(submission_params)
     """
     @auto_authenticate
-    def __init__(self, verbose=False, developer_key=None):
+    def __init__(self, developer_key=None, verbose=False):
         self.developer_key = developer_key
+        self.verbose = verbose
         self._animation = self._spinner_animation_generator()
         self._progress = 0
         self._sleep_time = 0.5

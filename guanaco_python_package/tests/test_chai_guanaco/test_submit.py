@@ -48,7 +48,7 @@ def mock_submission():
 
 
 def test_model_submitter(mock_submission, mock_post, mock_get_pending_to_success):
-    model_submitter = submit.ModelSubmitter("mock-key")
+    model_submitter = submit.ModelSubmitter(developer_key="mock-key")
     model_submitter._sleep_time = 0
     model_submitter._get_request_interval = 1
     model_submitter_params = {
