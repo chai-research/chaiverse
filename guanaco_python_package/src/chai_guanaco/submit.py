@@ -2,10 +2,11 @@ import itertools
 import requests
 import time
 
-from chai_guanaco.utils import print_color, get_url
+from chai_guanaco import utils
 from chai_guanaco.login_cli import auto_authenticate
 
 
+BASE_URL = "http://localhost:5051"
 SUBMISSION_ENDPOINT = "/models/submit"
 ALL_SUBMISSION_STATUS_ENDPOINT = "/models/"
 INFO_ENDPOINT = "/models/{submission_id}"
@@ -38,6 +39,7 @@ class ModelSubmitter:
         self._progress = 0
         self._sleep_time = 0.5
         self._get_request_interval = int(10 / self._sleep_time)
+        self._logs_cache = []
 
     def submit(self, submission_params):
         """
@@ -84,6 +86,7 @@ class ModelSubmitter:
         status = 'pending'
         if self._progress % self._get_request_interval == 0:
             model_info = get_model_info(submission_id, self.developer_key)
+            self._print_latest_logs(model_info)
             status = model_info.get('status')
         return status
 
@@ -95,7 +98,7 @@ class ModelSubmitter:
         print(f" {next(self._animation)} {status}...", end='\r')
 
     def _print_submission_header(self, submission_id):
-        print_color(f'\nModel Submission ID: {submission_id}', 'green')
+        utils.print_color(f'\nModel Submission ID: {submission_id}', 'green')
         print("Your model is being deployed to Chai Guanaco, please wait for approximately 10 minutes...")
 
     def _print_submission_result(self, status):
@@ -105,7 +108,16 @@ class ModelSubmitter:
         text = text_success if success else text_failed
         color = 'green' if success else 'red'
         print('\n')
-        print_color(f'\n{text}', color)
+        utils.print_color(f'\n{text}', color)
+
+    def _print_latest_logs(self, model_info):
+        logs = model_info.get("logs", [])
+        num_new_logs = len(logs) - len(self._logs_cache)
+        new_logs = logs[-num_new_logs:] if num_new_logs else []
+        self._logs_cache += new_logs
+        for log in new_logs:
+            message = utils.parse_log_entry(log)
+            print(message)
 
 
 @auto_authenticate

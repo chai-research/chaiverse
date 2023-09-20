@@ -1,4 +1,7 @@
-from functools import lru_cache
+from datetime import datetime
+import inspect
+import pickle
+import os
 from time import time
 import inspect
 import os
@@ -79,3 +82,20 @@ def _func_call_as_string(func, args, kwargs):
     arg_strs = [f'{name}={value!r}' for name, value in zip(param_names, args)]
     arg_strs += [f'{name}={value!r}' for name, value in kwargs.items()]
     return f"{func_name}({', '.join(arg_strs)})"
+
+
+def get_localised_timestamp(timestamp, timezone=None):
+    if not timezone:
+        breakpoint()
+        timezone = datetime.now().astimezone().tzinfo
+    timestamp = datetime.fromisoformat(timestamp)
+    timestamp = timestamp.astimezone(timezone)
+    return timestamp
+
+
+def parse_log_entry(log, timezone=None):
+    timestamp = get_localised_timestamp(log["timestamp"], timezone)
+    timestamp = timestamp.strftime("%H:%M:%S")
+    message = [timestamp, log["level"], log["entry"]]
+    message = ":".join(message)
+    return message
