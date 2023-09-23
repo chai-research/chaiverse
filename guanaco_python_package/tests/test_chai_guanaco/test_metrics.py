@@ -1,5 +1,6 @@
 import os
 import unittest.mock as mock
+from mock import patch
 
 import vcr
 import pandas as pd
@@ -11,14 +12,17 @@ from chai_guanaco import metrics
 RESOURCE_DIR = os.path.join(os.path.abspath(os.path.join(__file__, '..')), 'resources')
 
 
+@mock.patch('chai_guanaco.feedback._submission_is_deployed')
 @mock.patch('chai_guanaco.metrics.get_all_historical_submissions')
 @mock.patch('chai_guanaco.utils.guanaco_data_dir')
 @freeze_time('2023-07-28 00:00:00')
 @vcr.use_cassette(os.path.join(RESOURCE_DIR, 'test_get_leaderboard.yaml'))
-def test_get_leaderboard(data_dir_mock, get_ids_mock, tmpdir):
+def test_get_leaderboard(data_dir_mock, get_ids_mock, deployed_mock, tmpdir):
+    deployed_mock.return_value = True
     data_dir_mock.return_value = str(tmpdir)
     get_ids_mock.return_value = historical_submisions()
-    df = chai.get_leaderboard()
+    with patch("chai_guanaco.utils.get_all_historical_submissions", return_value={}):
+        df = chai.get_leaderboard()
     expected_cols = [
         'submission_id',
         'thumbs_up_ratio',
@@ -87,10 +91,13 @@ def test_get_leaderboard(data_dir_mock, get_ids_mock, tmpdir):
     pd.testing.assert_frame_equal(df, pd.DataFrame(expected_data))
 
 
+@mock.patch('chai_guanaco.feedback._submission_is_deployed')
 @vcr.use_cassette(os.path.join(RESOURCE_DIR, 'test_get_submission_metrics.yaml'))
 @freeze_time('2023-07-14 19:00:00')
-def test_get_submission_metrics():
-    results = metrics.get_submission_metrics('wizard-vicuna-13b-bo4')
+def test_get_submission_metrics(deployed_mock):
+    deployed_mock.return_value = True
+    with patch("chai_guanaco.utils.get_all_historical_submissions", return_value={}):
+        results = metrics.get_submission_metrics('wizard-vicuna-13b-bo4')
     expected_metrics = {
             'mcl': 28.849162011173185,
             'thumbs_up_ratio': 0.7560521415270018,

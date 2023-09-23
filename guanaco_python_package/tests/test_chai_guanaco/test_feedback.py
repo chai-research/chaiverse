@@ -1,4 +1,5 @@
-from mock import patch
+from mock import patch, Mock
+import os
 
 import pytest
 
@@ -30,18 +31,37 @@ def test_feedback_object(example_feedback):
     assert all(user_feedback.df.user_id == expected_user_id)
 
 
-def test_get_feedback(mock_get):
-    feedback.get_feedback(submission_id="test_model", developer_key="key")
+def test_get_feedback_with_cache(tmpdir):
+    submission_id = "test_submission"
+    developer_key = "test_key"
+
+    mock_submissions = {submission_id: {"status": "not_deployed"}}
+    mock_methods = {
+        "get_all_historical_submissions": Mock(return_value=mock_submissions),
+        "guanaco_data_dir": Mock(return_value=str(tmpdir)),
+    }
+    os.makedirs(os.path.join(tmpdir, 'cache'), exist_ok=True)
+
+    with patch.multiple("chai_guanaco.utils", **mock_methods):
+        with patch('chai_guanaco.feedback._get_latest_feedback', return_value='feedback'):
+            result = feedback.get_feedback(submission_id, developer_key)
+            expected_path = tmpdir / "cache" / f"{submission_id}.pkl"
+            assert expected_path.exists()
+            assert result == 'feedback'
+
+
+def test_get_latest_feedback(mock_get):
+    feedback._get_latest_feedback(submission_id="test_model", developer_key="key")
     expected_headers = {"developer_key": "key"}
     expected_url = "https://guanaco-feedback.chai-research.com/feedback/test_model"
     mock_get.assert_called_once_with(expected_url, headers=expected_headers)
 
 
-def test_get_feedback_raises_for_bad_request(mock_get):
+def test_get_latest_feedback_raises_for_bad_request(mock_get):
     mock_get.return_value.status_code = 500
     mock_get.return_value.json.return_value = {"error": "some error"}
     with pytest.raises(AssertionError) as ex:
-        feedback.get_feedback(submission_id="test_model", developer_key="key")
+        feedback._get_latest_feedback(submission_id="test_model", developer_key="key")
     assert "some error" in str(ex)
 
 

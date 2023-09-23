@@ -1,3 +1,0 @@
-[console_scripts]
-chai-guanaco = chai_guanaco.login_cli:cli
-

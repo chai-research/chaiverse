@@ -1,12 +1,14 @@
 import requests
+from pathlib import Path
 
 import pandas as pd
 
 from chai_guanaco.utils import print_color
+from chai_guanaco import utils
 from chai_guanaco.login_cli import auto_authenticate
 
 
-BASE_URL = "https://guanaco-feedback.chai-research.com"
+BASE_URL = 'https://guanaco-feedback.chai-research.com'
 FEEDBACK_ENDPOINT = "/feedback/{submission_id}"
 
 
@@ -88,6 +90,20 @@ class Feedback():
 
 @auto_authenticate
 def get_feedback(submission_id: str, developer_key=None):
+    submissions = utils.get_all_historical_submissions(developer_key)
+    is_deployed = _submission_is_deployed(submission_id, submissions)
+    load_feedback = _get_latest_feedback if is_deployed else _get_cached_feedback
+    feedback = load_feedback(submission_id, developer_key)
+    return feedback
+
+
+def _submission_is_deployed(submission_id, submissions):
+    submission_data = submissions.get(submission_id, {})
+    is_deployed = submission_data.get('status') == 'deployed'
+    return is_deployed
+
+
+def _get_latest_feedback(submission_id, developer_key):
     headers = {
         "developer_key": developer_key,
     }
@@ -96,4 +112,14 @@ def get_feedback(submission_id: str, developer_key=None):
     resp = requests.get(url, headers=headers)
     assert resp.status_code == 200, resp.json()
     feedback = Feedback(resp.json())
+    return feedback
+
+
+def _get_cached_feedback(submission_id, developer_key):
+    filename = Path(utils.guanaco_data_dir()) / 'cache' / f'{submission_id}.pkl'
+    try:
+        feedback = utils._load_from_cache(filename)
+    except FileNotFoundError:
+        feedback = _get_latest_feedback(submission_id, developer_key)
+        utils._save_to_cache(filename, feedback)
     return feedback

@@ -1,9 +1,18 @@
-import os
-import inspect
-import pickle
+from functools import lru_cache
 from time import time
+import inspect
+import os
+import pickle
+import requests
 
 CACHE_UPDATE_HOURS = 6
+BASE_URL = "https://guanaco-submitter.chai-research.com"
+LEADERBOARD_ENDPOINT = "/leaderboard"
+
+
+def get_url(endpoint):
+    base_url = BASE_URL
+    return base_url + endpoint
 
 
 def guanaco_data_dir():
@@ -21,6 +30,15 @@ def print_color(text, color):
               'red': '\033[91m'}
     assert color in colors.keys()
     print(f'{colors[color]}{text}\033[0m')
+
+
+@lru_cache(maxsize=None)
+def get_all_historical_submissions(developer_key):
+    headers = {"developer_key": developer_key}
+    url = get_url(LEADERBOARD_ENDPOINT)
+    resp = requests.get(url, headers=headers)
+    assert resp.status_code == 200, resp.json()
+    return resp.json()
 
 
 def cache(func, regenerate=False):

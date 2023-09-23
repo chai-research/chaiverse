@@ -2,20 +2,14 @@ import itertools
 import requests
 import time
 
-from chai_guanaco.utils import print_color
+from chai_guanaco.utils import print_color, get_url
 from chai_guanaco.login_cli import auto_authenticate
 
 
-BASE_URL = "https://guanaco-submitter.chai-research.com"
 SUBMISSION_ENDPOINT = "/models/submit"
 ALL_SUBMISSION_STATUS_ENDPOINT = "/models/"
 INFO_ENDPOINT = "/models/{submission_id}"
 DEACTIVATE_ENDPOINT = "/models/{submission_id}/deactivate"
-
-
-def get_url(endpoint):
-    base_url = BASE_URL
-    return base_url + endpoint
 
 
 class ModelSubmitter:

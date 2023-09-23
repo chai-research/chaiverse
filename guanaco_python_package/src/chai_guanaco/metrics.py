@@ -1,4 +1,3 @@
-import requests
 from datetime import datetime
 import string
 
@@ -8,11 +7,9 @@ from tqdm import tqdm
 
 from chai_guanaco.feedback import get_feedback
 from chai_guanaco.login_cli import auto_authenticate
-from chai_guanaco.submit import get_url
-from chai_guanaco.utils import print_color, cache
+from chai_guanaco.utils import print_color, cache, get_all_historical_submissions
 
 
-LEADERBOARD_ENDPOINT = "/leaderboard"
 PUBLIC_LEADERBOARD_MINIMUM_FEEDBACK_COUNT = 100
 LEADERBOARD_DISPLAY_COLS = [
     'developer_uid',
@@ -65,14 +62,6 @@ def get_submission_metrics(submission_id, developer_key):
             'total_feedback_count': feedback_metrics.total_feedback_count,
         }
     return metrics
-
-
-def get_all_historical_submissions(developer_key):
-    headers = {"developer_key": developer_key}
-    url = get_url(LEADERBOARD_ENDPOINT)
-    resp = requests.get(url, headers=headers)
-    assert resp.status_code == 200, resp.json()
-    return resp.json()
 
 
 class FeedbackMetrics():
