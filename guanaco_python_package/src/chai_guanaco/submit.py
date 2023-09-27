@@ -10,6 +10,7 @@ SUBMISSION_ENDPOINT = "/models/submit"
 ALL_SUBMISSION_STATUS_ENDPOINT = "/models/"
 INFO_ENDPOINT = "/models/{submission_id}"
 DEACTIVATE_ENDPOINT = "/models/{submission_id}/deactivate"
+TEARDOWN_ENDPOINT = "/models/{submission_id}/teardown"
 
 
 class ModelSubmitter:
@@ -138,6 +139,17 @@ def get_my_submissions(developer_key=None):
 @auto_authenticate
 def deactivate_model(submission_id, developer_key=None):
     url = get_url(DEACTIVATE_ENDPOINT)
+    url = url.format(submission_id=submission_id)
+    headers = {'Authorization': f"Bearer {developer_key}"}
+    response = requests.get(url=url, headers=headers)
+    assert response.status_code == 200, response.json()
+    print(response.json())
+    return response.json()
+
+
+@auto_authenticate
+def teardown_model(submission_id, developer_key=None):
+    url = get_url(TEARDOWN_ENDPOINT)
     url = url.format(submission_id=submission_id)
     headers = {'Authorization': f"Bearer {developer_key}"}
     response = requests.get(url=url, headers=headers)

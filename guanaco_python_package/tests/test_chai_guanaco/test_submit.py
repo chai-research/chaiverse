@@ -151,3 +151,13 @@ def test_deactivate_model(mock_get):
     expected_url = submit.get_url(submit.DEACTIVATE_ENDPOINT)
     expected_url = expected_url.format(submission_id = "test_model")
     mock_get.assert_called_once_with(url=expected_url, headers=expected_headers)
+
+
+def test_teardown_model(mock_get):
+    mock_get.return_value.status_code = 200
+    mock_get.return_value.json.return_value = ""
+    submit.teardown_model("test_model", developer_key="dev_key")
+    expected_headers = {"Authorization": "Bearer dev_key"}
+    expected_url = submit.get_url(submit.TEARDOWN_ENDPOINT)
+    expected_url = expected_url.format(submission_id = "test_model")
+    mock_get.assert_called_once_with(url=expected_url, headers=expected_headers)
