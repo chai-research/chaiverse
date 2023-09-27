@@ -5,7 +5,7 @@
 [![Pull Requests Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat)](http://makeapullrequest.com)
 
 
-# 🦙 Hosted By
+# Hosted By
 <a href="https://www.chai-research.com/"><img src="https://imgur.com/odX7Jz4.png" alt="Chai Logo" height="90"/></a>
 
 [Chai Guanaco](https://www.chai-research.com/competition.html) is part of the Chai Guanaco Competition, accelerating community AGI.
@@ -42,12 +42,12 @@ It's the world's first open community challenge with real-user evaluations. You 
 
 ## Getting Started
 
-**Getting Developer Key**
+#### **Getting Developer Key**
 
 Join the [competition discord](https://discord.gg/7mXdjAkw2s), introduce yourself and ask for a developer key. Login-based authentication is coming next 🤗
 
 
-**Installation**
+#### **Installation**
 
 Use [pip](https://github.com/pypa/pip) to install the Chai Guanaco package
 
@@ -63,37 +63,47 @@ chai-guanaco login
 
 And pass in your developer key when prompted, you can always logout using `chai-guanaco logout`.
 
-**Model Submission**
+#### **Model Submission**
 
-Upload any Llama based language model *with a tokenizer* to huggingface, i.e. [NousResearch/Llama-2-7b-chat-hf](https://huggingface.co/NousResearch/Llama-2-7b-chat-hf). Read [this guide](https://huggingface.co/docs/transformers/model_sharing) if you are unsure. Click the *Use in Transformers* button in huggingface to get the your huggingface model ID (i.e. "NousResearch/Llama-2-7b-chat-hf")
+Upload any Llama based language model *with a tokenizer* to huggingface, i.e. [ChaiML/phase2_winner_13b2](https://huggingface.co/ChaiML/phase2_winner_13b2).
+Read [this guide](https://huggingface.co/docs/transformers/model_sharing) if you are unsure.
 
 To submit model simply run:
 
 ```python
 import chai_guanaco as chai
 
-model_url = "NousResearch/Llama-2-7b-chat-hf" # Your model URL
+model_url = "ChaiML/phase2_winner_13b2" # Your model URL
 
-generation_params = {
-	'temperature': 1.0,
-	'repetition_penalty': 1.13,
+generation_parameters = {
+	'temperature': 0.8,
 	'top_p': 0.2,
 	"top_k": 40,
 	"stopping_words": ['\n'],
 	"presence_penalty": 0.,
-	"frequency_penalty": 0.
+	"frequency_penalty": 0.,
 	}
-submission_parameters = {'model_repo': model_url, 'generation_params': generation_params, 'model_name': 'my-awesome-llama'}
+
+submission_parameters = {
+    'model_repo': model_url,
+    'generation_params': generation_parameters,
+    'model_name': 'my-awesome-model',
+    }
 
 submitter = chai.ModelSubmitter()
 submission_id = submitter.submit(submission_parameters)
 ```
 
-This will display an animation while your model is being deployed, a typical
-deployment takes approximately 10 minutes. Note the `model_name` parameter is used for show-casing your model on the leaderboard and it should help you with identifying your model
+This will display an animation while your model is being deployed, a typical deployment takes approximately 10 minutes.
+Note the `model_name` parameter is used for show-casing your model on the leaderboard and it should help you with identifying your model
+
+- For more details on configuration and optimization of generation parameters, please check [Chai Prize Generation Parameters](https://wild-chatter-b52.notion.site/Chai-Prize-Generation-Parameters-bf6b64875dc4443986019e20fdbdc2bd).
+
+- To submit your model with custom formatting, you can create your own `PromptFormatter`.
+For more details and examples, please check [Chai Prize Prompt Format](https://wild-chatter-b52.notion.site/Chai-Prize-Prompt-Format-ec7986c40025493488a2f18e91c8cac9).
 
 
-**Chat With Your Model Submission**
+#### **Chat With Your Model Submission**
 
 Once your model is deployed, you can verify its behaviour and raw input by running:
 
@@ -116,7 +126,7 @@ Finally, to enter a chat session that prints out the raw input that was fed into
 chatbot.chat('nerd_girl', show_model_input=True)
 ```
 
-**Getting User Feedback**
+#### **Getting User Feedback**
 
 Once your model has been submitted, it is automatically deployed to the Chai Platform where real-life users will evaluate your model performance. To view their feedback, run:
 
@@ -136,7 +146,7 @@ print(df)
 
 This outputs a Pandas `DataFrame`, where each row corresponds to a user conversation with your model, together with their feedback.
 
-**Getting Live Leaderboard**
+#### **Getting Live Leaderboard**
 
 To view the public leaderboard used to determine prizes (which only shows the best model submitted by each developer):
 ```python
@@ -149,7 +159,7 @@ df = chai.display_leaderboard(detailed=True)
 ```
 which prints out the current leaderboard according to the most recent competition metrics, you can also access raw leaderboard is dumped to `df`
 
-**Re-Submitting Models**
+#### **Re-Submitting Models**
 
 Because it is a competition, you are allowed to test a single model at any given time. However, you can deactivate a model and submit a new one. To do this, simply run:
 
@@ -158,7 +168,7 @@ chai.deactivate_model(submission_id)
 ```
 Which will deactive your model, don't worry, all the model feedback will still be saved, it just means the model will no longer be exposed to users. You can then re-submit by repeating the model submission step.
 
-**Retrieve Your Model Submission IDs**
+#### **Retrieve Your Model Submission IDs**
 
 In case you have forgotten your submission ids / want to view all past submissions, run:
 
@@ -168,16 +178,13 @@ print(submission_ids)
 ```
 Here you will see all your model submission_ids along with their status, which is either `failed`, `inactive` or `deployed`.
 
-**Advanced Usage**
+#### **Advanced Usage**
 - This package caches various data, such as your developer key, in the folder `~/.chai-guanaco`. To change this, you can set the environment variable `GUANACO_DATA_DIR` to point to a different folder. You may need to re-run `chai-guanaco login` to update the cached developer key.
 - You can also access the raw feedback data by running
 	```python
 	model_feedback = chai.get_feedback(submission_id)
 	raw_data = model_feedback.raw_data
 	```
-- To submit your model with custom formatting, you can create your own
-  `PromptFormatter`. For more details and examples, please see [here](https://wild-chatter-b52.notion.site/Guanaco-Custom-Formatters-1f64f94b9cf54c819a341988aec5766a).
-
 
 
 ## Resources
@@ -185,12 +192,12 @@ Here you will see all your model submission_ids along with their status, which i
 | ---------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------|
 | 📒 [Fine tuning guide](https://huggingface.co/docs/transformers/training) | Guide on language model finetuning                                                           |
 | 💾 [Datasets](https://dataset-ideas.tiiny.site/) | Curated list of open-sourced datasets to get started with finetuning                                                  |
-| 💖 [Guanaco Discord](https://discord.gg/7mXdjAkw2s)                   | Our Guanaco competition discord                                                          |
+| 💖 [Chai Prize Discord](https://discord.gg/7mXdjAkw2s)                   | Our Chai Prize Competition discord                                                          |
 |🚀 [Deepspeed Guide](https://huggingface.co/docs/transformers/main_classes/deepspeed)     | Guide for training with Deepspeed (faster training without GPU bottleneck)    |
 |💬 [Example Conversations](https://huggingface.co/datasets/ChaiML/100_example_conversations)     | Here you can find 100 example conversations from the Chai Platform     |
 | ⚒️ [Build with us](https://boards.greenhouse.io/nexus/jobs/5319721003)| If you think what we are building is cool, join us!|
 
 
-# 🦙 Sponsored By
+# Sponsored By
 
 <a href="https://www.coreweave.com/"><img src="https://imgur.com/oJyuH8q.png" alt="Coreweave Logo" height="70"/></a>
