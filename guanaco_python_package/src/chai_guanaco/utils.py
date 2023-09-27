@@ -21,7 +21,7 @@ def get_url(endpoint):
 def guanaco_data_dir():
     home_dir = os.path.expanduser("~")
     data_dir = os.environ.get('GUANACO_DATA_DIR', f'{home_dir}/.chai-guanaco')
-    os.makedirs(data_dir, exist_ok=True)
+    os.makedirs(os.path.join(data_dir, 'cache'), exist_ok=True)
     return data_dir
 
 
