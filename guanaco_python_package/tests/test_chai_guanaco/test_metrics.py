@@ -1,6 +1,7 @@
 import os
 import unittest.mock as mock
 from mock import patch
+import numpy as np
 
 import vcr
 import pandas as pd
@@ -49,7 +50,8 @@ def test_get_leaderboard(data_dir_mock, get_ids_mock, deployed_mock, tmpdir):
             'repetition': 0.093097,
             'user_engagement': 67.34005746050721,
             'user_engagement_se': 18.57789825723364,
-            'total_feedback_count': 33
+            'total_feedback_count': 33,
+            'user_writing_speed': 2.258729,
             },
         {
             'submission_id': 'psiilu-funny-bunny-1-_1689922219',
@@ -67,7 +69,8 @@ def test_get_leaderboard(data_dir_mock, get_ids_mock, deployed_mock, tmpdir):
             'repetition': 0.262566,
             'user_engagement': 75.09995515460673,
             'user_engagement_se': 6.7271173705601095,
-            'total_feedback_count': 209
+            'total_feedback_count': 209,
+            'user_writing_speed': 2.812323,
             },
         {
             'submission_id': 'tehvenom-dolly-shygma_1690135695',
@@ -86,6 +89,7 @@ def test_get_leaderboard(data_dir_mock, get_ids_mock, deployed_mock, tmpdir):
             'user_engagement': 86.49293170787536,
             'user_engagement_se': 15.430467887932489,
             'total_feedback_count': 56,
+            'user_writing_speed': 3.146834,
             }
     ]
     pd.testing.assert_frame_equal(df, pd.DataFrame(expected_data))
@@ -99,15 +103,16 @@ def test_get_submission_metrics(deployed_mock):
     with patch("chai_guanaco.utils.get_all_historical_submissions", return_value={}):
         results = metrics.get_submission_metrics('wizard-vicuna-13b-bo4')
     expected_metrics = {
-            'mcl': 28.849162011173185,
-            'thumbs_up_ratio': 0.7560521415270018,
-            'thumbs_up_ratio_se': 0.00795905700008803,
-            'retry_score': 0.12822466528790682,
-            'repetition': 0.11065323789826058,
-            'user_engagement': 218.09694431688567,
-            'user_engagement_se': 12.29193183255007,
-            'total_feedback_count': 537
-            }
+        'mcl': 28.849162011173185,
+        'thumbs_up_ratio': 0.7560521415270018,
+        'thumbs_up_ratio_se': 0.00795905700008803,
+        'retry_score': 0.12822466528790682,
+        'repetition': 0.11065323789826058,
+        'user_engagement': 218.09694431688567,
+        'user_engagement_se': 12.29193183255007,
+        'total_feedback_count': 537,
+        'user_writing_speed': 2.2204209052818342,
+    }
     assert results == expected_metrics
 
 
@@ -127,6 +132,42 @@ def test_conversation_metrics():
     convo_metrics = metrics.ConversationMetrics(messages)
     assert convo_metrics.mcl == 5
     assert convo_metrics.user_engagement == 9
+
+
+def test_conversation_metrics_profile_conversation():
+    bot_sender_data = {'uid': '_bot_123'}
+    user_sender_data = {'uid': 'XLQR6'}
+    messages = [
+        {'deleted': False, 'content': 'hi', 'sender': bot_sender_data, 'sent_date': '2023-09-01T12:00:00'},
+        {'deleted': False, 'content': '123', 'sender': user_sender_data, 'sent_date': '2023-09-01T12:00:30'},
+        {'deleted': True, 'content': 'bye', 'sender': bot_sender_data, 'sent_date': '2023-09-01T12:00:45'},
+        {'deleted': True, 'content': 'bye~', 'sender': bot_sender_data, 'sent_date': '2023-09-01T12:00:55'},
+        {'deleted': False, 'content': 'dont go!', 'sender': bot_sender_data, 'sent_date': '2023-09-01T12:01:05'},
+        {'deleted': False, 'content': '123456', 'sender': user_sender_data, 'sent_date': '2023-09-01T12:01:25'},
+        {'deleted': False, 'content': 'bye', 'sender': bot_sender_data, 'sent_date': '2023-09-01T12:01:30'},
+
+    ]
+    convo_metrics = metrics.ConversationMetrics(messages)
+    out = convo_metrics.get_conversation_profile()
+    expected = pd.DataFrame([
+        {'duration': 30., 'bot_num_characters': 2, 'user_num_characters': 3},
+        {'duration': 20., 'bot_num_characters': 8, 'user_num_characters': 6},
+    ])
+    assert out.equals(expected)
+
+
+def test_summarise_convo_profile():
+    writing_speed = 12
+    reading_speed = 53
+    thinking_time = 21
+    df = pd.DataFrame({
+        'bot_num_characters': [23, 32, 45, 9, 6, 67],
+        'user_num_characters': [12, 89, 34, 68, 54, 90]})
+    df['duration'] = df['bot_num_characters'] / reading_speed + df['user_num_characters'] / writing_speed + thinking_time
+    out = metrics.summarise_conversation_profile(df)
+    assert np.isclose(out['writing_speed'], writing_speed)
+    assert np.isclose(out['reading_speed'], reading_speed)
+    assert np.isclose(out['thinking_time'], thinking_time)
 
 
 def test_print_formatted_leaderboard():
