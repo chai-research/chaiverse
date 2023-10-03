@@ -125,14 +125,3 @@ def _get_cached_feedback(submission_id, developer_key):
         feedback = _get_latest_feedback(submission_id, developer_key)
         utils._save_to_cache(filename, feedback)
     return feedback
-
-
-def filter_feedback_df(df):
-    df = keep_at_most_one_user_feedback(df)
-    return df
-
-
-def keep_at_most_one_user_feedback(df):
-    group_by_df = df.groupby(["user_id"])
-    filtered_df = group_by_df.apply(lambda x: x.iloc[0])
-    return filtered_df

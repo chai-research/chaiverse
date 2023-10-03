@@ -1,3 +1,4 @@
+from collections import defaultdict
 from datetime import datetime
 import string
 
@@ -69,6 +70,11 @@ class FeedbackMetrics():
     def __init__(self, feedback_data):
         feedbacks = feedback_data['feedback']
         self.feedbacks = feedbacks.values()
+        user_feedbacks = defaultdict(list)
+        for feedback in self.feedbacks:
+            user_id = feedback["conversation_id"].split("_")[3]
+            user_feedbacks[user_id].append(feedback)
+        self.feedbacks = [metrics[0] for _, metrics in user_feedbacks.items()]
 
     @property
     def convo_metrics(self):

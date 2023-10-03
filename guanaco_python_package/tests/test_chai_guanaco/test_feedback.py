@@ -115,34 +115,3 @@ def get_dummy_messages():
         'sent_date': '2021-03-21T20:10:45.355',
     }
     return [msg1, msg2, msg3]
-
-
-@pytest.mark.vcr
-def test_get_feedback_keeps_at_most_one_feedback_per_user():
-    model_feedback = feedback.get_feedback("anhnv125-llama-op-v8-0_v14", "")
-    df = model_feedback.df
-    user_feedbacks = df[df["user_id"] == "b4r6pol94vUrNLtngCFtfNr3q242"]
-    assert len(user_feedbacks) == 1
-
-
-def test_keep_at_most_one_user_feedback():
-    mock_df = pd.DataFrame(
-        {
-            "user_id": [
-                "user1", "user1", "user2"
-            ],
-            "feedback": [
-                "feedback1", "feedback2", "feedback3"
-            ]
-        }
-    )
-    filtered_df_dict = feedback.keep_at_most_one_user_feedback(mock_df).to_dict('list')
-    expected_df_dict = {
-            "user_id": [
-                "user1", "user2"
-            ],
-            "feedback": [
-                "feedback1", "feedback3"
-            ]
-        }
-    assert filtered_df_dict == expected_df_dict
