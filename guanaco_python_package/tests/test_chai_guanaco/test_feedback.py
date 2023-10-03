@@ -119,7 +119,7 @@ def get_dummy_messages():
 
 @pytest.mark.vcr
 def test_get_feedback_keeps_at_most_one_feedback_per_user():
-    model_feedback = feedback.get_feedback("anhnv125-llama-op-v8-0_v14")
+    model_feedback = feedback.get_feedback("anhnv125-llama-op-v8-0_v14", "")
     df = model_feedback.df
     user_feedbacks = df[df["user_id"] == "b4r6pol94vUrNLtngCFtfNr3q242"]
     assert len(user_feedbacks) == 1
