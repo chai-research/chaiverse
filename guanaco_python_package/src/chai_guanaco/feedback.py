@@ -24,7 +24,9 @@ class Feedback():
     def df(self):
         raw_feedback = self.raw_data['feedback']
         feedback = self._extract_feedback_as_rows(raw_feedback)
-        return pd.DataFrame(feedback)
+        df = pd.DataFrame(feedback)
+        df = filter_feedback_df(df)
+        return pd.DataFrame(df)
 
     def sample(self):
         df = self.df
@@ -123,3 +125,14 @@ def _get_cached_feedback(submission_id, developer_key):
         feedback = _get_latest_feedback(submission_id, developer_key)
         utils._save_to_cache(filename, feedback)
     return feedback
+
+
+def filter_feedback_df(df):
+    df = keep_at_most_one_user_feedback(df)
+    return df
+
+
+def keep_at_most_one_user_feedback(df):
+    group_by_df = df.groupby(["user_id"])
+    filtered_df = group_by_df.apply(lambda x: x.iloc[0])
+    return filtered_df

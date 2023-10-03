@@ -1,12 +1,13 @@
 from mock import patch, Mock
 import os
 
+import pandas as pd
 import pytest
 
 from chai_guanaco import feedback
 
 
-@pytest.fixture(autouse="session")
+@pytest.fixture()
 def mock_get():
     with patch("chai_guanaco.feedback.requests.get") as func:
         func.return_value.status_code = 200
@@ -27,7 +28,7 @@ def test_feedback_object(example_feedback):
     assert all(user_feedback.df.feedback == expected_feedback)
     expected_bot_id = ['_bot_demo-123', '_bot_demo-234']
     assert all(user_feedback.df.bot_id == expected_bot_id)
-    expected_user_id = ['user-id-123', 'user-id-123']
+    expected_user_id = ['user-id-123', 'user-id-1234']
     assert all(user_feedback.df.user_id == expected_user_id)
 
 
@@ -69,7 +70,7 @@ def test_get_latest_feedback_raises_for_bad_request(mock_get):
 def example_feedback():
     messages = get_dummy_messages()
     cid1 = '_bot_demo-123_user-id-123_1687485384266_123'
-    cid2 = '_bot_demo-234_user-id-123_1687485384266_234'
+    cid2 = '_bot_demo-234_user-id-1234_1687485384266_234'
     data1 = {
         'conversation_id': cid1,
         'messages': messages,
@@ -101,16 +102,46 @@ def get_dummy_messages():
     }
     msg2 = {
         'content': 'emmm hi?',
-        'conversation_id': '_bot_demo-123_user-id-123_1687485384355_234',
+        'conversation_id': '_bot_demo-123_user-id-1234_1687485384355_234',
         'deleted': False,
-        'sender': {'name': 'User', 'uid': 'user-id-123'},
+        'sender': {'name': 'User', 'uid': 'user-id-1234'},
         'sent_date': '2021-03-21T20:09:45.355',
     }
     msg3 = {
         'content': 'I hate u!',
-        'conversation_id': '_bot_demo-123_user-id-123_1687485387012_345',
+        'conversation_id': '_bot_demo-123_user-id-12345_1687485387012_345',
         'deleted': True,
         'sender': {'name': 'Bot', 'uid': '_bot_demo-123'},
         'sent_date': '2021-03-21T20:10:45.355',
     }
     return [msg1, msg2, msg3]
+
+
+def test_get_feedback_keeps_at_most_one_feedback_per_user():
+    model_feedback = feedback.get_feedback("anhnv125-llama-op-v8-0_v14")
+    df = model_feedback.df
+    user_feedbacks = df[df["user_id"] == "b4r6pol94vUrNLtngCFtfNr3q242"]
+    assert len(user_feedbacks) == 1
+
+
+def test_keep_at_most_one_user_feedback():
+    mock_df = pd.DataFrame(
+        {
+            "user_id": [
+                "user1", "user1", "user2"
+            ],
+            "feedback": [
+                "feedback1", "feedback2", "feedback3"
+            ]
+        }
+    )
+    filtered_df_dict = feedback.keep_at_most_one_user_feedback(mock_df).to_dict('list')
+    expected_df_dict = {
+            "user_id": [
+                "user1", "user2"
+            ],
+            "feedback": [
+                "feedback1", "feedback3"
+            ]
+        }
+    assert filtered_df_dict == expected_df_dict
