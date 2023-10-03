@@ -117,6 +117,7 @@ def get_dummy_messages():
     return [msg1, msg2, msg3]
 
 
+@pytest.mark.vcr
 def test_get_feedback_keeps_at_most_one_feedback_per_user():
     model_feedback = feedback.get_feedback("anhnv125-llama-op-v8-0_v14")
     df = model_feedback.df
