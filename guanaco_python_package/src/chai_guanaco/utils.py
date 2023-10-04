@@ -86,7 +86,6 @@ def _func_call_as_string(func, args, kwargs):
 
 def get_localised_timestamp(timestamp, timezone=None):
     if not timezone:
-        breakpoint()
         timezone = datetime.now().astimezone().tzinfo
     timestamp = datetime.fromisoformat(timestamp)
     timestamp = timestamp.astimezone(timezone)
