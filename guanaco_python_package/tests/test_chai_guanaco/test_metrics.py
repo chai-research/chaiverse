@@ -170,6 +170,20 @@ def test_summarise_convo_profile():
     assert np.isclose(out['thinking_time'], thinking_time)
 
 
+def test_summarise_convo_profile_returns_nan_when_not_enough_data_points():
+    writing_speed = 12
+    reading_speed = 53
+    thinking_time = 21
+    df = pd.DataFrame({
+        'bot_num_characters': [23],
+        'user_num_characters': [12]})
+    df['duration'] = df['bot_num_characters'] / reading_speed + df['user_num_characters'] / writing_speed + thinking_time
+    out = metrics.summarise_conversation_profile(df)
+    assert np.isnan(out['writing_speed'])
+    assert np.isnan(out['reading_speed'])
+    assert np.isnan(out['thinking_time'])
+
+
 def test_print_formatted_leaderboard():
     data = {
         'submission_id': ['tom_1689542168', 'tom_1689404889', 'val_1689051887', 'zl_1689542168'],

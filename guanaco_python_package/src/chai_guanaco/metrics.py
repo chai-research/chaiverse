@@ -190,7 +190,11 @@ def summarise_conversation_profile(convo_profile: pd.DataFrame):
     y = convo_profile['duration'].values
     X = convo_profile[['user_num_characters', 'bot_num_characters']].values
     X = np.concatenate([X, np.ones(len(X)).reshape(-1, 1)], axis=1)
-    inv_cov = np.linalg.inv(np.dot(X.T, X))
+    cov = np.dot(X.T, X)
+    if np.isclose(np.linalg.det(cov), 0):
+        inv_cov = cov * np.nan
+    else:
+        inv_cov = np.linalg.inv(cov)
     beta = np.dot(inv_cov, np.dot(X.T, y))
     result = {
         'writing_speed': 1 / beta[0],
