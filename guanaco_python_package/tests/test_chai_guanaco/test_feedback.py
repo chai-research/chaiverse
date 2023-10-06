@@ -3,8 +3,12 @@ import os
 
 import pandas as pd
 import pytest
+import vcr
 
 from chai_guanaco import feedback
+
+
+RESOURCE_DIR = os.path.join(os.path.abspath(os.path.join(__file__, '..')), 'resources')
 
 
 @pytest.fixture()
@@ -64,6 +68,37 @@ def test_get_latest_feedback_raises_for_bad_request(mock_get):
     with pytest.raises(AssertionError) as ex:
         feedback._get_latest_feedback(submission_id="test_model", developer_key="key")
     assert "some error" in str(ex)
+
+
+@vcr.use_cassette(os.path.join(RESOURCE_DIR, 'test_keep_at_most_one_feedback.yaml'))
+def test_get_feedback_keeps_at_most_one_feedback_per_user():
+    model_feedback = feedback.get_feedback("anhnv125-llama-op-v8-0_v14")
+    df = model_feedback.df
+    user_feedbacks = df[df["user_id"] == "b4r6pol94vUrNLtngCFtfNr3q242"]
+    assert len(user_feedbacks) == 1
+
+
+def test_keep_at_most_one_user_feedback():
+    mock_df = pd.DataFrame(
+        {
+            "user_id": [
+                "user1", "user1", "user2"
+            ],
+            "feedback": [
+                "feedback1", "feedback2", "feedback3"
+            ]
+        }
+    )
+    filtered_df_dict = feedback.keep_at_most_one_user_feedback(mock_df).to_dict('list')
+    expected_df_dict = {
+            "user_id": [
+                "user1", "user2"
+            ],
+            "feedback": [
+                "feedback1", "feedback3"
+            ]
+        }
+    assert filtered_df_dict == expected_df_dict
 
 
 @pytest.fixture
