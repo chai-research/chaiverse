@@ -18,7 +18,7 @@ LEADERBOARD_DISPLAY_COLS = [
     'submission_id',
     'thumbs_up_ratio',
     'user_writing_speed',
-    'repetition_score',
+    'repetition',
     'total_feedback_count',
     'overall_rank',
 ]
@@ -56,10 +56,7 @@ def get_submission_metrics(submission_id, developer_key):
             'mcl': feedback_metrics.mcl,
             'thumbs_up_ratio': feedback_metrics.thumbs_up_ratio,
             'thumbs_up_ratio_se': feedback_metrics.thumbs_up_ratio_se,
-            'retry_score': feedback_metrics.retry_score,
             'repetition': feedback_metrics.repetition_score,
-            'user_engagement': feedback_metrics.mean_user_engagement,
-            'user_engagement_se': feedback_metrics.user_engagement_se,
             'total_feedback_count': feedback_metrics.total_feedback_count,
             'user_writing_speed': feedback_metrics.user_writing_speed,
         }
@@ -98,28 +95,6 @@ class FeedbackMetrics():
         return np.mean([m.mcl for m in self.convo_metrics])
 
     @property
-    def mean_user_engagement(self):
-        # taking geometric mean over user response length
-        log_engagement = [np.log(m.user_engagement+1) for m in self.convo_metrics]
-        geometric_mean = np.exp(np.mean(log_engagement))
-        return geometric_mean
-
-    @property
-    def user_engagement_se(self):
-        log_engagement = [np.log(m.user_engagement+1) for m in self.convo_metrics]
-        log_mean = np.mean(log_engagement)
-        log_se = np.std(log_engagement) / len(log_engagement)**0.5
-        mean = np.exp(log_mean)
-        se = mean * log_se
-        return se
-
-    @property
-    def retry_score(self):
-        total_retries = sum([m.num_retries for m in self.convo_metrics])
-        total_bot_responses = sum([m.num_model_responses for m in self.convo_metrics])
-        return 0 if (total_bot_responses) == 0 else total_retries / total_bot_responses
-
-    @property
     def repetition_score(self):
         scores = np.array([m.repetition_score for m in self.convo_metrics])
         is_public = np.array([feedback.get('public', True) for feedback in self.feedbacks])
@@ -151,20 +126,6 @@ class ConversationMetrics():
     @property
     def mcl(self):
         return len([m for m in self.messages if not m['deleted']])
-
-    @property
-    def num_retries(self):
-        return len([m for m in self.messages if m['deleted']])
-
-    @property
-    def num_model_responses(self):
-        user_messages = [m for m in self.messages if self._is_from_user(m)]
-        return len(self.messages) - len(user_messages)
-
-    @property
-    def user_engagement(self):
-        response_length = [len(m['content']) for m in self.messages if self._is_from_user(m)]
-        return np.sum(response_length)
 
     @property
     def repetition_score(self):

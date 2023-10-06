@@ -27,9 +27,8 @@ def test_get_leaderboard(data_dir_mock, get_ids_mock, deployed_mock, tmpdir):
     expected_cols = [
         'submission_id',
         'thumbs_up_ratio',
-        'retry_score',
+        'user_writing_speed',
         'total_feedback_count',
-        'user_engagement'
         ]
     for col in expected_cols:
         assert col in df.columns, f'{col} not found in leaderboard'
@@ -46,10 +45,7 @@ def test_get_leaderboard(data_dir_mock, get_ids_mock, deployed_mock, tmpdir):
             'mcl': 12.0,
             'thumbs_up_ratio': 0.45454545454545453,
             'thumbs_up_ratio_se': 0.043159749410503594,
-            'retry_score': 0.14741035856573706,
-            'repetition': 0.093097,
-            'user_engagement': 67.34005746050721,
-            'user_engagement_se': 18.57789825723364,
+            'repetition': 0.09309662846841879,
             'total_feedback_count': 33,
             'user_writing_speed': 2.258729,
             },
@@ -62,15 +58,12 @@ def test_get_leaderboard(data_dir_mock, get_ids_mock, deployed_mock, tmpdir):
             'model_name': 'None',
             'thumbs_down': 306,
             'thumbs_up': 187,
-            'mcl': 9.191387559808613,
-            'thumbs_up_ratio': 0.41148325358851673,
-            'thumbs_up_ratio_se': 0.016750888484181537,
-            'retry_score': 0.22954380883417813,
-            'repetition': 0.262566,
-            'user_engagement': 75.09995515460673,
-            'user_engagement_se': 6.7271173705601095,
-            'total_feedback_count': 209,
-            'user_writing_speed': 2.812323,
+            'mcl': 9.241545893719806,
+            'thumbs_up_ratio': 0.4057971014492754,
+            'thumbs_up_ratio_se': 0.01675940260012055,
+            'repetition': 0.26395981785675354,
+            'total_feedback_count': 207,
+            'user_writing_speed': 2.7696244,
             },
         {
             'submission_id': 'tehvenom-dolly-shygma_1690135695',
@@ -81,15 +74,12 @@ def test_get_leaderboard(data_dir_mock, get_ids_mock, deployed_mock, tmpdir):
             'model_name': 'None',
             'thumbs_down': 76,
             'thumbs_up': 79,
-            'mcl': 13.053571428571429,
-            'thumbs_up_ratio': 0.48214285714285715,
-            'thumbs_up_ratio_se': 0.03336504343390119,
-            'retry_score': 0.20647773279352227,
-            'repetition': 0.072080,
-            'user_engagement': 86.49293170787536,
-            'user_engagement_se': 15.430467887932489,
-            'total_feedback_count': 56,
-            'user_writing_speed': 3.146834,
+            'mcl': 13.236363636363636,
+            'thumbs_up_ratio': 0.4909090909090909,
+            'thumbs_up_ratio_se': 0.033698849323782545,
+            'repetition': 0.07319031123625354,
+            'total_feedback_count': 55,
+            'user_writing_speed': 3.1909,
             }
     ]
     pd.testing.assert_frame_equal(df, pd.DataFrame(expected_data))
@@ -103,15 +93,12 @@ def test_get_submission_metrics(deployed_mock):
     with patch("chai_guanaco.utils.get_all_historical_submissions", return_value={}):
         results = metrics.get_submission_metrics('wizard-vicuna-13b-bo4')
     expected_metrics = {
-        'mcl': 28.849162011173185,
-        'thumbs_up_ratio': 0.7560521415270018,
-        'thumbs_up_ratio_se': 0.00795905700008803,
-        'retry_score': 0.12822466528790682,
-        'repetition': 0.11065323789826058,
-        'user_engagement': 218.09694431688567,
-        'user_engagement_se': 12.29193183255007,
-        'total_feedback_count': 537,
-        'user_writing_speed': 2.2204209052818342,
+        'mcl': 28.620229007633586,
+        'thumbs_up_ratio': 0.7538167938931297,
+        'thumbs_up_ratio_se': 0.008106970421151738,
+        'repetition': 0.10992682598233437,
+        'total_feedback_count': 524,
+        'user_writing_speed': 2.2084751053670595,
     }
     assert results == expected_metrics
 
@@ -131,7 +118,7 @@ def test_conversation_metrics():
     ]
     convo_metrics = metrics.ConversationMetrics(messages)
     assert convo_metrics.mcl == 5
-    assert convo_metrics.user_engagement == 9
+    assert convo_metrics.repetition_score == 0.25
 
 
 def test_conversation_metrics_profile_conversation():
@@ -189,9 +176,9 @@ def test_print_formatted_leaderboard():
         'submission_id': ['tom_1689542168', 'tom_1689404889', 'val_1689051887', 'zl_1689542168'],
         'total_feedback_count': [130, 160, 140, 51],
         'mcl': [1.0, 2.0, 3.0, 4.0],
-        'user_engagement': [500, 600, 700, 800],
         'retry_score': [.5, .6, .7, .8],
         'thumbs_up_ratio': [0.1, 0.5, 0.8, 0.2],
+        'user_writing_speed': [1.25, 3.2, 1.2, 1.09],
         'model_name': ['psutil', 'htop', 'watch', 'gunzip'],
         'developer_uid': ['tom', 'tom', 'val', 'zl'],
         'timestamp': ['2023-07-24 18:22:40+00:00'] * 3 + ['2023-07-24T18:22:40+00:00'],
@@ -206,13 +193,14 @@ def test_print_formatted_leaderboard():
             'submission_id',
             'total_feedback_count',
             'mcl',
-            'user_engagement',
             'retry_score',
             'thumbs_up_ratio',
+            'user_writing_speed',
             'model_name',
             'developer_uid',
             'model_repo',
             'date',
+            'overall_score',
             'overall_rank'
         ]
     assert list(df.columns) == expected_columns
