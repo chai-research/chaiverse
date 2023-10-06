@@ -1,14 +1,9 @@
 from mock import patch, Mock
 import os
 
-import pandas as pd
 import pytest
-import vcr
 
 from chai_guanaco import feedback
-
-
-RESOURCE_DIR = os.path.join(os.path.abspath(os.path.join(__file__, '..')), 'resources')
 
 
 @pytest.fixture()
