@@ -68,13 +68,8 @@ def get_submission_metrics(submission_id, developer_key):
 
 class FeedbackMetrics():
     def __init__(self, feedback_data):
-        feedbacks = feedback_data['feedback']
-        self.feedbacks = feedbacks.values()
-        user_feedbacks = defaultdict(list)
-        for feedback in self.feedbacks:
-            user_id = feedback["conversation_id"].split("_")[3]
-            user_feedbacks[user_id].append(feedback)
-        self.feedbacks = [metrics[0] for _, metrics in user_feedbacks.items()]
+        feedbacks = feedback_data['feedback'].values()
+        self.feedbacks = self._filter_duplicated_uid_feedbacks(feedbacks)
 
     @property
     def convo_metrics(self):
@@ -139,6 +134,14 @@ class FeedbackMetrics():
             df = df[ix]
         summary = summarise_conversation_profile(df)
         return summary['writing_speed']
+
+    def _filter_duplicated_uid_feedbacks(self, feedbacks):
+        user_feedbacks = defaultdict(list)
+        for feedback in feedbacks:
+            user_id = feedback["conversation_id"].split("_")[3]
+            user_feedbacks[user_id].append(feedback)
+        feedbacks = [metrics[0] for _, metrics in user_feedbacks.items()]
+        return feedbacks
 
 
 class ConversationMetrics():
