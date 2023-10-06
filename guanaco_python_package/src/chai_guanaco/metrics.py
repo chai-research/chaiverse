@@ -14,13 +14,12 @@ PUBLIC_LEADERBOARD_MINIMUM_FEEDBACK_COUNT = 100
 LEADERBOARD_DISPLAY_COLS = [
     'developer_uid',
     'model_name',
+    'submission_id',
     'thumbs_up_ratio',
-    'user_engagement',
-    'retry_score',
-    'repetition',
+    'user_writing_speed',
+    'repetition_score',
     'total_feedback_count',
     'overall_rank',
-    'user_writing_speed'
 ]
 
 
@@ -259,14 +258,10 @@ def _filter_submissions_with_few_feedback(df):
 
 
 def _add_overall_rank(df):
-    response_len = df['user_engagement']
-    thumbs_up = df['thumbs_up_ratio']
-    retry_score = df['retry_score']
-    response_len_rank = response_len.rank(ascending=False)
-    thumbs_up_rank = thumbs_up.rank(ascending=False)
-    retry_rate_rank = retry_score.rank(ascending=True)
-    overall_score = (response_len_rank + thumbs_up_rank + retry_rate_rank) / 3
-    df['overall_rank'] = overall_score.rank().astype(int)
+    thumbs_up_rank = df['thumbs_up_ratio'].rank(ascending=False)
+    writing_speed_rank = df['user_writing_speed'].rank(ascending=True)
+    df['overall_score'] = np.mean([writing_speed_rank, thumbs_up_rank], axis=0)
+    df['overall_rank'] = df.overall_score.rank().astype(int)
     df = df.sort_values('overall_rank').reset_index(drop=True)
     return df
 
