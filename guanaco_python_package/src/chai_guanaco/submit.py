@@ -4,22 +4,18 @@ import sys
 import requests
 import time
 
-from chai_guanaco.utils import print_color
+from chai_guanaco import utils
 from chai_guanaco.login_cli import auto_authenticate
 
 if 'ipykernel' in sys.modules:
     from IPython.core.display import display
 
-BASE_URL = "https://guanaco-submitter.chai-research.com"
 SUBMISSION_ENDPOINT = "/models/submit"
 ALL_SUBMISSION_STATUS_ENDPOINT = "/models/"
 INFO_ENDPOINT = "/models/{submission_id}"
 DEACTIVATE_ENDPOINT = "/models/{submission_id}/deactivate"
-
-
-def get_url(endpoint):
-    base_url = BASE_URL
-    return base_url + endpoint
+TEARDOWN_ENDPOINT = "/models/{submission_id}/teardown"
+EULA_ENDPOINT = "/developers/update_eula"
 
 
 class ModelSubmitter:
@@ -29,6 +25,7 @@ class ModelSubmitter:
     Attributes
     --------------
     developer_key : str
+    verbose       : str - Print deployment logs
 
     Methods
     --------------
@@ -42,12 +39,14 @@ class ModelSubmitter:
     """
 
     @auto_authenticate
-    def __init__(self, developer_key=None):
+    def __init__(self, developer_key=None, verbose=False):
         self.developer_key = developer_key
+        self.verbose = verbose
         self._animation = self._spinner_animation_generator()
         self._progress = 0
         self._sleep_time = 0.5
         self._get_request_interval = int(10 / self._sleep_time)
+        self._logs_cache = []
 
     def submit(self, submission_params):
         """
@@ -63,6 +62,7 @@ class ModelSubmitter:
             formatter (optional): PromptFormatter
             model_name (optional): str - custom alias for your model
         """
+        check_user_accepts_eula()
         submission_params = self._preprocess_submission(submission_params)
         submission_id = self._get_submission_id(submission_params)
         self._print_submission_header(submission_id)
@@ -94,6 +94,7 @@ class ModelSubmitter:
         status = 'pending'
         if self._progress % self._get_request_interval == 0:
             model_info = get_model_info(submission_id, self.developer_key)
+            self._print_latest_logs(model_info)
             status = model_info.get('status')
         return status
 
@@ -109,7 +110,7 @@ class ModelSubmitter:
             print(text, end='\r')
 
     def _print_submission_header(self, submission_id):
-        print_color(f'\nModel Submission ID: {submission_id}', 'green')
+        utils.print_color(f'\nModel Submission ID: {submission_id}', 'green')
         print("Your model is being deployed to Chai Guanaco, please wait for approximately 10 minutes...")
 
     def _print_submission_result(self, status):
@@ -119,12 +120,22 @@ class ModelSubmitter:
         text = text_success if success else text_failed
         color = 'green' if success else 'red'
         print('\n')
-        print_color(f'\n{text}', color)
+        utils.print_color(f'\n{text}', color)
+
+    def _print_latest_logs(self, model_info):
+        if self.verbose:
+            logs = model_info.get("logs", [])
+            num_new_logs = len(logs) - len(self._logs_cache)
+            new_logs = logs[-num_new_logs:] if num_new_logs else []
+            self._logs_cache += new_logs
+            for log in new_logs:
+                message = utils.parse_log_entry(log)
+                print(message)
 
 
 @auto_authenticate
 def submit_model(model_submission: dict, developer_key=None):
-    submission_url = get_url(SUBMISSION_ENDPOINT)
+    submission_url = utils.get_url(SUBMISSION_ENDPOINT)
     headers = {'Authorization': f"Bearer {developer_key}"}
     response = requests.post(url=submission_url, json=model_submission, headers=headers)
     assert response.status_code == 200, response.json()
@@ -133,7 +144,7 @@ def submit_model(model_submission: dict, developer_key=None):
 
 @auto_authenticate
 def get_model_info(submission_id, developer_key=None):
-    url = get_url(INFO_ENDPOINT)
+    url = utils.get_url(INFO_ENDPOINT)
     url = url.format(submission_id=submission_id)
     headers = {'Authorization': f"Bearer {developer_key}"}
     response = requests.get(url=url, headers=headers)
@@ -143,7 +154,7 @@ def get_model_info(submission_id, developer_key=None):
 
 @auto_authenticate
 def get_my_submissions(developer_key=None):
-    url = get_url(ALL_SUBMISSION_STATUS_ENDPOINT)
+    url = utils.get_url(ALL_SUBMISSION_STATUS_ENDPOINT)
     headers = {'Authorization': f"Bearer {developer_key}"}
     response = requests.get(url=url, headers=headers)
     assert response.status_code == 200, response.json()
@@ -152,10 +163,32 @@ def get_my_submissions(developer_key=None):
 
 @auto_authenticate
 def deactivate_model(submission_id, developer_key=None):
-    url = get_url(DEACTIVATE_ENDPOINT)
+    url = utils.get_url(DEACTIVATE_ENDPOINT)
     url = url.format(submission_id=submission_id)
     headers = {'Authorization': f"Bearer {developer_key}"}
     response = requests.get(url=url, headers=headers)
     assert response.status_code == 200, response.json()
     print(response.json())
     return response.json()
+
+
+@auto_authenticate
+def teardown_model(submission_id, developer_key=None):
+    url = utils.get_url(TEARDOWN_ENDPOINT)
+    url = url.format(submission_id=submission_id)
+    headers = {'Authorization': f"Bearer {developer_key}"}
+    response = requests.get(url=url, headers=headers)
+    assert response.status_code == 200, response.json()
+    print(response.json())
+    return response.json()
+
+
+@auto_authenticate
+def check_user_accepts_eula(developer_key):
+    text = "Thank you! Before submitting a model, please acknowledge that you have"\
+           " read our End-user license agreement (EULA),"\
+           "\nwhich can be found at: www.chai-research.com/competition-eula.html 🥳."\
+           "\nPlease type 'accept' to confirm that you have read and agree with our EULA: "
+    input_text = input(text)
+    if input_text.lower().strip() != 'accept':
+        raise ValueError('In order to submit a model, you must agree with our EULA 😢')

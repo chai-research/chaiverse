@@ -1,7 +1,6 @@
 from mock import patch
 
 import pytest
-import pandas as pd
 
 from chai_guanaco import submit, formatters
 
@@ -62,12 +61,22 @@ def test_model_submitter(mock_submission, mock_post, mock_get_pending_to_success
         },
         "formatter": formatters.PygmalionFormatter(),
     }
-    submission_id = model_submitter.submit(model_submitter_params)
+    with patch('builtins.input', return_value='accept'):
+        submission_id = model_submitter.submit(model_submitter_params)
     headers = {"Authorization": "Bearer mock-key"}
     expected_url = submit.get_url(submit.SUBMISSION_ENDPOINT)
     mock_post.assert_called_once_with(url=expected_url, json=mock_submission, headers=headers)
     assert mock_get_pending_to_success.call_count == 3
     assert submission_id == "name_123456"
+
+
+@patch('builtins.input')
+def test_model_submitter_fails_on_invalid_eula_agreement(text_input):
+    model_submitter = submit.ModelSubmitter(developer_key="mock-key")
+    text_input.return_value = 'no'
+    with pytest.raises(ValueError) as e:
+        model_submitter.submit({})
+    assert 'you must agree with our EULA' in str(e)
 
 
 def test_client(mock_post, mock_submission):
