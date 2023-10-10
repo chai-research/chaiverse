@@ -1,5 +1,4 @@
-import dataset
-
+from chaiverse.lora.dataset import DatasetLoader, DatasetBuilder
 from chaiverse.lora.tokenizer import LlamaTokenizer
 from chaiverse.lora.model import LoraTrainer
 
@@ -7,7 +6,7 @@ from chaiverse.lora.model import LoraTrainer
 if __name__ == '__main__':
     # load data
     data_path = 'ChaiML/davinci_completions_1.7m_unsampled'
-    data_loader = dataset.DatasetLoader(
+    data_loader = DatasetLoader(
             hf_path=data_path,
             data_samples=100,
             validation_split_size=0.1,
@@ -18,7 +17,7 @@ if __name__ == '__main__':
 
     # process data
     tokenizer = LlamaTokenizer()
-    data_builder = dataset.DatasetBuilder(
+    data_builder = DatasetBuilder(
             tokenize_loader=tokenizer,
             block_size=1024,
             )
