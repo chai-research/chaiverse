@@ -14,5 +14,5 @@ def check_dataset_format(data):
 
 
 def slice_dataset(df, ixs):
-    assert len(ixs) == df.num_rows
+    assert len(ixs) == df.num_rows, 'index has different length with dataset'
     return df.select(np.where(ixs)[0])

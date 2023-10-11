@@ -3,7 +3,7 @@ from unittest import mock
 import datasets
 import pytest
 
-from chaiverse.lora.dataset import DatasetLoader
+from chaiverse.dev.dataset import DatasetLoader
 
 
 @pytest.fixture()
@@ -29,11 +29,7 @@ def mock_load_dataset(hf_dataset):
 
 
 def test_datasetloader_load_default_df(mock_load_dataset):
-    data_loader = DatasetLoader(
-            hf_path='',
-            # data_samples=2,
-            # validation_split_size=0.1,
-            )
+    data_loader = DatasetLoader(hf_path='')
     df = data_loader.load()
     assert df['train']['input_text'] == ['a', 'b', 'c', 'd', 'e', 'f']
     assert df['train']['output_text'] == ['f', 'g', 'h', 'i', 'j', 'k']

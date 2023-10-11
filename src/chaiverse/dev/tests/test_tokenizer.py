@@ -1,6 +1,6 @@
 import pytest
 
-from chaiverse.lora.tokenizer import Tokenizer, LlamaTokenizer
+from chaiverse.dev.tokenizer import Tokenizer, LlamaTokenizer
 
 
 def test_dafult_tokenizer():

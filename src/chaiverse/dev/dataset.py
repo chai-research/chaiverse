@@ -2,7 +2,7 @@ from copy import deepcopy
 from typing import Union
 
 import datasets
-from chaiverse.lora import utils
+from chaiverse.dev import utils
 
 
 class DatasetLoader:

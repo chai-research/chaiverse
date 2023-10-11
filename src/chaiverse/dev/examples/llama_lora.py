@@ -1,6 +1,6 @@
-from chaiverse.lora.dataset import DatasetLoader, DatasetBuilder
-from chaiverse.lora.tokenizer import LlamaTokenizer
-from chaiverse.lora.model import LoraTrainer
+from chaiverse.dev.dataset import DatasetLoader, DatasetBuilder
+from chaiverse.dev.tokenizer import LlamaTokenizer
+from chaiverse.dev.lora_model import LoraTrainer
 
 
 if __name__ == '__main__':
@@ -28,9 +28,11 @@ if __name__ == '__main__':
     base_model = 'NousResearch/Llama-2-7b-hf'
     model = LoraTrainer(
             model_name=base_model,
-            tokenizer=tokenizer,
             output_dir='test_lora',
             )
-    print(model.training_config)
     print(model.lora_config)
-    model.train(data)
+    model.fit(data)
+    model.save()
+    model.merge()
+    model_path = 'ebony59/llama-2-7b-lora-davinci100'
+    model.push_to_hub(model_path, private=True)
