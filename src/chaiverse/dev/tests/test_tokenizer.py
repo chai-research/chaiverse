@@ -1,5 +1,3 @@
-import pytest
-
 from chaiverse.dev.tokenizer import Tokenizer, LlamaTokenizer
 
 
