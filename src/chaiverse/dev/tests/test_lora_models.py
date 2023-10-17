@@ -2,7 +2,7 @@ import unittest
 import os
 import torch
 
-from peft import LoraConfig, get_peft_model, prepare_model_for_int8_training, TaskType
+from peft import LoraConfig, get_peft_model, prepare_model_for_int8_training, TaskType, PeftModel
 from transformers import AutoModelForCausalLM
 import tempfile
 
@@ -10,9 +10,7 @@ from chaiverse.dev.dataset import DatasetLoader, CausalDatasetBuilder
 from chaiverse.dev.tokenizer import LlamaTokenizer
 from chaiverse.dev.model.lora_model import LoraTrainer
 
-#from .testing_utils import is_peft_available
 
-#@require_peft
 class LoraModelTester(unittest.TestCase):
     def setUp(self):
         self.tiny_base_model = "HuggingFaceH4/tiny-random-LlamaForCausalLM"
@@ -78,6 +76,43 @@ class LoraModelTester(unittest.TestCase):
                 os.path.exists(f"{tmp_dir}/adapter_config.json"),
                 msg=f"{tmp_dir}/adapter_config.json does not exist",
             )
+
+    def test_load_pretrained_lora(self):
+        r"""
+        Check that the model can be saved and loaded properly.
+        """
+        tiny_model = LoraTrainer(
+                model_name = self.tiny_base_model,
+                output_dir = 'lora_unittest'
+                )
+        base_model = tiny_model._load_base_model(load_in_8bit = False)
+        tiny_model.instantiate_lora_model(load_in_8bit=False)
+
+        with tempfile.TemporaryDirectory() as tmp_dir:
+            tiny_model.save(path=tmp_dir)
+            pretrained_lora_model = PeftModel.from_pretrained(base_model, tmp_dir)
+
+            # check all the weights are the same
+            for p1, p2 in zip(tiny_model.model.named_parameters(), pretrained_lora_model.named_parameters()):
+                if p1[0] not in ["v_head.summary.weight", "v_head.summary.bias"]:
+                    self.assertTrue(torch.allclose(p1[1], p2[1]), msg=f"{p1[0]} != {p2[0]}")
+
+    def test_continue_training_lora_model(self):
+        r"""
+        Load peft and checks that it can continue training.
+        """
+        tiny_model = LoraTrainer(
+                model_name = self.tiny_base_model,
+                output_dir = 'lora_unittest'
+                )
+        base_model = tiny_model._load_base_model(load_in_8bit = False)
+        tiny_model.instantiate_lora_model(load_in_8bit=False)
+
+        with tempfile.TemporaryDirectory() as tmp_dir:
+            tiny_model.save(path=tmp_dir)
+            pretrained_lora_model = PeftModel.from_pretrained(base_model, tmp_dir, is_trainable=True)
+            nb_trainable_params = sum(p.numel() for p in pretrained_lora_model.parameters() if p.requires_grad)
+            self.assertEqual(nb_trainable_params, 4096)
 
     def test_merge_model(self):
         r"""
