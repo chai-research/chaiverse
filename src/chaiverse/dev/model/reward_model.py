@@ -84,7 +84,6 @@ class RewardTrainer:
                 tokenizer=self.tokenizer,
                 train_dataset=data['train'],
                 eval_dataset=eval_dataset,
-                # num_labels=self.num_labels,
                 )
 
     @property

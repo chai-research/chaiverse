@@ -8,7 +8,7 @@ if __name__ == '__main__':
     data_path = 'ChaiML/20231012_chai_prize_reward_model_data'
     data_loader = DatasetLoader(
             hf_path=data_path,
-            data_samples=100,
+            data_samples=1000,
             validation_split_size=0.1,
             shuffle=True,
             )
@@ -16,7 +16,10 @@ if __name__ == '__main__':
     print(df)
 
     # process data
-    tokenize_loader = GPT2Tokenizer(truncation_side='left')
+    tokenize_loader = GPT2Tokenizer(
+            padding_side='right',
+            truncation_side='left',
+            )
     data_builder = RewardDatasetBuilder(
             tokenize_loader=tokenize_loader,
             block_size=1024,
@@ -29,9 +32,13 @@ if __name__ == '__main__':
             model_name='gpt2',
             tokenize_loader=tokenize_loader,
             output_dir='test_reward_model',
+            learning_rate=1e-5,
+            num_train_epochs=1,
+            bf16=False,
+            eval_strategy='steps',
+            eval_steps=50,
             )
     print(model.training_config)
-    1/0
     model.fit(data)
-    model_path = 'zonemercy/chai_reward_model_gpt2_s100'
+    model_path = 'ChaiML/chai_reward_model_gpt2_test'
     model.push_to_hub(model_path, private=True)
