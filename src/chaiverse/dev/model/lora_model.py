@@ -52,8 +52,8 @@ class LoraTrainer:
     def push_to_hub(self, hf_path, private=True):
         self.model.push_to_hub(hf_path, private=private)
 
-    def instantiate_lora_model(self, **kwargs):
-        model = self._load_base_model()
+    def instantiate_lora_model(self, load_in_8bit=True, **kwargs):
+        model = self._load_base_model(load_in_8bit = load_in_8bit)
         model = prepare_model_for_int8_training(model)
         self.model = self._load_lora_model(model)
         self.model.print_trainable_parameters()
