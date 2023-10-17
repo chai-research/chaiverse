@@ -30,7 +30,7 @@ class LoraModelTester(unittest.TestCase):
         base_model = AutoModelForCausalLM.from_pretrained(
                 self.tiny_base_model,
                 load_in_8bit=False,
-                device_map='auto')
+                device_map='cpu')
 
     def test_instantiate_lora_model(self):
         r"""
@@ -48,7 +48,8 @@ class LoraModelTester(unittest.TestCase):
         """
         tiny_model = LoraTrainer(
                 model_name = self.tiny_base_model,
-                output_dir = 'test_peft_model'
+                output_dir = 'test_peft_model',
+                device_map = 'cpu',
                 )
         tiny_model.instantiate_lora_model(load_in_8bit=False)
         nb_trainable_params = sum(p.numel() for p in tiny_model.model.parameters() if p.requires_grad)
@@ -60,7 +61,8 @@ class LoraModelTester(unittest.TestCase):
         """
         tiny_model = LoraTrainer(
                 model_name = self.tiny_base_model,
-                output_dir = 'lora_unittest'
+                output_dir = 'lora_unittest',
+                device_map = 'cpu',
                 )
         tiny_model.instantiate_lora_model(load_in_8bit=False)
 
@@ -83,7 +85,8 @@ class LoraModelTester(unittest.TestCase):
         """
         tiny_model = LoraTrainer(
                 model_name = self.tiny_base_model,
-                output_dir = 'lora_unittest'
+                output_dir = 'lora_unittest',
+                device_map = 'cpu',
                 )
         base_model = tiny_model._load_base_model(load_in_8bit = False)
         tiny_model.instantiate_lora_model(load_in_8bit=False)
@@ -103,7 +106,8 @@ class LoraModelTester(unittest.TestCase):
         """
         tiny_model = LoraTrainer(
                 model_name = self.tiny_base_model,
-                output_dir = 'lora_unittest'
+                output_dir = 'lora_unittest',
+                device_map = 'cpu',
                 )
         base_model = tiny_model._load_base_model(load_in_8bit = False)
         tiny_model.instantiate_lora_model(load_in_8bit=False)
@@ -120,8 +124,10 @@ class LoraModelTester(unittest.TestCase):
         """
         tiny_model = LoraTrainer(
                 model_name = self.tiny_base_model,
-                output_dir = 'lora_unittest'
+                output_dir = 'lora_unittest',
+                device_map = "cpu",
                 )
+        device = "cpu"
         tiny_model.instantiate_lora_model(load_in_8bit=False)
 
         with tempfile.TemporaryDirectory() as tmp_dir:
@@ -153,7 +159,8 @@ class LoraModelTester(unittest.TestCase):
         """
         tiny_model = LoraTrainer(
                 model_name = self.tiny_base_model,
-                output_dir = 'lora_unittest'
+                output_dir = 'lora_unittest',
+                device_map = 'cpu',
                 )
         tiny_model.instantiate_lora_model(load_in_8bit=False)
 

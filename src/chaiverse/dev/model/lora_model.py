@@ -14,6 +14,7 @@ class LoraTrainer:
             num_train_epochs=2,
             logging_strategy='steps',
             logging_steps=50,
+            device_map='auto',
             lora_r=16,
             lora_alpha=32,
             lora_target_modules=['q_proj', 'k_proj', 'v_proj', 'o_proj'],
@@ -27,6 +28,7 @@ class LoraTrainer:
         self.num_train_epochs = num_train_epochs
         self.logging_strategy = logging_strategy
         self.logging_steps = logging_steps
+        self.device_map = device_map
         self.lora_r = lora_r
         self.lora_alpha = lora_alpha
         self.lora_target_modules = lora_target_modules
@@ -69,7 +71,7 @@ class LoraTrainer:
         model = AutoModelForCausalLM.from_pretrained(
                 self.model_name,
                 load_in_8bit=load_in_8bit,
-                device_map='auto')
+                device_map=self.device_map)
         return model
 
     def _load_lora_model(self, model):
