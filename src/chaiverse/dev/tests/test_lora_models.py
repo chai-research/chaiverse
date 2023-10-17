@@ -1,5 +1,6 @@
 import unittest
 import os
+import torch
 
 from peft import LoraConfig, get_peft_model, prepare_model_for_int8_training, TaskType
 from transformers import AutoModelForCausalLM
@@ -68,16 +69,70 @@ class LoraModelTester(unittest.TestCase):
         with tempfile.TemporaryDirectory() as tmp_dir:
             tiny_model.save(path=tmp_dir)
 
+            # check that the files `adapter_model.bin` and `adapter_config.json` are in the directory
             self.assertTrue(
                 os.path.isfile(f"{tmp_dir}/adapter_model.bin"),
                 msg=f"{tmp_dir}/adapter_model.bin does not exist",
             )
-
             self.assertTrue(
-                    os.path.exists(f"{tmp_dir}/adapter_config.json"),
-                    msg=f"{tmp_dir}/adapter_config.json does not exist",
-                    )
+                os.path.exists(f"{tmp_dir}/adapter_config.json"),
+                msg=f"{tmp_dir}/adapter_config.json does not exist",
+            )
 
     def test_merge_model(self):
+        r"""
+        Check that the model can be merged and saved.
+        """
+        tiny_model = LoraTrainer(
+                model_name = self.tiny_base_model,
+                output_dir = 'lora_unittest'
+                )
+        tiny_model.instantiate_lora_model(load_in_8bit=False)
 
+        with tempfile.TemporaryDirectory() as tmp_dir:
+            tiny_model.save(path=tmp_dir)
+            tiny_model.merge(path=tmp_dir)
+            tiny_model.model.save_pretrained(tmp_dir)
+
+            self.assertTrue("LlamaForCausalLM" in str(type(tiny_model.model)))
+
+            # check that the files `adapter_model.bin` and `adapter_config.json` are in the directory
+            self.assertTrue(
+                os.path.isfile(f"{tmp_dir}/adapter_model.bin"),
+                msg=f"{tmp_dir}/adapter_model.bin does not exist",
+            )
+            self.assertTrue(
+                os.path.exists(f"{tmp_dir}/adapter_config.json"),
+                msg=f"{tmp_dir}/adapter_config.json does not exist",
+            )
+            # check also for `pytorch_model.bin`
+            self.assertTrue(
+                os.path.exists(f"{tmp_dir}/pytorch_model.bin"),
+                msg=f"{tmp_dir}/pytorch_model.bin does not exist",
+            )
+
+
+    def test_load_merge_model(self):
+        r"""
+        Check that the merged model can be loaded correctly.
+        """
+        tiny_model = LoraTrainer(
+                model_name = self.tiny_base_model,
+                output_dir = 'lora_unittest'
+                )
+        tiny_model.instantiate_lora_model(load_in_8bit=False)
+
+        with tempfile.TemporaryDirectory() as tmp_dir:
+            tiny_model.save(path=tmp_dir)
+            tiny_model.merge(path=tmp_dir)
+            tiny_model.model.save_pretrained(tmp_dir)
+
+            merged_model = AutoModelForCausalLM.from_pretrained(tmp_dir)
+
+            self.assertTrue("LlamaForCausalLM" in str(type(merged_model)))
+
+            # check all the weights are the same
+            for p1, p2 in zip(tiny_model.model.named_parameters(), merged_model.named_parameters()):
+                if p1[0] not in ["v_head.summary.weight", "v_head.summary.bias"]:
+                    self.assertTrue(torch.allclose(p1[1], p2[1]), msg=f"{p1[0]} != {p2[0]}")
 
