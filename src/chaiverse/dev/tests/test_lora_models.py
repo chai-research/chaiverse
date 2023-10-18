@@ -167,9 +167,9 @@ class LoraModelTester(unittest.TestCase):
         with tempfile.TemporaryDirectory() as tmp_dir:
             tiny_model.save(path=tmp_dir)
             tiny_model.merge(path=tmp_dir)
-            tiny_model.model.save_pretrained(tmp_dir)
+            tiny_model.model.save_pretrained(tmp_dir+'/merged')
 
-            merged_model = AutoModelForCausalLM.from_pretrained(tmp_dir)
+            merged_model = AutoModelForCausalLM.from_pretrained(tmp_dir+'/merged')
 
             self.assertTrue("LlamaForCausalLM" in str(type(merged_model)))
 
