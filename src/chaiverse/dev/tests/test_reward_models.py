@@ -2,6 +2,7 @@ import os
 import torch
 import pytest
 
+from datasets import *
 import tempfile
 from transformers import AutoModelForSequenceClassification
 from transformers import TrainingArguments, Trainer
@@ -29,6 +30,23 @@ def tokenize_loader():
             padding_side='right',
             truncation_side='left',
             )
+
+@pytest.fixture
+def data(tokenize_loader):
+    data_path = 'ChaiML/20231012_chai_prize_reward_model_data'
+    data_loader = DatasetLoader(
+                hf_path=data_path,
+                data_samples=10,
+                validation_split_size=0.1,
+                shuffle=True,
+                )
+    df = data_loader.load()
+    df = df.cast(Features({'input_text': Value("string"), "labels": Value("float32")}))
+    data_builder = RewardDatasetBuilder(
+            tokenize_loader=tokenize_loader,
+            block_size=1024,
+            )
+    return data_builder.generate(df, n_jobs=10)
 
 @pytest.fixture
 def tiny_model(tiny_base_model_id,tokenize_loader):
@@ -59,3 +77,19 @@ def test_check_reward_model_nb_trainable_params(tiny_model):
     """
     nb_trainable_params = sum(p.numel() for p in tiny_model.model.parameters() if p.requires_grad)
     assert nb_trainable_params == 112032
+
+def test_instantiate_reward_trainer(tiny_model,data):
+    tiny_model.tokenizer = tiny_model.tokenize_loader.load()
+    tiny_model.instantiate_reward_trainer(data)
+    assert tiny_model.trainer is not None
+
+def test_save_pretrained_reward(tiny_model):
+    r"""
+    Check that the model can be saved and loaded properly.
+    """
+    with tempfile.TemporaryDirectory() as tmp_dir:
+        tiny_model.save(path=tmp_dir)
+
+        # check that the files `pytorch_model.bin` and `config.json` are in the directory
+        assert os.path.isfile(f"{tmp_dir}/pytorch_model.bin"), f"{tmp_dir}/pytorch_model.bin does not exist"
+        assert os.path.exists(f"{tmp_dir}/config.json"), f"{tmp_dir}/config.json does not exist"
