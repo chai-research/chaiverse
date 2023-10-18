@@ -71,17 +71,18 @@ class BaseDatasetBuilder(metaclass=abc.ABCMeta):
 
     def generate(self, df, n_jobs=1):
         self.tokenizer = self.tokenize_loader.load()
+        self._check_model_max_length()
         data = self.apply(df, n_jobs=n_jobs)
         return data
 
     def apply(self, df, n_jobs=1):
         tokenized_data = df.map(
-                self._format_data,
+                self._process_data,
                 batched=True,
                 num_proc=n_jobs)
         return tokenized_data
 
-    def _format_data(self, data):
+    def _process_data(self, data):
         raise NotImplementedError
 
     def _get_joint_input_output_texts(self, data):
@@ -98,6 +99,10 @@ class BaseDatasetBuilder(metaclass=abc.ABCMeta):
             truncation=True)
         return tokenized_data
 
+    def _check_model_max_length(self):
+        max_length = self.tokenizer.model_max_length
+        assert self.block_size <= max_length, f'Block size exceeds model_max_length: {max_length}'
+
 
 class CausalDatasetBuilder(BaseDatasetBuilder):
 
@@ -112,7 +117,7 @@ class CausalDatasetBuilder(BaseDatasetBuilder):
         super().__init__(tokenize_loader, block_size, input_column, output_column)
         self.input_mask_label = input_mask_label
 
-    def _format_data(self, data):
+    def _process_data(self, data):
         joint_data = self._get_joint_input_output_texts(data)
         tokenized_data = self._padding_tokenize(joint_data)
         output_lengths = self._get_output_token_lengths(data)
@@ -140,7 +145,7 @@ class RewardDatasetBuilder(BaseDatasetBuilder):
     def __init__(
             self,
             tokenize_loader,
-            block_size=2048,
+            block_size=1024,
             input_column='input_text',
             output_column=None,
             label_column=None,
@@ -148,14 +153,14 @@ class RewardDatasetBuilder(BaseDatasetBuilder):
         super().__init__(tokenize_loader, block_size, input_column, output_column)
         self.label_column = label_column
 
-    def _format_data(self, data):
-        input_data = self._get_input_data(data)
+    def _process_data(self, data):
+        input_data = self._format_input_data(data)
         tokenized_data = self._padding_tokenize(input_data)
         if self.label_column:
             tokenized_data = self._add_label_column(data, tokenized_data)
         return tokenized_data
 
-    def _get_input_data(self, data):
+    def _format_input_data(self, data):
         if self.output_column:
             input_data = self._get_joint_input_output_texts(data)
         else:
