@@ -23,6 +23,7 @@ class RewardTrainer:
             tokenize_loader,
             output_dir,
             num_labels=1,
+            device_map="auto",
             learning_rate=2e-5,
             num_train_epochs=1,
             optim='adamw_hf',
@@ -41,6 +42,7 @@ class RewardTrainer:
         self.tokenize_loader = tokenize_loader
         self.output_dir = output_dir
         self.num_labels = num_labels
+        self.device_map = device_map
         self.learning_rate = learning_rate
         self.num_train_epochs = num_train_epochs
         self.optim = optim
@@ -73,7 +75,7 @@ class RewardTrainer:
         self.model = AutoModelForSequenceClassification.from_pretrained(
                 self.model_name,
                 num_labels=self.num_labels,
-                device_map='auto',
+                device_map=self.device_map,
                 )
 
     def instantiate_reward_trainer(self, data):
