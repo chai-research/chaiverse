@@ -53,8 +53,8 @@ class BaseRewardTrainer(metaclass=ABCMeta):
         self.device_map = device_map
 
     def fit(self, data):
-        self.tokenizer = self.tokenize_loader.load()
         data = self._format_data_by_training_task(data)
+        self.tokenizer = self.tokenize_loader.load()
         self.instantiate_reward_model()
         self.instantiate_reward_trainer(data)
         self.trainer.train()
@@ -74,6 +74,7 @@ class BaseRewardTrainer(metaclass=ABCMeta):
                 problem_type=self._training_task,
                 device_map=self.device_map,
                 )
+        self.model.config.pad_token_id = self.tokenizer.pad_token_id
 
     def instantiate_reward_trainer(self, data):
         eval_dataset = data.get('validation', None)
