@@ -125,18 +125,13 @@ class RewardClassificationTrainer(BaseRewardTrainer):
     _training_task = 'single_label_classification'
 
     def _format_data_by_training_task(self, data):
-        data = copy.copy(data)
-        for fold, df in data.items():
-            if np.array(df['labels']).ndim == 1:
-                df = utils.format_dataset_dtype(df, 'labels', 'int64')
-                data[fold] = self._format_one_hot_labels(df)
+        data = utils.format_dataset_dtype(data, 'labels', 'int64')
+        self._check_num_labels(self, data)
         return data
 
-    def _format_one_hot_labels(self, df):
-        labels = np.array(df['labels'])
-        assert len(np.unique(labels)) <= self.num_labels
-        one_hot_labels = np.eye(self.num_labels)[labels]
-        one_hot_labels = one_hot_labels.astype(int).tolist()
-        df = df.remove_columns('labels')
-        df = df.add_column('labels', one_hot_labels)
-        return df
+    def _check_num_labels(self, data):
+        n_unique_labels = []
+        for _, df in data.items():
+            n_unique = len(np.unique(df['labels']))
+            n_unique_labels.append(n_unique)
+        assert np.max(n_unique_labels) <= self.num_labels
