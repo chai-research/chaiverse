@@ -32,7 +32,7 @@ if __name__ == '__main__':
             model_name='gpt2',
             tokenize_loader=tokenize_loader,
             output_dir='test_reward_model',
-            num_labels=2,
+            # num_labels=2,
             learning_rate=1e-5,
             num_train_epochs=1,
             bf16=False,
@@ -41,6 +41,7 @@ if __name__ == '__main__':
             eval_strategy='steps',
             eval_steps=2,
             )
+    1/0
     model.fit(data)
 
     # upload model

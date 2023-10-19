@@ -1,5 +1,4 @@
 from abc import ABCMeta, abstractmethod
-import copy
 
 from transformers import AutoModelForSequenceClassification
 from transformers import TrainingArguments, Trainer
@@ -11,13 +10,14 @@ from chaiverse.dev import utils
 class BaseRewardTrainer(metaclass=ABCMeta):
     _trainer_cls = Trainer
     _training_task = None
+    _num_labels = 1
 
     def __init__(
             self,
             model_name,
             tokenize_loader,
             output_dir,
-            num_labels=1,
+            num_labels=None,
             learning_rate=2e-5,
             num_train_epochs=1,
             optim='adamw_hf',
@@ -36,7 +36,7 @@ class BaseRewardTrainer(metaclass=ABCMeta):
         self.model_name = model_name
         self.tokenize_loader = tokenize_loader
         self.output_dir = output_dir
-        self.num_labels = num_labels
+        self.num_labels = num_labels or self._num_labels
         self.learning_rate = learning_rate
         self.num_train_epochs = num_train_epochs
         self.optim = optim
@@ -115,6 +115,7 @@ class BaseRewardTrainer(metaclass=ABCMeta):
 
 class RewardRegressionTrainer(BaseRewardTrainer):
     _training_task = 'regression'
+    _num_labels = 1
 
     def _format_data_by_training_task(self, data):
         data = utils.format_dataset_dtype(data, 'labels', 'float')
@@ -123,10 +124,11 @@ class RewardRegressionTrainer(BaseRewardTrainer):
 
 class RewardClassificationTrainer(BaseRewardTrainer):
     _training_task = 'single_label_classification'
+    _num_labels = 2
 
     def _format_data_by_training_task(self, data):
         data = utils.format_dataset_dtype(data, 'labels', 'int64')
-        self._check_num_labels(self, data)
+        self._check_num_labels(data)
         return data
 
     def _check_num_labels(self, data):
