@@ -1,4 +1,4 @@
-import abc
+from abc import ABCMeta, abstractmethod
 from copy import deepcopy
 from typing import Union
 
@@ -55,7 +55,7 @@ class DatasetLoader:
         return df
 
 
-class BaseDatasetBuilder(metaclass=abc.ABCMeta):
+class BaseDatasetBuilder(metaclass=ABCMeta):
 
     def __init__(
             self,
@@ -82,6 +82,7 @@ class BaseDatasetBuilder(metaclass=abc.ABCMeta):
                 num_proc=n_jobs)
         return tokenized_data
 
+    @abstractmethod
     def _process_data(self, data):
         raise NotImplementedError
 

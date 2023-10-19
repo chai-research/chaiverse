@@ -1,4 +1,7 @@
+import copy
+
 import datasets
+from datasets import Value
 import numpy as np
 
 
@@ -26,3 +29,21 @@ def slice_dataset(df, ixs):
 
 def ensure_is_list(obj):
     return obj if isinstance(obj, list) else [obj]
+
+
+def format_dataset_dtype(data, column, dtype):
+    data = copy.copy(data)
+    if type(data).__name__ == 'DatasetDict':
+        for fold, df in data.items():
+            data[fold] = _format_dataset_dtype(df, column, dtype)
+    else:
+        data = _format_dataset_dtype(data, column, dtype)
+    return data
+
+
+def _format_dataset_dtype(df, column, dtype):
+    features = df.features.copy()
+    if features[column].dtype != dtype:
+        features[column] = Value(dtype)
+        df = df.cast(features)
+    return df
