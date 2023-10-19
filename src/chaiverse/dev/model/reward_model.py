@@ -18,6 +18,7 @@ class BaseRewardTrainer(metaclass=ABCMeta):
             tokenize_loader,
             output_dir,
             num_labels=None,
+            device_map="auto",
             learning_rate=2e-5,
             num_train_epochs=1,
             optim='adamw_hf',
@@ -37,6 +38,7 @@ class BaseRewardTrainer(metaclass=ABCMeta):
         self.tokenize_loader = tokenize_loader
         self.output_dir = output_dir
         self.num_labels = num_labels or self._num_labels
+        self.device_map = device_map
         self.learning_rate = learning_rate
         self.num_train_epochs = num_train_epochs
         self.optim = optim
