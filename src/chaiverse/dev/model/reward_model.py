@@ -5,6 +5,7 @@ from transformers import TrainingArguments, Trainer
 import numpy as np
 
 from chaiverse.dev import utils
+from chaiverse.dev.logging_utils import logging_manager
 
 
 class BaseRewardTrainer(metaclass=ABCMeta):
@@ -12,6 +13,7 @@ class BaseRewardTrainer(metaclass=ABCMeta):
     _training_task = None
     _num_labels = 1
 
+    @logging_manager(submit=False)
     def __init__(
             self,
             model_name,
