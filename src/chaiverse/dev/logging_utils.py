@@ -5,17 +5,12 @@ import inspect
 import os
 import requests
 
-
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.INFO)
 
 BASE_URL = "https://guanaco-submitter.chai-research.com"
 CHAIVERSE_ANALYTIC_ENDPOINT = "/chaiverse_analytics"
-
-
-def get_url(endpoint):
-    base_url = BASE_URL
-    return base_url + endpoint
+DEFAULT_DEVELOPER_KEY = "xxxxxxxx"
 
 
 def auto_authenticate(func):
@@ -27,17 +22,15 @@ def auto_authenticate(func):
 
 
 @auto_authenticate
-def submit_logs(func_args: dict, developer_key=None):
-    submission_url = get_url(CHAIVERSE_ANALYTIC_ENDPOINT)
+def submit_logs(func_args, developer_key=None):
+    submission_url = BASE_URL + CHAIVERSE_ANALYTIC_ENDPOINT
     headers = {'Authorization': f"Bearer {developer_key}"}
-    response = requests.post(url=submission_url, json=func_args, headers=headers)
-    assert response.status_code == 200, response.json()
-    return response.json()
+    requests.post(url=submission_url, json=func_args, headers=headers)
 
 
 def _update_developer_key(func, args, kwargs):
     if 'developer_key' not in kwargs and _developer_key_not_in_args(func, args):
-        developer_key = _get_developer_key_from_cache()
+        developer_key = _get_developer_key()
         kwargs['developer_key'] = developer_key
     return args, kwargs
 
@@ -48,11 +41,12 @@ def _developer_key_not_in_args(func, args):
     return 'developer_key' not in positional_args
 
 
-def _get_developer_key_from_cache():
+def _get_developer_key():
     cached_key_path = _get_cached_key_path()
-    error_msg = "Please pass in developer key... or run `chai-guanaco login` from terminal."
-    assert os.path.exists(cached_key_path), error_msg
-    developer_key = _get_cached_key()
+    if os.path.exists(cached_key_path):
+        developer_key = _get_cached_key()
+    else:
+        developer_key = DEFAULT_DEVELOPER_KEY
     return developer_key
 
 
@@ -86,7 +80,7 @@ class logging_manager(object):
             if self.submit:
                 try:
                     submit_logs(func_args=kws)
-                except AssertionError:
+                except requests.RequestException:
                     pass
             res = func(*args, **kwargs)
             return res
