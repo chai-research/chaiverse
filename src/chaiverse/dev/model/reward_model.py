@@ -32,6 +32,7 @@ class BaseRewardTrainer(metaclass=ABCMeta):
             gradient_accumulation_steps=1,
             train_seed=1,
             device_map='auto',
+            no_cuda=False,
     ):
         self.model_name = model_name
         self.tokenize_loader = tokenize_loader
@@ -51,6 +52,7 @@ class BaseRewardTrainer(metaclass=ABCMeta):
         self.gradient_accumulation_steps = gradient_accumulation_steps
         self.train_seed = train_seed
         self.device_map = device_map
+        self.no_cuda = no_cuda
 
     def fit(self, data):
         data = self._format_data_by_training_task(data)
@@ -110,6 +112,7 @@ class BaseRewardTrainer(metaclass=ABCMeta):
                 per_device_train_batch_size=self.per_device_batch_size,
                 per_device_eval_batch_size=self.per_device_batch_size,
                 gradient_accumulation_steps=self.gradient_accumulation_steps,
+                no_cuda=self.no_cuda,
                 )
 
 
