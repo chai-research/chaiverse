@@ -4,10 +4,12 @@ from typing import Union
 
 import datasets
 from chaiverse.dev import utils
+from chaiverse.dev.logging_utils import logging_manager
 
 
 class DatasetLoader:
 
+    @logging_manager(submit=False)
     def __init__(
             self,
             hf_path,

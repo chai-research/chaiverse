@@ -1,9 +1,13 @@
+import logging
+
 from chaiverse.dev.dataset import DatasetLoader, RewardDatasetBuilder
 from chaiverse.dev.tokenizer import GPT2Tokenizer
 from chaiverse.dev.model.reward_model import RewardClassificationTrainer, RewardRegressionTrainer
 
 
 if __name__ == '__main__':
+    logging.basicConfig(level=logging.INFO)
+
     # load data
     data_path = 'ChaiML/20231012_chai_prize_reward_model_data'
     data_loader = DatasetLoader(
@@ -40,8 +44,8 @@ if __name__ == '__main__':
             logging_steps=2,
             eval_strategy='steps',
             eval_steps=2,
+            no_cuda=True,
             )
-    1/0
     model.fit(data)
 
     # upload model
