@@ -6,6 +6,12 @@ import pytest
 from chaiverse.dev.dataset import DatasetLoader
 
 
+@pytest.fixture(autouse='session')
+def mock_request():
+    with patch('chaiverse.dev.logging_utils.requests.post', Mock()) as request:
+        yield request
+
+
 @pytest.fixture()
 def hf_dataset():
     train_txt = {

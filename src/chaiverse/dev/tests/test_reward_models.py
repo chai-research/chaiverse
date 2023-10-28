@@ -2,15 +2,13 @@ import os
 import torch
 import pytest
 
-from datasets import *
 import tempfile
 from transformers import AutoModelForSequenceClassification
-from transformers import TrainingArguments, Trainer
 
-from torch import nn
 from chaiverse.dev.dataset import DatasetLoader, RewardDatasetBuilder
 from chaiverse.dev.tokenizer import GPT2Tokenizer
 from chaiverse.dev.model.reward_model import RewardClassificationTrainer
+from mock import patch, Mock
 
 
 @pytest.fixture
@@ -28,7 +26,7 @@ def tiny_base_model(tiny_base_model_id):
 
 
 @pytest.fixture
-def tokenize_loader():
+def tokenizer_loader():
     return GPT2Tokenizer(
             padding_side='right',
             truncation_side='left',
@@ -36,7 +34,8 @@ def tokenize_loader():
 
 
 @pytest.fixture
-def data(tokenize_loader):
+@patch("chaiverse.dev.logging_utils.requests.post", Mock())
+def data(tokenizer_loader):
     data_path = 'ChaiML/tiny_chai_prize_reward_model_data'
     data_loader = DatasetLoader(
                 hf_path=data_path,
@@ -45,42 +44,44 @@ def data(tokenize_loader):
                 )
     df = data_loader.load()
     data_builder = RewardDatasetBuilder(
-            tokenize_loader=tokenize_loader,
+            tokenizer_loader=tokenizer_loader,
             block_size=32,
             )
     return data_builder.generate(df, n_jobs=1)
 
 
 @pytest.fixture
-def tiny_model(tiny_base_model_id, tokenize_loader):
+@patch("chaiverse.dev.logging_utils.requests.post", Mock())
+def tiny_model(tiny_base_model_id, tokenizer_loader, tmp_path):
     model = RewardClassificationTrainer(
             model_name=tiny_base_model_id,
-            tokenize_loader=tokenize_loader,
+            tokenizer_loader=tokenizer_loader,
             device_map="cpu",
-            output_dir='test_reward_model',
+            output_dir=f'{tmp_path}/test_reward_model',
             learning_rate=1e-5,
             num_train_epochs=1,
             bf16=False,
             no_cuda=True,
             )
-    model.tokenizer = model.tokenize_loader.load()
+    model.tokenizer = model.tokenizer_loader.load()
     model.instantiate_reward_model()
     return model
 
 
 @pytest.fixture
-def gpt2_model(tokenize_loader):
+@patch("chaiverse.dev.logging_utils.requests.post", Mock())
+def gpt2_model(tokenizer_loader, tmp_path):
     model = RewardClassificationTrainer(
             model_name="gpt2",
-            tokenize_loader=tokenize_loader,
+            tokenizer_loader=tokenizer_loader,
             device_map="cpu",
-            output_dir='test_reward_model',
+            output_dir=f'{tmp_path}/test_reward_model',
             learning_rate=1e-5,
             num_train_epochs=1,
             bf16=False,
             no_cuda=True,
             )
-    model.tokenizer = model.tokenize_loader.load()
+    model.tokenizer = model.tokenizer_loader.load()
     model.instantiate_reward_model()
     return model
 
@@ -103,7 +104,7 @@ def test_check_reward_model_nb_trainable_params(tiny_model):
 
 
 def test_instantiate_reward_trainer(tiny_model, data):
-    tiny_model.tokenizer = tiny_model.tokenize_loader.load()
+    tiny_model.tokenizer = tiny_model.tokenizer_loader.load()
     tiny_model.instantiate_reward_trainer(data)
     assert tiny_model.trainer is not None
 

@@ -1,16 +1,16 @@
 from functools import wraps
-import logging
 import functools
 import inspect
+import logging
 import os
 import requests
+
 
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.INFO)
 
-BASE_URL = "https://guanaco-submitter.chai-research.com"
-CHAIVERSE_ANALYTIC_ENDPOINT = "/chaiverse_analytics"
-DEFAULT_DEVELOPER_KEY = "xxxxxxxx"
+BASE_URL = "https://guanaco-training.chai-research.com"
+DEFAULT_DEVELOPER_KEY = "CR_b590b336cb314e63ab8d83f189a73edc"
 
 
 def auto_authenticate(func):
@@ -22,10 +22,16 @@ def auto_authenticate(func):
 
 
 @auto_authenticate
-def submit_logs(func_args, developer_key=None):
-    submission_url = BASE_URL + CHAIVERSE_ANALYTIC_ENDPOINT
+def submit_logs(field, parameters, developer_key=None):
+    endpoint = get_logging_endpoint(field)
     headers = {'Authorization': f"Bearer {developer_key}"}
-    requests.post(url=submission_url, json=func_args, headers=headers)
+    logging_request = {'developer_key': developer_key, 'parameters': parameters}
+    requests.post(url=endpoint, json=logging_request, headers=headers)
+
+
+def get_logging_endpoint(path):
+    endpoint = f"{BASE_URL}/{path}/update"
+    return endpoint
 
 
 def _update_developer_key(func, args, kwargs):
@@ -42,11 +48,10 @@ def _developer_key_not_in_args(func, args):
 
 
 def _get_developer_key():
+    developer_key = DEFAULT_DEVELOPER_KEY
     cached_key_path = _get_cached_key_path()
     if os.path.exists(cached_key_path):
         developer_key = _get_cached_key()
-    else:
-        developer_key = DEFAULT_DEVELOPER_KEY
     return developer_key
 
 
@@ -69,19 +74,18 @@ def _guanaco_data_dir():
 
 
 class logging_manager(object):
-    def __init__(self, submit=True):
-        self.submit = submit
+    def __init__(self, field):
+        self.field = field
 
     def __call__(self, func):
         @wraps(func)
         def new_func(*args, **kwargs):
-            kws = self._format_function_args(func, *args, **kwargs)
-            logger.info(kws)
-            if self.submit:
-                try:
-                    submit_logs(func_args=kws)
-                except requests.RequestException:
-                    pass
+            params = self._format_function_args(func, *args, **kwargs)
+            logger.info(params)
+            try:
+                submit_logs(field=self.field, parameters=params)
+            except requests.RequestException:
+                pass
             res = func(*args, **kwargs)
             return res
         return new_func

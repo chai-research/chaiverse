@@ -13,11 +13,11 @@ class BaseRewardTrainer(metaclass=ABCMeta):
     _training_task = None
     _num_labels = 1
 
-    @logging_manager(submit=False)
+    @logging_manager('training_jobs')
     def __init__(
             self,
             model_name,
-            tokenize_loader,
+            tokenizer_loader,
             output_dir,
             num_labels=None,
             learning_rate=2e-5,
@@ -37,7 +37,7 @@ class BaseRewardTrainer(metaclass=ABCMeta):
             no_cuda=False,
     ):
         self.model_name = model_name
-        self.tokenize_loader = tokenize_loader
+        self.tokenizer_loader = tokenizer_loader
         self.output_dir = output_dir
         self.num_labels = num_labels or self._num_labels
         self.learning_rate = learning_rate
@@ -58,7 +58,7 @@ class BaseRewardTrainer(metaclass=ABCMeta):
 
     def fit(self, data):
         data = self._format_data_by_training_task(data)
-        self.tokenizer = self.tokenize_loader.load()
+        self.tokenizer = self.tokenizer_loader.load()
         self.instantiate_reward_model()
         self.instantiate_reward_trainer(data)
         self.trainer.train()

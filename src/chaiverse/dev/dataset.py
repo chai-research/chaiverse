@@ -9,7 +9,7 @@ from chaiverse.dev.logging_utils import logging_manager
 
 class DatasetLoader:
 
-    @logging_manager(submit=False)
+    @logging_manager('dataset_jobs')
     def __init__(
             self,
             hf_path,
@@ -61,18 +61,18 @@ class BaseDatasetBuilder(metaclass=ABCMeta):
 
     def __init__(
             self,
-            tokenize_loader,
+            tokenizer_loader,
             block_size=2048,
             input_column='input_text',
             output_column='output_text',
             ):
         self.block_size = block_size
-        self.tokenize_loader = tokenize_loader
+        self.tokenizer_loader = tokenizer_loader
         self.input_column = input_column
         self.output_column = output_column
 
     def generate(self, df, n_jobs=1):
-        self.tokenizer = self.tokenize_loader.load()
+        self.tokenizer = self.tokenizer_loader.load()
         self._check_model_max_length()
         data = self.apply(df, n_jobs=n_jobs)
         return data
@@ -111,13 +111,13 @@ class CausalDatasetBuilder(BaseDatasetBuilder):
 
     def __init__(
             self,
-            tokenize_loader,
+            tokenizer_loader,
             block_size=2048,
             input_column='input_text',
             output_column='output_text',
             input_mask_label=-100,
             ):
-        super().__init__(tokenize_loader, block_size, input_column, output_column)
+        super().__init__(tokenizer_loader, block_size, input_column, output_column)
         self.input_mask_label = input_mask_label
 
     def _process_data(self, data):
@@ -147,13 +147,13 @@ class RewardDatasetBuilder(BaseDatasetBuilder):
 
     def __init__(
             self,
-            tokenize_loader,
+            tokenizer_loader,
             block_size=1024,
             input_column='input_text',
             output_column=None,
             label_column=None,
             ):
-        super().__init__(tokenize_loader, block_size, input_column, output_column)
+        super().__init__(tokenizer_loader, block_size, input_column, output_column)
         self.label_column = label_column
 
     def _process_data(self, data):

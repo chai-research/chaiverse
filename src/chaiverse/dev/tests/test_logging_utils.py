@@ -12,18 +12,18 @@ class dummy_mixin:
 
 class dummy_class:
 
-    @logging_utils.logging_manager()
+    @logging_utils.logging_manager('test')
     def __init__(self, a, b=123, c='abc', d=dummy_mixin()):
         pass
 
-    @logging_utils.logging_manager(submit=False)
-    def run(self):
+    @logging_utils.logging_manager('run')
+    def run(self, n_jobs=1):
         pass
 
 
 @pytest.fixture(autouse="session")
 def mock_post():
-    with patch("logging_utils.requests.post") as func:
+    with patch("chaiverse.dev.logging_utils.requests.post") as func:
         yield func
 
 
@@ -33,28 +33,37 @@ def dummy_function(info, developer_key=None):
 
 
 def test_logging_manager_submit_correct_payload(tmp_path, mock_post):
-    write_tmp_key_to_file(tmp_path, 'CR-12345')
-    dummy_class(321, c='cba')
+    developer_key = 'CR-12345'
+    write_tmp_key_to_file(tmp_path, developer_key)
+    model = dummy_class(321, c='cba')
     expected_submission = {
-            'b': 123,
-            'c': 'cba',
-            'd': 'dummy_mixin',
-            'args1': 'dummy_class',
-            'args2': 321}
-    headers = {"Authorization": "Bearer CR-12345"}
-    expected_url = logging_utils.BASE_URL + logging_utils.CHAIVERSE_ANALYTIC_ENDPOINT
+            'developer_key': developer_key,
+            'parameters': {
+                'b': 123,
+                'c': 'cba',
+                'd': 'dummy_mixin',
+                'args1': 'dummy_class',
+                'args2': 321},
+            }
+    headers = {"Authorization": f"Bearer {developer_key}"}
+    expected_url = logging_utils.get_logging_endpoint('test')
     mock_post.assert_called_once_with(
             url=expected_url,
             json=expected_submission,
             headers=headers)
 
-
-def test_logging_manager_not_submit_payload(tmp_path, mock_post):
-    write_tmp_key_to_file(tmp_path, 'CR-12345')
-    cls = dummy_class(321)
-    mock_post.call_count == 1
-    cls.run()
-    mock_post.call_count == 1
+    model.run(n_jobs=10)
+    expected_submission = {
+            'developer_key': developer_key,
+            'parameters': {
+                'args1': 'dummy_class',
+                'n_jobs': 10},
+            }
+    expected_url = logging_utils.get_logging_endpoint('run')
+    mock_post.assert_called_with(
+            url=expected_url,
+            json=expected_submission,
+            headers=headers)
 
 
 def test_auto_authenticate_wrapper_loads_from_cached_key(tmp_path):

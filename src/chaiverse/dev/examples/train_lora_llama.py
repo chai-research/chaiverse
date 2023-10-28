@@ -18,7 +18,7 @@ if __name__ == '__main__':
     # process data
     tokenizer = LlamaTokenizer()
     data_builder = CausalDatasetBuilder(
-            tokenize_loader=tokenizer,
+            tokenizer_loader=tokenizer,
             block_size=1024,
             )
     data = data_builder.generate(df, n_jobs=10)
