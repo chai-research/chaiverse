@@ -11,7 +11,7 @@ from chai_guanaco.login_cli import auto_authenticate
 from chai_guanaco.utils import print_color, cache, get_all_historical_submissions
 
 
-PUBLIC_LEADERBOARD_MINIMUM_FEEDBACK_COUNT = 100
+PUBLIC_LEADERBOARD_MINIMUM_FEEDBACK_COUNT = 150
 LEADERBOARD_DISPLAY_COLS = [
     'developer_uid',
     'model_name',

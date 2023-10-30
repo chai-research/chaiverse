@@ -174,7 +174,7 @@ def test_summarise_convo_profile_returns_nan_when_not_enough_data_points():
 def test_print_formatted_leaderboard():
     data = {
         'submission_id': ['tom_1689542168', 'tom_1689404889', 'val_1689051887', 'zl_1689542168'],
-        'total_feedback_count': [130, 160, 140, 51],
+        'total_feedback_count': [151, 160, 290, 101],
         'mcl': [1.0, 2.0, 3.0, 4.0],
         'retry_score': [.5, .6, .7, .8],
         'thumbs_up_ratio': [0.1, 0.5, 0.8, 0.2],
