@@ -1,9 +1,12 @@
+from datetime import datetime
 from functools import wraps
 import functools
 import inspect
 import logging
 import os
+import pytz
 import requests
+import time
 
 
 logger = logging.getLogger(__name__)
@@ -22,16 +25,25 @@ def auto_authenticate(func):
 
 
 @auto_authenticate
-def submit_logs(field, parameters, developer_key=None):
+def submit_logs(field, parameters, timeout=5, developer_key=None):
     endpoint = get_logging_endpoint(field)
     headers = {'Authorization': f"Bearer {developer_key}"}
+    parameters['timestamp'] = str(get_utc_now())
     logging_request = {'developer_key': developer_key, 'parameters': parameters}
-    requests.post(url=endpoint, json=logging_request, headers=headers)
+    response = requests.post(url=endpoint, json=logging_request, headers=headers, timeout=timeout)
+    return response
 
 
 def get_logging_endpoint(path):
     endpoint = f"{BASE_URL}/{path}/update"
     return endpoint
+
+
+def get_utc_now():
+    timestamp = int(time.time())
+    timestamp = datetime.utcfromtimestamp(timestamp)
+    timestamp = timestamp.replace(tzinfo=pytz.UTC)
+    return timestamp
 
 
 def _update_developer_key(func, args, kwargs):
