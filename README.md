@@ -13,29 +13,29 @@
 
 1. login to your runpod.io account then go to https://www.runpod.io/console/gpu-cloud
 2. From "GPU Cloud", select "Community Cloud", and choose the required GPU to deploy the RunPod Pytorch 2.0.1 Template.For Lora and Reward model training, 1 x A40 is enough!
-   
-   <img src='https://github.com/chai-research/chaiverse/assets/52447514/2bd5ff1b-1934-4188-8736-d229e9be74b4' width="700">
+
+   <img src='https://github.com/chai-research/chaiverse/assets/52447514/3a38a674-adc9-447b-948e-8e82cf8644f5' width="700">
    
 3. Click "Customize Deployment"
    
-   <img src="https://github.com/chai-research/chaiverse/assets/52447514/e9583b73-e915-48b4-8fd9-3bf90a856b88" width="700">
+   <img src="https://github.com/chai-research/chaiverse/assets/52447514/a69b4b8b-8484-43b0-8a13-3aaeb08439e3" width="700">
 
    Change "Container Image" to "chaiverse/runpod", and "Container Disk" and "Volume Disk" to "100GB". Then click "set Overrides" to save the changes.
 
-   <img src="https://github.com/chai-research/chaiverse/assets/52447514/42a6b709-7d85-4412-8ccb-9754b4b5101e" width="700">
+   <img src="https://github.com/chai-research/chaiverse/assets/52447514/eb215217-7800-4a57-971a-7d6710633402" width="700">
 
    Click "Continue" to deploy the changes.
 
-   <img src="https://github.com/chai-research/chaiverse/assets/52447514/4df44e6d-a5e9-44e1-bfa0-c4bb986b8c71" width="700">
+   <img src="https://github.com/chai-research/chaiverse/assets/52447514/991a92f7-32f5-4d92-a014-bfad5a8617e1" width="700">
 
-   
+
 4. Click "Deploy" to get your pod running.
 
-   <img src="https://github.com/chai-research/chaiverse/assets/52447514/c484780d-91e3-4bb9-9c93-bf9003a3a93d" width="700">
+   <img src="https://github.com/chai-research/chaiverse/assets/52447514/8423bf17-2b71-4c96-9690-36cb97fb3055" width="700">
            
 5. Find the pods under "MANAGE: Pods" and your pod is ready there. Click "Connect" to start the journey!
 
-   <img src="https://github.com/chai-research/chaiverse/assets/52447514/d0d4bd4c-c95d-4bf3-9d89-b158956e8ed6" width="700">
+   <img src="https://github.com/chai-research/chaiverse/assets/52447514/4d09d2b4-1fd8-4dff-bb0d-9bc5d88f4345" width="700">
 
 
 ## Model Training
