@@ -18,9 +18,10 @@
 4. Click "Customize Deployment", and change "Container Image" to "chaiverse/runpod". Set Container Disk and Volume Disk to "100GB". Click "set Overrides" to deploy the changes. Then click "Continue".
         ![image](https://github.com/chai-research/chaiverse/assets/52447514/e9583b73-e915-48b4-8fd9-3bf90a856b88)
 
-        ![image](https://github.com/chai-research/chaiverse/assets/52447514/93593a76-78b7-46d3-ad53-4a8eaa465b4e)
+   ![image](https://github.com/chai-research/chaiverse/assets/52447514/42a6b709-7d85-4412-8ccb-9754b4b5101e)
 
-        ![image](https://github.com/chai-research/chaiverse/assets/52447514/036193a4-9c28-4890-a736-612a594710bf)
+   ![image](https://github.com/chai-research/chaiverse/assets/52447514/4df44e6d-a5e9-44e1-bfa0-c4bb986b8c71)
+
    
 6. Click "Deploy" to get your pod running.
         ![image](https://github.com/chai-research/chaiverse/assets/52447514/c484780d-91e3-4bb9-9c93-bf9003a3a93d)
