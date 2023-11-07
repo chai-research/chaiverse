@@ -34,7 +34,7 @@ def tokenizer_loader():
 
 
 @pytest.fixture
-@patch("chaiverse.dev.logging_utils.requests.post", Mock())
+@patch("chaiverse.logging_utils.requests.post", Mock())
 def data(tokenizer_loader):
     data_path = 'ChaiML/tiny_chai_prize_reward_model_data'
     data_loader = DatasetLoader(
@@ -51,7 +51,7 @@ def data(tokenizer_loader):
 
 
 @pytest.fixture
-@patch("chaiverse.dev.logging_utils.requests.post", Mock())
+@patch("chaiverse.logging_utils.requests.post", Mock())
 def tiny_model(tiny_base_model_id, tokenizer_loader, tmp_path):
     model = RewardClassificationTrainer(
             model_name=tiny_base_model_id,
@@ -69,7 +69,7 @@ def tiny_model(tiny_base_model_id, tokenizer_loader, tmp_path):
 
 
 @pytest.fixture
-@patch("chaiverse.dev.logging_utils.requests.post", Mock())
+@patch("chaiverse.logging_utils.requests.post", Mock())
 def gpt2_model(tokenizer_loader, tmp_path):
     model = RewardClassificationTrainer(
             model_name="gpt2",

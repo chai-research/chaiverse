@@ -20,7 +20,6 @@ class BaseRewardTrainer(metaclass=ABCMeta):
             tokenizer_loader,
             output_dir,
             num_labels=None,
-            device_map="auto",
             learning_rate=2e-5,
             num_train_epochs=1,
             optim='adamw_hf',
