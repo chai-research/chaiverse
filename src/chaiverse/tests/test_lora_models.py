@@ -6,9 +6,9 @@ from peft import LoraConfig, get_peft_model, prepare_model_for_int8_training, Ta
 from transformers import AutoModelForCausalLM
 import tempfile
 
-from chaiverse.dev.dataset import DatasetLoader, CausalDatasetBuilder
-from chaiverse.dev.tokenizer import LlamaTokenizer
-from chaiverse.dev.model.lora_model import LoraTrainer
+from chaiverse.dataset import DatasetLoader, CausalDatasetBuilder
+from chaiverse.tokenizer import LlamaTokenizer
+from chaiverse.model.lora_model import LoraTrainer
 
 @pytest.fixture
 def tiny_base_model_id():

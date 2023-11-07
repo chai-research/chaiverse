@@ -1,9 +1,9 @@
 import logging
 from functools import partial
 
-from chaiverse.dev.data_preparation import data_cleaning as dc
-from chaiverse.dev.data_preparation import reward_data_cleaning as rdc
-from chaiverse.dev.data_preparation.data_pipeline import DataPipeline
+from chaiverse.data_preparation import data_cleaning as dc
+from chaiverse.data_preparation import reward_data_cleaning as rdc
+from chaiverse.data_preparation.data_pipeline import DataPipeline
 
 logger = logging.getLogger(__name__)
 

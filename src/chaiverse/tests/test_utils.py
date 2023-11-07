@@ -1,7 +1,7 @@
 import pytest
 import numpy as np
 
-from chaiverse.dev import utils
+from chaiverse import utils
 
 
 def test_ensure_is_dataset(hf_dataset):

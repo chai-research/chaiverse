@@ -3,7 +3,7 @@ from mock import patch
 
 import pytest
 
-from chaiverse.dev import logging_utils
+from chaiverse import logging_utils
 
 
 class dummy_mixin:

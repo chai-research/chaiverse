@@ -5,9 +5,9 @@ import pytest
 import tempfile
 from transformers import AutoModelForSequenceClassification
 
-from chaiverse.dev.dataset import DatasetLoader, RewardDatasetBuilder
-from chaiverse.dev.tokenizer import GPT2Tokenizer
-from chaiverse.dev.model.reward_model import RewardClassificationTrainer
+from chaiverse.dataset import DatasetLoader, RewardDatasetBuilder
+from chaiverse.tokenizer import GPT2Tokenizer
+from chaiverse.model.reward_model import RewardClassificationTrainer
 from mock import patch, Mock
 
 

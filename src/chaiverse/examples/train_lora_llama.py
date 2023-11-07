@@ -1,6 +1,6 @@
-from chaiverse.dev.dataset import DatasetLoader, CausalDatasetBuilder
-from chaiverse.dev.tokenizer import LlamaTokenizer
-from chaiverse.dev.model.lora_model import LoraTrainer
+from chaiverse.dataset import DatasetLoader, CausalDatasetBuilder
+from chaiverse.tokenizer import LlamaTokenizer
+from chaiverse.model.lora_model import LoraTrainer
 
 
 if __name__ == '__main__':

@@ -3,7 +3,7 @@ from unittest import mock
 import datasets
 import pytest
 
-from chaiverse.dev.dataset import DatasetLoader
+from chaiverse.dataset import DatasetLoader
 
 
 @pytest.fixture(autouse='session')

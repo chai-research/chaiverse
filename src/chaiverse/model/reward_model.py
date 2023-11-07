@@ -4,8 +4,8 @@ from transformers import AutoModelForSequenceClassification
 from transformers import TrainingArguments, Trainer
 import numpy as np
 
-from chaiverse.dev import utils
-from chaiverse.dev.logging_utils import logging_manager
+from chaiverse import utils
+from chaiverse.logging_utils import logging_manager
 
 
 class BaseRewardTrainer(metaclass=ABCMeta):
