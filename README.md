@@ -42,12 +42,12 @@
 Currently we support efficient training with Lora, and reward model training.
 The sample codes can be found under `src/chaiverse/examples`
 
-### Fit a model with Lora
+### 🦙 Fit a model with Lora
 Nice and easy pipeline with Lora implementation to train a LLaMA7b model and push it to huggingface within hours 🥳
 
 The [example notebook](https://github.com/chai-research/chaiverse/blob/clean_dev_main/src/chaiverse/examples/example_lora_llama.ipynb) to fit a Llama7b model and push it to huggingface.
 
-### Reward Model Training
+### 🎁 Reward Model Training
 We also implemented a reward model training pipeline which helps to boost your model's performance even more!
 
 The [example notebook](https://github.com/chai-research/chaiverse/blob/clean_dev_main/src/chaiverse/examples/example_reward_model.ipynb) running through the pipeline.
@@ -55,42 +55,35 @@ The [example notebook](https://github.com/chai-research/chaiverse/blob/clean_dev
 Detailed writeups about the reward model's [Introduction and Data Generation](https://wild-chatter-b52.notion.site/Chai-Prize-Reward-Model-Part-I-Data-026a10a8998a404ca6a52251c0c8d052) and [Model Training](https://wild-chatter-b52.notion.site/Chai-Prize-Reward-Model-Part-II-Training-model-753b574c843f4d0780bf8d85b084da57). 
 
 ## Winning Prizes with Chai Guanaco
-Check out [Chai Prize](https://www.chai-research.com/competition.html), the world's first open community challenge with real-user evaluations hosted by Chai!
+Check out [Chai Prize](https://www.chai-research.com/competition.html), the world's first open community challenge with real-user evaluations hosted by Chai! Your models will be directly deployed on the Chai App where our over 500K daily active users will be providing live feedback. Get to the top of the leaderboard and share the $1 million cash prize!
 
-The model submission is managed by the [chai-guanaco](https://pypi.org/project/chai-guanaco/) package, check out the link for more details including quick start tutorials.
+The model submission is managed by the [chai-guanaco](https://pypi.org/project/chai-guanaco/) package. Run `pip install chai-guanaco` to install.
 
-```sh
-chai-guanaco login
-```
+It provides a way to easily submit your language model, all you need to do is ensure it is on HuggingFace 🤗. We will automatically Tritonize your model for fast inference and host it in our internal GPU cluster 🚀
 
-Now submit the model you have just trained!
+Once deployed, Chai users on our platform who enter the arena mode will be rating your model directly, providing you with both quantitative and verbal feedback 📈 Both the public leaderboard and user feedback for your model can be directly downloaded via the chai_guanaco package 🧠
 
-```python
-import chai_guanaco as chai
+Cash prizes will be allocated according to your position on the leaderboard 💰
 
-model_url = "ChaiML/llama7b_dummy"
+### 🚀 Quick Start with Colab
+- Join the [Chai Prize Discord](https://discord.com/invite/chai-llm), our bot will greet you and give you a developer key 🥳
+- Submit a model in < 10 minutes with [Chai Prize Jupyter Notebook Quickstart](https://colab.research.google.com/drive/1FyCamT6icUo5Wlt6qqogHbyREHQQkAY8?usp=sharing)
+- Run through our [Chai Prize Prompt Engineering Guide](https://colab.research.google.com/drive/1eMRidYrys3b1mPrhUOJnfAB3Z7tcCNn0?usp=sharing) to submit models with custom prompts
+- Run through our [Chai Prize: Reward Model Guide](https://drive.google.com/file/d/15lWzRoP0RZ7jVxhas_zQaG2OyvqxaxhT/view?usp=sharing) to submit reward models! ❤️
+- Take a look at our #new-joiners #dataset-sharing and #ai-discussions channels for easter eggs
 
-#add reward_url if you also want to submit a reward model
-reward_url = "ChaiML/reward_dummy"
+### 📖 Resources
 
-generation_params = {
-        'temperature': 1.0,
-        'repetition_penalty': 1.13,
-        'top_p': 0.2,
-        "top_k": 40,
-        "stopping_words": ['\n'],
-        "presence_penalty": 1.5,
-        "frequency_penalty": 1.5
-        }
-submission_parameters = {
-                'model_repo': model_url,
-                'reward_repo':reward_url,
-                'generation_params': generation_params,
-                'model_name': 'my-awesome-model'}
-
-submitter = chai.ModelSubmitter()
-submission_id = submitter.submit(submission_parameters)
-```
+|Resources|Description|
+|---|---|
+|🤗 [Chai Huggingface](https://huggingface.co/ChaiML)	|Tons of models / datasets for you to finetune on! Including past winner solutions|
+|📒 [Fine tuning guide](https://huggingface.co/docs/transformers/training)	|Guide on language model finetuning|
+|💾 [Datasets](https://dataset-ideas.tiiny.site/)	|Curated list of open-sourced datasets to get started with finetuning|
+|💖 [Chai Prize Discord](https://discord.gg/chai-llm)	|Our Chai Prize Competition discord|
+|🚀 [Deepspeed Guide](https://huggingface.co/docs/transformers/main_classes/deepspeed)	|Guide for training with Deepspeed (faster training without GPU bottleneck)|
+|💬 [Example Conversations](https://huggingface.co/datasets/ChaiML/100_example_conversations)	|Here you can find 100 example conversations from the Chai Platform|
+|⚒️ [Build with us](https://www.chai-research.com/#careers)	|If you think what we are building is cool, join us!|
+|❗ [Competition EULA](https://www.chai-research.com/competition-eula.html)	|Covers terms of use and competition agreements|
 
 ## Sponsored By
 [![Sponsorship Banner](https://imgur.com/yovi11c.png)](https://www.coreweave.com/)
