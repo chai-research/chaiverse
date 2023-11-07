@@ -1,11 +1,12 @@
 import os
 import unittest.mock as mock
 from mock import patch
-import numpy as np
 
-import vcr
-import pandas as pd
 from freezegun import freeze_time
+import pandas as pd
+import pytest
+import numpy as np
+import vcr
 
 import chai_guanaco as chai
 from chai_guanaco import metrics
@@ -23,7 +24,7 @@ def test_get_leaderboard(data_dir_mock, get_ids_mock, deployed_mock, tmpdir):
     data_dir_mock.return_value = str(tmpdir)
     get_ids_mock.return_value = historical_submisions()
     with patch("chai_guanaco.utils.get_all_historical_submissions", return_value={}):
-        df = chai.get_leaderboard()
+        df = chai.get_leaderboard(developer_key="key")
     expected_cols = [
         'submission_id',
         'thumbs_up_ratio',
@@ -91,14 +92,14 @@ def test_get_leaderboard(data_dir_mock, get_ids_mock, deployed_mock, tmpdir):
 def test_get_submission_metrics(deployed_mock):
     deployed_mock.return_value = True
     with patch("chai_guanaco.utils.get_all_historical_submissions", return_value={}):
-        results = metrics.get_submission_metrics('wizard-vicuna-13b-bo4')
+        results = metrics.get_submission_metrics('wizard-vicuna-13b-bo4', developer_key="key")
     expected_metrics = {
-        'mcl': 28.620229007633586,
-        'thumbs_up_ratio': 0.7538167938931297,
-        'thumbs_up_ratio_se': 0.008106970421151738,
-        'repetition': 0.10992682598233437,
+        'mcl': pytest.approx(28.620229007633586),
+        'thumbs_up_ratio': pytest.approx(0.7538167938931297),
+        'thumbs_up_ratio_se': pytest.approx(0.008106970421151738),
+        'repetition': pytest.approx(0.10992682598233437),
         'total_feedback_count': 524,
-        'user_writing_speed': 2.2084751053670595,
+        'user_writing_speed': pytest.approx(2.2084751053670595),
     }
     assert results == expected_metrics
 
