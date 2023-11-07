@@ -1,9 +1,13 @@
+import logging
+
 from chaiverse.dev.dataset import DatasetLoader, RewardDatasetBuilder
 from chaiverse.dev.tokenizer import GPT2Tokenizer
 from chaiverse.dev.model.reward_model import RewardClassificationTrainer, RewardRegressionTrainer
 
 
 if __name__ == '__main__':
+    logging.basicConfig(level=logging.INFO)
+
     # load data
     data_path = 'ChaiML/20231012_chai_prize_reward_model_data'
     data_loader = DatasetLoader(
@@ -16,12 +20,12 @@ if __name__ == '__main__':
     print(df)
 
     # process data
-    tokenize_loader = GPT2Tokenizer(
+    tokenizer_loader = GPT2Tokenizer(
             padding_side='right',
             truncation_side='left',
             )
     data_builder = RewardDatasetBuilder(
-            tokenize_loader=tokenize_loader,
+            tokenizer_loader=tokenizer_loader,
             block_size=512,
             )
     data = data_builder.generate(df, n_jobs=10)
@@ -30,7 +34,7 @@ if __name__ == '__main__':
     # train model
     model = RewardClassificationTrainer(
             model_name='gpt2',
-            tokenize_loader=tokenize_loader,
+            tokenizer_loader=tokenizer_loader,
             output_dir='test_reward_model',
             # num_labels=2,
             learning_rate=1e-5,
@@ -40,8 +44,8 @@ if __name__ == '__main__':
             logging_steps=2,
             eval_strategy='steps',
             eval_steps=2,
+            no_cuda=True,
             )
-    1/0
     model.fit(data)
 
     # upload model

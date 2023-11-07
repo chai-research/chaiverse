@@ -5,6 +5,7 @@ from transformers import TrainingArguments, Trainer
 import numpy as np
 
 from chaiverse.dev import utils
+from chaiverse.dev.logging_utils import logging_manager
 
 
 class BaseRewardTrainer(metaclass=ABCMeta):
@@ -12,10 +13,11 @@ class BaseRewardTrainer(metaclass=ABCMeta):
     _training_task = None
     _num_labels = 1
 
+    @logging_manager('training_jobs')
     def __init__(
             self,
             model_name,
-            tokenize_loader,
+            tokenizer_loader,
             output_dir,
             num_labels=None,
             device_map="auto",
@@ -33,9 +35,10 @@ class BaseRewardTrainer(metaclass=ABCMeta):
             gradient_accumulation_steps=1,
             train_seed=1,
             device_map='auto',
+            no_cuda=False,
     ):
         self.model_name = model_name
-        self.tokenize_loader = tokenize_loader
+        self.tokenizer_loader = tokenizer_loader
         self.output_dir = output_dir
         self.num_labels = num_labels or self._num_labels
         self.device_map = device_map
@@ -53,10 +56,11 @@ class BaseRewardTrainer(metaclass=ABCMeta):
         self.gradient_accumulation_steps = gradient_accumulation_steps
         self.train_seed = train_seed
         self.device_map = device_map
+        self.no_cuda = no_cuda
 
     def fit(self, data):
         data = self._format_data_by_training_task(data)
-        self.tokenizer = self.tokenize_loader.load()
+        self.tokenizer = self.tokenizer_loader.load()
         self.instantiate_reward_model()
         self.instantiate_reward_trainer(data)
         self.trainer.train()
@@ -112,6 +116,7 @@ class BaseRewardTrainer(metaclass=ABCMeta):
                 per_device_train_batch_size=self.per_device_batch_size,
                 per_device_eval_batch_size=self.per_device_batch_size,
                 gradient_accumulation_steps=self.gradient_accumulation_steps,
+                no_cuda=self.no_cuda,
                 )
 
 

@@ -31,5 +31,8 @@ def parallelize_map(df, func, col=None, output_col=None, inplace=False, n_jobs=1
         df = df.map(lambda x: {output_col: func(x[col])}, num_proc=n_jobs)
     if inplace:
         return df
-    res = np.array(df[output_col])
+    if type(df).__name__ == 'DatasetDict':
+        res = {fold: np.array(_df[output_col]) for fold, _df in df.items()}
+    else:
+        res = np.array(df[output_col])
     return res
