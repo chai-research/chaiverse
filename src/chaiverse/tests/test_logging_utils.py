@@ -2,7 +2,6 @@ import os
 from mock import patch
 import pytz
 import pytest
-#from freezegun import freeze_time
 from datetime import datetime
 
 from chaiverse import logging_utils

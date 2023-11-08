@@ -116,9 +116,9 @@ def test_save_pretrained_reward(tiny_model):
     with tempfile.TemporaryDirectory() as tmp_dir:
         tiny_model.save(path=tmp_dir)
 
-        # check that the files `pytorch_model.bin` and `config.json` are in the directory
-        assert os.path.isfile(f"{tmp_dir}/pytorch_model.bin"), f"{tmp_dir}/pytorch_model.bin does not exist"
-        assert os.path.exists(f"{tmp_dir}/config.json"), f"{tmp_dir}/config.json does not exist"
+        # check that the files `model.safetensors` and `config.json` are in the directory
+        assert os.path.isfile(f"{tmp_dir}/model.safetensors"), f"{tmp_dir}/model.safetensors does not exist, it has {os.listdir(tmp_dir)}"
+        assert os.path.exists(f"{tmp_dir}/config.json"), f"{tmp_dir}/config.json does not exist, it has {os.listdir(tmp_dir)}"
 
 
 def test_reward_trainer(gpt2_model, data):
