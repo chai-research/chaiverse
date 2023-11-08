@@ -54,7 +54,7 @@ def tiny_model(tiny_base_model_id):
 @pytest.fixture
 @patch("chaiverse.logging_utils.requests.post", Mock())
 def data():
-    data_path = 'ebony59/chaiverse_lora_testing_fandom_IO'
+    data_path = 'ChaiML/chaiverse_lora_testing_fandom_IO'
     data_loader = DatasetLoader(
         hf_path=data_path,
         data_samples=10,
