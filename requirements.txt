@@ -1,2 +1,23 @@
-transformers
+attrs
+lancedb == 0.3.3
+pytest==5.3.5
+pytest-mock
+urllib3==1.26.18
+decorator
+msgpack
+mypy-extensions
+numba
+numpy
+oauthlib
+fastapi
+pytz
+boto3
+python-dateutil
+websocket-client
+SQLAlchemy
+wrapt
+future
+datasets
+transformers==4.35.0
+peft==0.6.0
 chai-guanaco

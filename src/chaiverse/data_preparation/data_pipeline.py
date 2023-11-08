@@ -1,7 +1,7 @@
 import logging
 
-from chaiverse.dev.data_preparation import data_utils
-from chaiverse.dev import utils
+from chaiverse.data_preparation import data_utils
+from chaiverse import utils
 
 
 logger = logging.getLogger(__name__)

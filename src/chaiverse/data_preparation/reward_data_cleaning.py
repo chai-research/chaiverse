@@ -1,7 +1,7 @@
 from datasets import Dataset, concatenate_datasets
 import numpy as np
 
-from chaiverse.dev.utils import load_dataset
+from chaiverse.utils import load_dataset
 
 
 def load_feedback_dataset_with_bot_info(feedback_path, bot_path):

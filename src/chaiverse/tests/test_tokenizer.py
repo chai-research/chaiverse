@@ -1,4 +1,4 @@
-from chaiverse.dev.tokenizer import Tokenizer, LlamaTokenizer
+from chaiverse.tokenizer import Tokenizer, LlamaTokenizer
 
 
 def test_dafult_tokenizer():

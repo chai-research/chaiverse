@@ -4,8 +4,8 @@ from transformers import AutoModelForSequenceClassification
 from transformers import TrainingArguments, Trainer
 import numpy as np
 
-from chaiverse.dev import utils
-from chaiverse.dev.logging_utils import logging_manager
+from chaiverse import utils
+from chaiverse.logging_utils import logging_manager
 
 
 class BaseRewardTrainer(metaclass=ABCMeta):
@@ -40,6 +40,7 @@ class BaseRewardTrainer(metaclass=ABCMeta):
         self.tokenizer_loader = tokenizer_loader
         self.output_dir = output_dir
         self.num_labels = num_labels or self._num_labels
+        self.device_map = device_map
         self.learning_rate = learning_rate
         self.num_train_epochs = num_train_epochs
         self.optim = optim

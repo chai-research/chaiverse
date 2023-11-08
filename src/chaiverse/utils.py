@@ -1,28 +1,49 @@
-import os
-import yaml
+import copy
 
-from datasets import load_dataset as load_hf_dataset
-from axolotl.utils.dict import DictDefault
+import datasets
+from datasets import Value
+import numpy as np
 
 
-def ensure_dir_exists(path):
-    if '.' in os.path.basename(path):
-        directory = os.path.dirname(path)
+def load_dataset(path, **kw):
+    df = datasets.load_dataset(path, **kw)
+    df = ensure_is_dataset(df)
+    return df
+
+
+def ensure_is_dataset(df):
+    if type(df).__name__ == 'DatasetDict':
+        df = datasets.concatenate_datasets(list(df.values()))
+    check_dataset_format(df)
+    return df
+
+
+def check_dataset_format(data):
+    assert type(data).__name__ == 'Dataset'
+
+
+def slice_dataset(df, ixs):
+    assert len(ixs) == df.num_rows, 'index has different length with dataset'
+    return df.select(np.where(ixs)[0])
+
+
+def ensure_is_list(obj):
+    return obj if isinstance(obj, list) else [obj]
+
+
+def format_dataset_dtype(data, column, dtype):
+    data = copy.copy(data)
+    if type(data).__name__ == 'DatasetDict':
+        for fold, df in data.items():
+            data[fold] = _format_dataset_dtype(df, column, dtype)
     else:
-        directory = path
-    if not os.path.exists(directory):
-        os.makedirs(directory)
+        data = _format_dataset_dtype(data, column, dtype)
+    return data
 
 
-def load_dataset(repo_url, data_type):
-    assert data_type in {'chatml', 'input_output'}, 'Unsupported dataset format'
-    dataset = load_hf_dataset(repo_url)
-    dataset.repo_url = repo_url
-    dataset.data_type = data_type
-    return dataset
-
-
-def load_config(config_file_path):
-    with open(config_file_path, encoding="utf-8") as file:
-        cfg: DictDefault = DictDefault(yaml.safe_load(file))
-    return cfg
+def _format_dataset_dtype(df, column, dtype):
+    features = df.features.copy()
+    if features[column].dtype != dtype:
+        features[column] = Value(dtype)
+        df = df.cast(features)
+    return df

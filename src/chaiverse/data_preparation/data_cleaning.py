@@ -1,8 +1,8 @@
 from functools import partial
 import numpy as np
 
-from chaiverse.dev import utils
-from chaiverse.dev.data_preparation import data_utils
+from chaivers import utils
+from chaiverse.data_preparation import data_utils
 
 
 def slice_columns(df, cols):

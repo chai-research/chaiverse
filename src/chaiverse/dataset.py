@@ -3,8 +3,8 @@ from copy import deepcopy
 from typing import Union
 
 import datasets
-from chaiverse.dev import utils
-from chaiverse.dev.logging_utils import logging_manager
+from chaiverse import utils
+from chaiverse.logging_utils import logging_manager
 
 
 class DatasetLoader:

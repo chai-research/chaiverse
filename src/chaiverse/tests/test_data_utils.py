@@ -1,7 +1,7 @@
 import pytest
 import numpy as np
 
-from chaiverse.dev.data_preparation import data_utils
+from chaiverse.data_preparation import data_utils
 
 
 def test_set_temp_seed():
