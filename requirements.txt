@@ -21,4 +21,3 @@ datasets
 transformers==4.35.0
 peft==0.6.0
 chai-guanaco
-pytest-mock
