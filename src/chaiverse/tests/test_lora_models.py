@@ -12,9 +12,11 @@ from chaiverse.model.lora_model import LoraTrainer
 
 from mock import patch, Mock
 
+
 @pytest.fixture
 def tiny_base_model_id():
     return "HuggingFaceH4/tiny-random-LlamaForCausalLM"
+
 
 @pytest.fixture
 def lora_config():
@@ -22,10 +24,11 @@ def lora_config():
                 r=16,
                 lora_alpha=32,
                 lora_dropout=0.05,
-                target_modules = ['q_proj', 'k_proj', 'v_proj', 'o_proj'],
-                bias = 'none',
+                target_modules=['q_proj', 'k_proj', 'v_proj', 'o_proj'],
+                bias='none',
                 task_type=TaskType.CAUSAL_LM,
             )
+
 
 @pytest.fixture
 def tiny_base_model(tiny_base_model_id):
@@ -37,19 +40,21 @@ def tiny_base_model(tiny_base_model_id):
             load_in_8bit=False,
             device_map='cpu')
 
+
 @pytest.fixture
 @patch("chaiverse.logging_utils.requests.post", Mock())
-def tiny_model(tiny_base_model_id):
+def tiny_model(tiny_base_model_id, tmpdir):
     r"""
     Simply creates a peft model and checks that it can be loaded.
     """
     tiny_model = LoraTrainer(
-            model_name = tiny_base_model_id,
-            output_dir = 'lora_unittest',
-            device_map = 'cpu'
+            model_name=tiny_base_model_id,
+            output_dir=f'{tmpdir}/lora_unittest',
+            device_map='cpu'
             )
     tiny_model.instantiate_lora_model(load_in_8bit=False)
     return tiny_model
+
 
 @pytest.fixture
 @patch("chaiverse.logging_utils.requests.post", Mock())
@@ -69,11 +74,14 @@ def data():
         )
     return data_builder.generate(df)
 
+
 def test_load_base_model(tiny_base_model):
     assert tiny_base_model is not None
 
+
 def test_instantiate_lora_model(tiny_model):
     assert tiny_model.model is not None
+
 
 def test_check_lora_model_nb_trainable_params(tiny_model):
     r"""
@@ -81,6 +89,7 @@ def test_check_lora_model_nb_trainable_params(tiny_model):
     """
     nb_trainable_params = sum(p.numel() for p in tiny_model.model.parameters() if p.requires_grad)
     assert nb_trainable_params == 4096
+
 
 def test_save_pretrained_lora(tiny_model):
     r"""
@@ -92,6 +101,7 @@ def test_save_pretrained_lora(tiny_model):
         # check that the files `adapter_model.bin` and `adapter_config.json` are in the directory
         assert os.path.isfile(f"{tmp_dir}/adapter_model.bin"), f"{tmp_dir}/adapter_model.bin does not exist"
         assert os.path.exists(f"{tmp_dir}/adapter_config.json"), f"{tmp_dir}/adapter_config.json does not exist"
+
 
 def test_load_pretrained_lora(tiny_model, tiny_base_model):
     r"""
@@ -106,6 +116,7 @@ def test_load_pretrained_lora(tiny_model, tiny_base_model):
             if p1[0] not in ["v_head.summary.weight", "v_head.summary.bias"]:
                 assert torch.allclose(p1[1], p2[1]), f"{p1[0]} != {p2[0]}"
 
+
 def test_continue_training_lora_model(tiny_model, tiny_base_model):
     r"""
     Load peft and checks that it can continue training.
@@ -115,6 +126,7 @@ def test_continue_training_lora_model(tiny_model, tiny_base_model):
         pretrained_lora_model = PeftModel.from_pretrained(tiny_base_model, tmp_dir, is_trainable=True)
         nb_trainable_params = sum(p.numel() for p in pretrained_lora_model.parameters() if p.requires_grad)
         assert nb_trainable_params == 4096
+
 
 def test_merge_model(tiny_model):
     r"""
@@ -132,6 +144,7 @@ def test_merge_model(tiny_model):
         assert os.path.isfile(f"{tmp_dir}/merged/generation_config.json"), f"{tmp_dir}/merged/generation_config does not exist, it has {os.listdir(tmp_dir)}"
         assert os.path.exists(f"{tmp_dir}/merged/config.json"), f"{tmp_dir}/merged/config.json does not exist, it has {os.listdir(tmp_dir)}"
         assert os.path.exists(f"{tmp_dir}/merged/model.safetensors"), f"{tmp_dir}/merged/pytorch.safetensors does not exist, it has {os.listdir(tmp_dir)}"
+
 
 def test_training_lora_model(tiny_model, data):
     r"""
@@ -186,6 +199,7 @@ def test_training_lora_model(tiny_model, data):
         assert os.path.exists(f"{tmp_dir}/merged/config.json"), f"{tmp_dir}/merged/config.json does not exist, it has {os.listdir(tmp_dir)}"
         assert os.path.exists(f"{tmp_dir}/merged/model.safetensors"), f"{tmp_dir}/merged/pytorch.safetensors does not exist, it has {os.listdir(tmp_dir)}"
 
+
 def test_load_merge_model(tiny_model):
     r"""
     Check that the merged model can be loaded correctly.
@@ -203,4 +217,3 @@ def test_load_merge_model(tiny_model):
         for p1, p2 in zip(tiny_model.model.named_parameters(), merged_model.named_parameters()):
             if p1[0] not in ["v_head.summary.weight", "v_head.summary.bias"]:
                 assert torch.allclose(p1[1], p2[1]), f"{p1[0]} != {p2[0]}"
-

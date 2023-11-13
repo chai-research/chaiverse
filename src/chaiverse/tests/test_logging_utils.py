@@ -27,16 +27,20 @@ def mock_post():
     with patch("chaiverse.logging_utils.requests.post") as func:
         yield func
 
+
 @pytest.fixture
-def mock_utc_now(mocker):
-    fake_time = datetime(2023,1,1,0,0,0,tzinfo=pytz.UTC)
-    mocker.patch('chaiverse.logging_utils.get_utc_now',return_value=fake_time)
+def mock_utc_now():
+    fake_time = datetime(2023, 1, 1, 0, 0, 0, tzinfo=pytz.UTC)
+    with patch('chaiverse.logging_utils.get_utc_now', return_value=fake_time) as func:
+        yield func
+
 
 @logging_utils.auto_authenticate
 def dummy_function(info, developer_key=None):
     return info, developer_key
 
-def test_logging_manager_submit_correct_payload(tmp_path, mock_post,mock_utc_now):
+
+def test_logging_manager_submit_correct_payload(tmp_path, mock_post, mock_utc_now):
     developer_key = 'CR-12345'
     write_tmp_key_to_file(tmp_path, developer_key)
     model = dummy_class(321, c='cba')
@@ -48,7 +52,7 @@ def test_logging_manager_submit_correct_payload(tmp_path, mock_post,mock_utc_now
                 'd': 'dummy_mixin',
                 'args1': 'dummy_class',
                 'args2': 321,
-                'timestamp':"2023-01-01 00:00:00+00:00"},
+                'timestamp': "2023-01-01 00:00:00+00:00"},
             }
     headers = {"Authorization": f"Bearer {developer_key}"}
     expected_url = logging_utils.get_logging_endpoint('test')
@@ -64,7 +68,7 @@ def test_logging_manager_submit_correct_payload(tmp_path, mock_post,mock_utc_now
             'parameters': {
                 'args1': 'dummy_class',
                 'n_jobs': 10,
-                'timestamp':"2023-01-01 00:00:00+00:00"},
+                'timestamp': "2023-01-01 00:00:00+00:00"},
             }
     expected_url = logging_utils.get_logging_endpoint('run')
     mock_post.assert_called_with(
