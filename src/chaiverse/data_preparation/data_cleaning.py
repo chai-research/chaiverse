@@ -1,12 +1,15 @@
 from functools import partial
 import numpy as np
 
-from chaivers import utils
+from chaiverse import utils
 from chaiverse.data_preparation import data_utils
 
 
+@utils.datasetdict_inplace_wrapper
 def slice_columns(df, cols):
     cols = utils.ensure_is_list(cols)
+    err_msg = f'{cols} is not subset of data columns {df.column_names}'
+    assert (set(cols).issubset(set(df.column_names))), err_msg
     rm_cols = [i for i in df.column_names if i not in cols]
     df = df.remove_columns(rm_cols)
     return df
@@ -92,7 +95,7 @@ def format_user_label(df, col, user_label, new_user_label, n_jobs=1):
 def format_with_pygmalion_prompt(
         df, col, output_col, bot_label, context_window, memory='memory', prompt='prompt', n_jobs=1):
     def _formatting_in_row(row):
-        formatted_txt = _construct_pygmalion_prompt(
+        formatted_txt = construct_pygmalion_prompt(
                 context=row[col],
                 bot_name=row[bot_label],
                 context_window=context_window,
@@ -109,7 +112,7 @@ def format_with_pygmalion_prompt(
     return df
 
 
-def _construct_pygmalion_prompt(context, bot_name, context_window, memory=None, prompt=None):
+def construct_pygmalion_prompt(context, bot_name, context_window, memory=None, prompt=None):
     text = context[-context_window:]
     trunc_memory = trunc_prompt = ''
     if memory is not None:
