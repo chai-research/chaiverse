@@ -89,18 +89,10 @@ class Feedback():
 
 
 @auto_authenticate
-def get_feedback(submission_id: str, developer_key=None):
-    submissions = utils.get_all_historical_submissions(developer_key)
-    is_deployed = _submission_is_deployed(submission_id, submissions)
-    load_feedback = _get_latest_feedback if is_deployed else _get_cached_feedback
+def get_feedback(submission_id: str, developer_key=None, reload=True):
+    load_feedback = _get_latest_feedback if reload else _get_cached_feedback
     feedback = load_feedback(submission_id, developer_key)
     return feedback
-
-
-def _submission_is_deployed(submission_id, submissions):
-    submission_data = submissions.get(submission_id, {})
-    is_deployed = submission_data.get('status') == 'deployed'
-    return is_deployed
 
 
 def _get_latest_feedback(submission_id, developer_key):

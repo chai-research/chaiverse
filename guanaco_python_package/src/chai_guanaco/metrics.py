@@ -50,15 +50,16 @@ def get_leaderboard(max_workers=DEFAULT_MAX_WORKERS, developer_key=None):
     return pd.DataFrame(leaderboard)
 
 
-def get_leaderboard_row(submission_item, developer_key):
+def get_leaderboard_row(submission_item, developer_key=None):
     submission_id, meta_data = submission_item
-    metrics = get_submission_metrics(submission_id, developer_key)
+    is_deployed = meta_data.get('status') == 'deployed'
+    metrics = get_submission_metrics(submission_id, developer_key, reload=is_deployed)
     return {'submission_id': submission_id, **meta_data, **metrics}
 
 
 @auto_authenticate
-def get_submission_metrics(submission_id, developer_key):
-    feedback = get_feedback(submission_id, developer_key)
+def get_submission_metrics(submission_id, developer_key, reload=True):
+    feedback = get_feedback(submission_id, developer_key, reload=reload)
     metrics = calc_metrics(feedback)
     return metrics
 

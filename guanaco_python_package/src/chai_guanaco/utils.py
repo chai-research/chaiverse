@@ -1,14 +1,11 @@
 from concurrent.futures import ProcessPoolExecutor, wait, ALL_COMPLETED
 from datetime import datetime
 import inspect
-import pickle
 import os
+import pickle
 from time import time
-import inspect
-import os
-import pickle
-import requests
 
+import requests
 from tqdm import tqdm
 
 CACHE_UPDATE_HOURS = 6
@@ -38,7 +35,6 @@ def print_color(text, color):
     print(f'{colors[color]}{text}\033[0m')
 
 
-@lru_cache(maxsize=None)
 def get_all_historical_submissions(developer_key):
     headers = {"developer_key": developer_key}
     url = get_url(LEADERBOARD_ENDPOINT)

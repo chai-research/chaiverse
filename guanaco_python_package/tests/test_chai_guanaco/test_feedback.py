@@ -35,16 +35,14 @@ def test_get_feedback_with_cache(tmpdir):
     submission_id = "test_submission"
     developer_key = "test_key"
 
-    mock_submissions = {submission_id: {"status": "not_deployed"}}
     mock_methods = {
-        "get_all_historical_submissions": Mock(return_value=mock_submissions),
         "guanaco_data_dir": Mock(return_value=str(tmpdir)),
     }
     os.makedirs(os.path.join(tmpdir, 'cache'), exist_ok=True)
 
     with patch.multiple("chai_guanaco.utils", **mock_methods):
         with patch('chai_guanaco.feedback._get_latest_feedback', return_value='feedback'):
-            result = feedback.get_feedback(submission_id, developer_key)
+            result = feedback.get_feedback(submission_id, developer_key, reload=False)
             expected_path = tmpdir / "cache" / f"{submission_id}.pkl"
             assert expected_path.exists()
             assert result == 'feedback'

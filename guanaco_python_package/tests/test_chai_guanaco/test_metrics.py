@@ -14,17 +14,38 @@ from chai_guanaco import metrics
 RESOURCE_DIR = os.path.join(os.path.abspath(os.path.join(__file__, '..')), 'resources')
 
 
-@mock.patch('chai_guanaco.feedback._submission_is_deployed')
+@mock.patch('chai_guanaco.metrics.get_all_historical_submissions')
+def test_developer_can_call_display_leaderboard_and_pass_in_developer_key_as_arg(get_submissions_mock):
+    get_submissions_mock.side_effect = KeyError()
+    with pytest.raises(KeyError):
+        chai.display_leaderboard(max_workers=1, developer_key='bad-developer-key')
+    get_submissions_mock.assert_called_with('bad-developer-key')
+
+
+@mock.patch('chai_guanaco.metrics.get_all_historical_submissions')
+def test_developer_can_call_get_leaderboard_and_pass_in_developer_key_as_arg(get_submissions_mock):
+    get_submissions_mock.side_effect = KeyError()
+    with pytest.raises(KeyError):
+        chai.get_leaderboard(max_workers=1, developer_key='bad-developer-key')
+    get_submissions_mock.assert_called_with('bad-developer-key')
+
+
+@mock.patch('chai_guanaco.metrics.get_feedback')
+def test_developer_can_call_get_submission_metrics_and_pass_in_developer_key_as_arg(feedback_mock):
+    feedback_mock.side_effect = KeyError()
+    with pytest.raises(KeyError):
+        metrics.get_submission_metrics(submission_id='fake-submission-id', developer_key='bad-developer-key')
+    feedback_mock.assert_called_with('fake-submission-id', 'bad-developer-key', reload=True)
+
+
 @mock.patch('chai_guanaco.metrics.get_all_historical_submissions')
 @mock.patch('chai_guanaco.utils.guanaco_data_dir')
 @freeze_time('2023-07-28 00:00:00')
 @vcr.use_cassette(os.path.join(RESOURCE_DIR, 'test_get_leaderboard.yaml'))
-def test_get_leaderboard(data_dir_mock, get_ids_mock, deployed_mock, tmpdir):
-    deployed_mock.return_value = True
+def test_get_leaderboard(data_dir_mock, get_ids_mock, tmpdir):
     data_dir_mock.return_value = str(tmpdir)
     get_ids_mock.return_value = historical_submisions()
-    with patch("chai_guanaco.utils.get_all_historical_submissions", return_value={}):
-        df = chai.get_leaderboard(developer_key="key")
+    df = chai.get_leaderboard(max_workers=1, developer_key="key")
     expected_cols = [
         'submission_id',
         'thumbs_up_ratio',
@@ -37,7 +58,7 @@ def test_get_leaderboard(data_dir_mock, get_ids_mock, deployed_mock, tmpdir):
         {
             'submission_id': 'alekseykorshuk-exp-sy_1690222960',
             'timestamp': '2023-07-24 18:22:40+00:00',
-            'status': 'inactive',
+            'status': 'deployed',
             'model_repo': 'AlekseyKorshuk/exp-syn-friendly-cp475',
             'developer_uid': 'aleksey',
             'model_name': 'None',
@@ -53,7 +74,7 @@ def test_get_leaderboard(data_dir_mock, get_ids_mock, deployed_mock, tmpdir):
         {
             'submission_id': 'psiilu-funny-bunny-1-_1689922219',
             'timestamp': '2023-07-21 06:50:19+00:00',
-            'status': 'inactive',
+            'status': 'deployed',
             'model_repo': 'psiilu/funny-bunny-1-1-1-1-1',
             'developer_uid': 'philipp',
             'model_name': 'None',
@@ -69,7 +90,7 @@ def test_get_leaderboard(data_dir_mock, get_ids_mock, deployed_mock, tmpdir):
         {
             'submission_id': 'tehvenom-dolly-shygma_1690135695',
             'timestamp': '2023-07-23 18:08:15+00:00',
-            'status': 'inactive',
+            'status': 'deployed',
             'model_repo': 'TehVenom/Dolly_Shygmalion-6b-Dev_V8P2',
             'developer_uid': 'tehvenom',
             'model_name': 'None',
@@ -86,6 +107,23 @@ def test_get_leaderboard(data_dir_mock, get_ids_mock, deployed_mock, tmpdir):
     pd.testing.assert_frame_equal(df, pd.DataFrame(expected_data))
 
 
+@vcr.use_cassette(os.path.join(RESOURCE_DIR, 'test_get_submission_metrics.yaml'))
+@freeze_time('2023-07-14 19:00:00')
+def test_get_leaderboard_row():
+    results = metrics.get_leaderboard_row(('wizard-vicuna-13b-bo4', {'meta-data-key': 'meta-data-value'}), developer_key="key")
+    expected_metrics = {
+        'submission_id': 'wizard-vicuna-13b-bo4',
+        'meta-data-key': 'meta-data-value',
+        'mcl': pytest.approx(28.620229007633586),
+        'thumbs_up_ratio': pytest.approx(0.7538167938931297),
+        'thumbs_up_ratio_se': pytest.approx(0.008106970421151738),
+        'repetition': pytest.approx(0.10992682598233437),
+        'total_feedback_count': 524,
+        'user_writing_speed': pytest.approx(2.2084751053670595),
+    }
+    assert results == expected_metrics
+
+
 @mock.patch('chai_guanaco.feedback._submission_is_deployed')
 @vcr.use_cassette(os.path.join(RESOURCE_DIR, 'test_get_submission_metrics.yaml'))
 @freeze_time('2023-07-14 19:00:00')
@@ -95,7 +133,7 @@ def test_get_submission_metrics(deployed_mock):
         results = metrics.get_submission_metrics('wizard-vicuna-13b-bo4', developer_key="key")
     expected_metrics = {
         'mcl': pytest.approx(28.620229007633586),
-        'thumbs_up_ratio': pytest.approx(.7538167938931297),
+        'thumbs_up_ratio': pytest.approx(0.7538167938931297),
         'thumbs_up_ratio_se': pytest.approx(0.008106970421151738),
         'repetition': pytest.approx(0.10992682598233437),
         'total_feedback_count': 524,
@@ -115,7 +153,6 @@ def test_conversation_metrics():
         {'deleted': False, 'content': 'dont go!', 'sender': bot_sender_data},
         {'deleted': False, 'content': '123456', 'sender': user_sender_data},
         {'deleted': False, 'content': 'bye', 'sender': bot_sender_data},
-
     ]
     convo_metrics = metrics.ConversationMetrics(messages)
     assert convo_metrics.mcl == 5
@@ -250,7 +287,7 @@ def historical_submisions():
     data = {
        "alekseykorshuk-exp-sy_1690222960": {
           "timestamp": "2023-07-24 18:22:40+00:00",
-          "status": "inactive",
+          "status": "deployed",
           "model_repo": "AlekseyKorshuk/exp-syn-friendly-cp475",
           "developer_uid": "aleksey",
           "model_name": "None",
@@ -259,7 +296,7 @@ def historical_submisions():
        },
        "psiilu-funny-bunny-1-_1689922219": {
           "timestamp": "2023-07-21 06:50:19+00:00",
-          "status": "inactive",
+          "status": "deployed",
           "model_repo": "psiilu/funny-bunny-1-1-1-1-1",
           "developer_uid": "philipp",
           "model_name": "None",
@@ -268,7 +305,7 @@ def historical_submisions():
        },
        "tehvenom-dolly-shygma_1690135695": {
           "timestamp": "2023-07-23 18:08:15+00:00",
-          "status": "inactive",
+          "status": "deployed",
           "model_repo": "TehVenom/Dolly_Shygmalion-6b-Dev_V8P2",
           "developer_uid": "tehvenom",
           "model_name": "None",
