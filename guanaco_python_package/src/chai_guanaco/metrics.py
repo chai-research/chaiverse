@@ -1,16 +1,19 @@
 from collections import defaultdict
 from datetime import datetime
+import itertools
+import os
 import string
+from time import time
 
 import numpy as np
 import pandas as pd
-from tqdm import tqdm
 
 from chai_guanaco.feedback import get_feedback
 from chai_guanaco.login_cli import auto_authenticate
-from chai_guanaco.utils import print_color, cache, get_all_historical_submissions
+from chai_guanaco.utils import print_color, cache, get_all_historical_submissions, distribute_to_workers
 
 
+DEFAULT_MAX_WORKERS = min(20, os.cpu_count() * 2)
 PUBLIC_LEADERBOARD_MINIMUM_FEEDBACK_COUNT = 150
 LEADERBOARD_DISPLAY_COLS = [
     'developer_uid',
@@ -24,31 +27,43 @@ LEADERBOARD_DISPLAY_COLS = [
 ]
 
 
-@auto_authenticate
 def display_leaderboard(
         developer_key=None,
         regenerate=False,
+        max_workers=DEFAULT_MAX_WORKERS,
         detailed=False,
         ):
-    df = cache(get_leaderboard, regenerate)(developer_key)
+    df = cache(get_leaderboard, regenerate)(max_workers=max_workers, developer_key=developer_key)
     _print_formatted_leaderboard(df, detailed)
     return df
 
 
 @auto_authenticate
-def get_leaderboard(developer_key=None):
-    submission_data = get_all_historical_submissions(developer_key)
-    leaderboard = []
-    for submission_id, meta_data in tqdm(submission_data.items(), 'Getting Metrics'):
-        metrics = get_submission_metrics(submission_id, developer_key)
-        meta_data.update(metrics)
-        leaderboard.append({'submission_id': submission_id, **meta_data})
+def get_leaderboard(max_workers=DEFAULT_MAX_WORKERS, developer_key=None):
+    submissions = get_all_historical_submissions(developer_key)
+    leaderboard = distribute_to_workers(
+        get_leaderboard_row,
+        submissions.items(),
+        max_workers=max_workers,
+        developer_key=developer_key
+    )
     return pd.DataFrame(leaderboard)
+
+
+def get_leaderboard_row(submission_item, developer_key):
+    submission_id, meta_data = submission_item
+    metrics = get_submission_metrics(submission_id, developer_key)
+    return {'submission_id': submission_id, **meta_data, **metrics}
 
 
 @auto_authenticate
 def get_submission_metrics(submission_id, developer_key):
     feedback = get_feedback(submission_id, developer_key)
+    metrics = calc_metrics(feedback)
+    return metrics
+
+
+def calc_metrics(feedback):
     feedback_metrics = FeedbackMetrics(feedback.raw_data)
     metrics = {}
     if len(feedback_metrics.convo_metrics) > 0:

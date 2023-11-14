@@ -1,3 +1,4 @@
+from concurrent.futures import ProcessPoolExecutor, wait, ALL_COMPLETED
 from datetime import datetime
 import inspect
 import pickle
@@ -7,6 +8,8 @@ import inspect
 import os
 import pickle
 import requests
+
+from tqdm import tqdm
 
 CACHE_UPDATE_HOURS = 6
 BASE_URL = "https://guanaco-submitter.chai-research.com"
@@ -98,3 +101,31 @@ def parse_log_entry(log, timezone=None):
     message = [timestamp, log["level"], log["entry"]]
     message = ":".join(message)
     return message
+
+
+def _distribute_to_multi_process_pool(func, *args_iter, max_workers=2, **kwargs):
+    futures = []
+    with tqdm(total=None) as progress:
+        with ProcessPoolExecutor(max_workers) as executor:
+            for func_args in zip(*args_iter):
+                future = executor.submit(func, *func_args, **kwargs)
+                future.add_done_callback(lambda p: progress.update(1))
+                futures.append(future)
+            progress.total = len(futures)
+            wait(futures, return_when=ALL_COMPLETED)
+    results = [future.result() for future in futures]
+    return results
+
+
+def _distribute_to_single_process(func, *args_iter, **kwargs):
+    args_list = list(zip(*args_iter))
+    results = [func(*args, **kwargs) for args in tqdm(args_list, total=len(args_list))]
+    return results
+
+
+def distribute_to_workers(func, *args_iter,  max_workers=1, **kwargs):
+    if max_workers == 1:
+        return _distribute_to_single_process(func, *args_iter, **kwargs)
+    else:
+        return _distribute_to_multi_process_pool(func, *args_iter, max_workers=max_workers, **kwargs)
+
