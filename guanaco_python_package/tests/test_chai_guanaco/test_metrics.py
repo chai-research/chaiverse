@@ -124,13 +124,10 @@ def test_get_leaderboard_row():
     assert results == expected_metrics
 
 
-@mock.patch('chai_guanaco.feedback._submission_is_deployed')
 @vcr.use_cassette(os.path.join(RESOURCE_DIR, 'test_get_submission_metrics.yaml'))
 @freeze_time('2023-07-14 19:00:00')
-def test_get_submission_metrics(deployed_mock):
-    deployed_mock.return_value = True
-    with patch("chai_guanaco.utils.get_all_historical_submissions", return_value={}):
-        results = metrics.get_submission_metrics('wizard-vicuna-13b-bo4', developer_key="key")
+def test_get_submission_metrics():
+    results = metrics.get_submission_metrics('wizard-vicuna-13b-bo4', developer_key="key", reload=True)
     expected_metrics = {
         'mcl': pytest.approx(28.620229007633586),
         'thumbs_up_ratio': pytest.approx(0.7538167938931297),
