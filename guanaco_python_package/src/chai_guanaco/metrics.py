@@ -18,6 +18,7 @@ PUBLIC_LEADERBOARD_MINIMUM_FEEDBACK_COUNT = 150
 LEADERBOARD_DISPLAY_COLS = [
     'developer_uid',
     'model_name',
+    'is_custom_reward',
     'submission_id',
     'thumbs_up_ratio',
     'user_writing_speed',
@@ -27,6 +28,10 @@ LEADERBOARD_DISPLAY_COLS = [
 ]
 
 
+pd.set_option('display.max_columns', 10)
+pd.set_option('display.width', 500)
+
+
 def display_leaderboard(
         developer_key=None,
         regenerate=False,
@@ -34,8 +39,9 @@ def display_leaderboard(
         detailed=False,
         ):
     df = cache(get_leaderboard, regenerate)(max_workers=max_workers, developer_key=developer_key)
-    _print_formatted_leaderboard(df, detailed)
-    return df
+    df = _get_processed_leaderboard(df, detailed)
+    df = _get_formatted_leaderboard(df, detailed)
+    _pprint_leaderboard(df)
 
 
 @auto_authenticate
@@ -210,35 +216,37 @@ def _remove_punctuation(text):
     return cleaned_text.lower()
 
 
-def _print_formatted_leaderboard(raw_df, detailed):
-    df = _get_processed_leaderboard(raw_df)
-    if not detailed:
-        df = _get_df_with_unique_hf_repo(df)
-        df = df[LEADERBOARD_DISPLAY_COLS].copy()
-    _pprint_leaderboard(df, '💎 Leaderboard:', 'overall_rank', detailed, ascending=True)
-    return df
-
-
-def _get_processed_leaderboard(df):
+def _get_processed_leaderboard(df, detailed):
     # maintain backwards compatibility with model_name field
     df['model_name'] = df['model_name'].fillna(df['submission_id'])
-    df = _format_leaderboard_date(df)
+    if 'is_custom_reward' not in df:
+        df['is_custom_reward'] = None
+    df['is_custom_reward'] = df['is_custom_reward'].fillna(False)
+    if 'reward_repo' not in df:
+        df['reward_repo'] = None
     df = _filter_submissions_with_few_feedback(df)
-    df = df.reset_index(drop=True)
-    df = _add_overall_rank(df)
+    df = _add_and_sort_by_overall_rank(df)
+    df = df if detailed else _get_submissions_with_unique_model(df)
+    df = df if detailed else _get_submissions_with_unique_dev_id(df)
     return df
 
 
-def _format_leaderboard_date(df):
+def _get_formatted_leaderboard(df, detailed):
     df['timestamp'] = df.apply(lambda x: datetime.fromisoformat(x['timestamp']), axis=1)
     df['date'] = df['timestamp'].dt.date
     df.drop(['timestamp'], axis=1, inplace=True)
+    df['is_custom_reward'] = df['is_custom_reward'].replace({
+        True: '✅',
+        False: '❌'
+    })
+    if not detailed:
+        df = df[LEADERBOARD_DISPLAY_COLS]
+    df = df.reset_index(drop=True)
     return df
 
 
-def _get_df_with_unique_hf_repo(df):
-    df = df.sort_values(['overall_rank'], ascending=True)
-    df = df.drop_duplicates('model_repo', keep='first')
+def _get_submissions_with_unique_model(df):
+    df = df.drop_duplicates(subset=['model_repo', 'reward_repo'], keep='first')
     return df
 
 
@@ -247,22 +255,20 @@ def _filter_submissions_with_few_feedback(df):
     return filtered_df
 
 
-def _add_overall_rank(df):
+def _add_and_sort_by_overall_rank(df):
     thumbs_up_rank = df['thumbs_up_ratio'].rank(ascending=False)
     writing_speed_rank = df['user_writing_speed'].rank(ascending=True)
-    df['overall_score'] = np.mean([writing_speed_rank, thumbs_up_rank], axis=0)
-    df['overall_rank'] = df.overall_score.rank().astype(int)
-    df = df.sort_values('overall_rank').reset_index(drop=True)
+    df.loc[:, 'overall_score'] = np.mean([writing_speed_rank, thumbs_up_rank], axis=0)
+    df.loc[:, 'overall_rank'] = df.overall_score.rank().astype(int)
+    df = df.sort_values('overall_rank', ascending=True).reset_index(drop=True)
     return df
 
 
-def _get_df_with_unique_dev_id(df):
-    out = df.drop_duplicates('developer_uid', keep='first').reset_index(drop=True)
+def _get_submissions_with_unique_dev_id(df):
+    out = df.drop_duplicates('developer_uid', keep='first')
     return out
 
 
-def _pprint_leaderboard(df, title, sort_by, detailed=False, ascending=True):
-    print_color(f'\n{title}', 'red')
-    df = df.sort_values(sort_by, ascending=ascending).reset_index(drop=True)
-    df = df if detailed else _get_df_with_unique_dev_id(df)
+def _pprint_leaderboard(df):
+    print_color(f'\n💎 Leaderboard:', 'red')
     print(df.round(3).head(30))

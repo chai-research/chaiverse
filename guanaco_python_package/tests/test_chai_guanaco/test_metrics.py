@@ -70,6 +70,8 @@ def test_get_leaderboard(data_dir_mock, get_ids_mock, tmpdir):
             'repetition': 0.09309662846841879,
             'total_feedback_count': 33,
             'user_writing_speed': 2.258729,
+            'reward_repo': None,
+            'is_custom_reward': None,
             },
         {
             'submission_id': 'psiilu-funny-bunny-1-_1689922219',
@@ -86,6 +88,8 @@ def test_get_leaderboard(data_dir_mock, get_ids_mock, tmpdir):
             'repetition': 0.26395981785675354,
             'total_feedback_count': 207,
             'user_writing_speed': 2.7696244,
+            'reward_repo': 'mock-custom-reward-repo',
+            'is_custom_reward': True,
             },
         {
             'submission_id': 'tehvenom-dolly-shygma_1690135695',
@@ -102,6 +106,8 @@ def test_get_leaderboard(data_dir_mock, get_ids_mock, tmpdir):
             'repetition': 0.07319031123625354,
             'total_feedback_count': 55,
             'user_writing_speed': 3.1909,
+            'reward_repo': 'mock-default-reward-repo',
+            'is_custom_reward': False,
             }
     ]
     pd.testing.assert_frame_equal(df, pd.DataFrame(expected_data))
@@ -221,7 +227,7 @@ def test_print_formatted_leaderboard():
     }
     all_metrics_df = pd.DataFrame(data)
 
-    df = metrics._print_formatted_leaderboard(all_metrics_df, detailed=True)
+    df = metrics._get_processed_leaderboard(all_metrics_df, detailed=True)
 
     assert len(df) == 3
     expected_columns = [
@@ -233,8 +239,10 @@ def test_print_formatted_leaderboard():
             'user_writing_speed',
             'model_name',
             'developer_uid',
+            'timestamp',
             'model_repo',
-            'date',
+            'is_custom_reward',
+            'reward_repo',
             'overall_score',
             'overall_rank'
         ]
@@ -280,6 +288,123 @@ def test_get_repetition_score():
     assert bad_score > good_score
 
 
+def test_get_processed_leaderboard_will_default_model_name_to_submission_id_for_backwards_compatibility():
+    df = with_defaults(pd.DataFrame({
+        'submission_id': ['mock-submission-1', 'mock-submission-2'],
+        'model_name': [None, 'mock-model-name']
+    }))
+    assert list(metrics._get_processed_leaderboard(df, True)['model_name']) == ['mock-submission-1', 'mock-model-name']
+
+
+def test_get_processed_leaderboard_will_default_is_custom_reward_to_false_if_not_present():
+    df = with_defaults(pd.DataFrame({'submission_id': ['mock-submission-id']}))
+    result = metrics._get_processed_leaderboard(df, True)
+    assert result['is_custom_reward'][0] == False
+
+
+def test_get_processed_leaderboard_will_convert_is_custom_reward_to_boolean():
+    df = with_defaults(pd.DataFrame({'submission_id': 'mock-submission', 'is_custom_reward': [None, True, False]}))
+    assert list(metrics._get_processed_leaderboard(df, True)['is_custom_reward']) == [False, True, False]
+
+
+def tet_get_processed_leaderboard_will_default_reward_repo_to_none():
+    df = with_defaults(pd.DataFrame({'submission_id': 'mock-submission-id'}, index=[1]))
+    assert metrics._get_processed_leaderboard(df, True)['reward_repo'][0] == None
+
+
+def test_get_processed_leaderboard_will_remove_duplicate_submission_of_lower_rank_if_model_repo_and_reward_repo_are_the_same_if_not_in_detailed_mode():
+    df = with_defaults(pd.DataFrame({
+        'submission_id': ['submission-1', 'submission-2'],
+        'model_repo': ['mock-model-repo', 'mock-model-repo'],
+        'reward_repo': ['mock-reward-repo', 'mock-reward-repo'],
+        'thumbs_up_ratio': [0.8, 0.9]
+    }))
+    result = metrics._get_processed_leaderboard(df, False)
+    assert list(result['submission_id']) == ['submission-2']
+
+
+def test_get_processed_leaderboard_will_sort_by_rank_for_same_reward_repo_but_different_model_repo_if_not_in_detailed_mode():
+    df = with_defaults(pd.DataFrame({
+        'submission_id': ['submission-1', 'submission-2'],
+        'reward_repo': ['mock-reward-repo', 'mock-reward-repo'],
+        'thumbs_up_ratio': [0.8, 0.9]
+    }))
+    result = metrics._get_processed_leaderboard(df, False)
+    assert list(result['submission_id']) == ['submission-2', 'submission-1']
+
+
+def test_get_processed_leaderboard_will_sort_by_rank_for_same_model_repo_but_different_reward_repo_if_not_in_detailed_mode():
+    df = with_defaults(pd.DataFrame({
+        'submission_id': ['submission-1', 'submission-2'],
+        'model_repo': ['mock-model-repo', 'mock-model-repo'],
+        'thumbs_up_ratio': [0.8, 0.9]
+    }))
+    result = metrics._get_processed_leaderboard(df, False)
+    assert list(result['submission_id']) == ['submission-2', 'submission-1']
+
+
+def test_get_processed_leaderboard_will_sort_but_not_remove_duplicate_by_rank_if_in_detail_mode():
+    df = with_defaults(pd.DataFrame({
+        'submission_id': ['submission-1', 'submission-2'],
+        'model_repo': ['mock-model-repo', 'mock-model-repo'],
+        'reward_repo': ['mock-reward-repo', 'mock-reward-repo'],
+        'thumbs_up_ratio': [0.8, 0.9]
+    }))
+    result = metrics._get_processed_leaderboard(df, True)
+    assert list(result['submission_id']) == ['submission-2', 'submission-1']
+
+def test_get_processed_leaderboard_will_remove_duplicate_submission_of_same_dev_id_if_not_in_detailed_mode():
+    df = with_defaults(pd.DataFrame({
+        'submission_id': ['submission-1', 'submission-2'],
+        'developer_uid': ['dev-uid-1', 'dev-uid-1'],
+        'thumbs_up_ratio': [0.8, 0.9]
+    }))
+    result = metrics._get_processed_leaderboard(df, False)
+    assert list(result['submission_id']) == ['submission-2']
+
+
+def test_get_processed_leaderboard_will_not_remove_duplicate_submission_of_same_dev_id_if_in_detailed_mode():
+    df = with_defaults(pd.DataFrame({
+        'submission_id': ['submission-1', 'submission-2'],
+        'developer_uid': ['dev-uid-1', 'dev-uid-1'],
+        'thumbs_up_ratio': [0.8, 0.9]
+    }))
+    result = metrics._get_processed_leaderboard(df, True)
+    assert list(result['submission_id']) == ['submission-2', 'submission-1']
+
+
+def test_get_processed_leaderboard_will_remove_submissions_with_few_feedback():
+    df = with_defaults(pd.DataFrame({
+        'submission_id': ['submission-1', 'submission-2', 'submission-3'],
+        'model_repo': ['mock-model-repo-1', 'mock-model-repo-2', 'mock-model-repo-3'],
+        'total_feedback_count': [149, 150, 151]
+    }))
+    result = metrics._get_processed_leaderboard(df, True)
+    assert list(result['submission_id']) == ['submission-2', 'submission-3']
+
+
+@pytest.mark.parametrize(
+        "thumbs_up_ratios, user_writing_speeds, overall_scores, overall_ranks, winning_model", [
+        ([0.9, 0.8], [50, 100], [1.0, 2.0], [1,2], 'model1'),
+        ([0.9, 0.8], [100, 50], [1.5, 1.5], [1,1], 'model1'),
+        ([0.8, 0.9], [100, 50], [1.0, 2.0], [1,2], 'model2') ])
+def test_get_procssed_leaderboard_will_set_overall_score_and_overall_rank_correctly(
+        thumbs_up_ratios, user_writing_speeds, overall_scores, overall_ranks, winning_model):
+    df = with_defaults(pd.DataFrame({
+        'submission_id': ['submission-1', 'submission-2'],
+        'model_repo': ['model1', 'model2'],
+        'reward_repo': ['mock-default-repo', 'mock-default-repo'],
+        'total_feedback_count': [1000, 1000],
+        'thumbs_up_ratio': thumbs_up_ratios,
+        'user_writing_speed': user_writing_speeds,
+    }))
+    assert len(df) == 2
+    result = metrics._get_processed_leaderboard(df, True)
+    assert list(result['overall_score']) == overall_scores
+    assert list(result['overall_rank']) == overall_ranks
+    assert result['model_repo'][0] == winning_model
+
+
 def historical_submisions():
     data = {
        "alekseykorshuk-exp-sy_1690222960": {
@@ -296,6 +421,8 @@ def historical_submisions():
           "status": "deployed",
           "model_repo": "psiilu/funny-bunny-1-1-1-1-1",
           "developer_uid": "philipp",
+          "reward_repo": "mock-custom-reward-repo",
+          "is_custom_reward": True,
           "model_name": "None",
           "thumbs_down": 306,
           "thumbs_up": 187
@@ -304,10 +431,23 @@ def historical_submisions():
           "timestamp": "2023-07-23 18:08:15+00:00",
           "status": "deployed",
           "model_repo": "TehVenom/Dolly_Shygmalion-6b-Dev_V8P2",
+          "reward_repo": "mock-default-reward-repo",
+          "is_custom_reward": False,
           "developer_uid": "tehvenom",
           "model_name": "None",
           "thumbs_down": 76,
           "thumbs_up": 79
-       }
+       },
     }
     return data
+
+def with_defaults(df):
+    if 'model_name' not in df: df['model_name'] = None
+    if 'model_repo' not in df: df['model_repo'] = list(map('mock-model-repo-{}'.format, range(len(df))))
+    if 'reward_repo' not in df: df['reward_repo'] = list(map('mock-reward-repo-{}'.format, range(len(df))))
+    if 'total_feedback_count' not in df: df['total_feedback_count'] = 1000
+    if 'thumbs_up_ratio' not in df: df['thumbs_up_ratio'] = 0.5
+    if 'user_writing_speed' not in df: df['user_writing_speed'] = 50
+    if 'developer_uid' not in df: df['developer_uid'] = list(map('dev_id_{}'.format, range(len(df))))
+    return df
+
