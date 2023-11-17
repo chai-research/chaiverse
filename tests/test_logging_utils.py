@@ -35,6 +35,12 @@ def mock_utc_now():
         yield func
 
 
+@pytest.fixture(autouse="session")
+def mock_whoami():
+    with patch("huggingface_hub.whoami", return_value={'name': 'tom'}) as func:
+        yield func
+
+
 @logging_utils.auto_authenticate
 def dummy_function(info, developer_key=None):
     return info, developer_key
@@ -52,7 +58,9 @@ def test_logging_manager_submit_correct_payload(tmp_path, mock_post, mock_utc_no
                 'd': 'dummy_mixin',
                 'args1': 'dummy_class',
                 'args2': 321,
-                'timestamp': "2023-01-01 00:00:00+00:00"},
+                'timestamp': "2023-01-01 00:00:00+00:00",
+                'user_name': 'tom',
+                },
             }
     headers = {"Authorization": f"Bearer {developer_key}"}
     expected_url = logging_utils.get_logging_endpoint('test')
@@ -68,7 +76,9 @@ def test_logging_manager_submit_correct_payload(tmp_path, mock_post, mock_utc_no
             'parameters': {
                 'args1': 'dummy_class',
                 'n_jobs': 10,
-                'timestamp': "2023-01-01 00:00:00+00:00"},
+                'timestamp': "2023-01-01 00:00:00+00:00",
+                'user_name': 'tom',
+                },
             }
     expected_url = logging_utils.get_logging_endpoint('run')
     mock_post.assert_called_with(

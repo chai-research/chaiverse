@@ -8,6 +8,8 @@ import pytz
 import requests
 import time
 
+import huggingface_hub
+
 
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.INFO)
@@ -29,6 +31,7 @@ def submit_logs(field, parameters, timeout=5, developer_key=None):
     endpoint = get_logging_endpoint(field)
     headers = {'Authorization': f"Bearer {developer_key}"}
     parameters['timestamp'] = str(get_utc_now())
+    parameters['user_name'] = _get_user_name()
     logging_request = {'developer_key': developer_key, 'parameters': parameters}
     response = requests.post(url=endpoint, json=logging_request, headers=headers, timeout=timeout)
     return response
@@ -83,6 +86,14 @@ def _guanaco_data_dir():
     data_dir = os.environ.get('GUANACO_DATA_DIR', f'{home_dir}/.chai-guanaco')
     os.makedirs(os.path.join(data_dir, 'cache'), exist_ok=True)
     return data_dir
+
+
+def _get_user_name():
+    try:
+        name = huggingface_hub.whoami()['name']
+    except:
+        name = ''
+    return name
 
 
 class logging_manager(object):
