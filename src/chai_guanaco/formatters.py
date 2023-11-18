@@ -50,7 +50,7 @@ class VicunaFormatter(PromptFormatter):
     response_template = "### Response:\n{bot_name}:"
 
 class ChatMLFormatter(PromptFormatter):
-    memory_template = "<|im_start|>system\n{prompt}<|im_end|>\n"
+    memory_template = "<|im_start|>system\n{memory}<|im_end|>\n"
     prompt_template = <|im_start|>user\n{prompt}<|im_end|>\n"
     bot_template = "<|im_start|>assistant\n{bot_name}: {message}<|im_end|>\n"
     user_template = "<|im_start|>user\n{user_name}: {message}<|im_end|>\n"
