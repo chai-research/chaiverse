@@ -443,11 +443,16 @@ def historical_submisions():
 
 def with_defaults(df):
     if 'model_name' not in df: df['model_name'] = None
-    if 'model_repo' not in df: df['model_repo'] = list(map('mock-model-repo-{}'.format, range(len(df))))
-    if 'reward_repo' not in df: df['reward_repo'] = list(map('mock-reward-repo-{}'.format, range(len(df))))
+    if 'model_repo' not in df:
+        df['model_repo'] = _get_list_by_format('mock-model-repo-{}', len(df))
+    if 'reward_repo' not in df:
+        df['reward_repo'] = _get_list_by_format('mock-reward-repo-{}', len(df))
     if 'total_feedback_count' not in df: df['total_feedback_count'] = 1000
     if 'thumbs_up_ratio' not in df: df['thumbs_up_ratio'] = 0.5
     if 'user_writing_speed' not in df: df['user_writing_speed'] = 50
-    if 'developer_uid' not in df: df['developer_uid'] = list(map('dev_id_{}'.format, range(len(df))))
+    if 'developer_uid' not in df:
+        df['developer_uid'] = _get_list_by_format('dev_id_{}', len(df))
     return df
 
+def _get_list_by_format(format_string, length):
+    return [format_string.format(i) for i in range(length)]
