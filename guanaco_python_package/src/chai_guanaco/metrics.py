@@ -35,8 +35,8 @@ pd.set_option('display.width', 500)
 def display_leaderboard(
         developer_key=None,
         regenerate=False,
-        max_workers=DEFAULT_MAX_WORKERS,
         detailed=False,
+        max_workers=DEFAULT_MAX_WORKERS
         ):
     df = cache(get_leaderboard, regenerate)(max_workers=max_workers, developer_key=developer_key)
     df = _get_processed_leaderboard(df, detailed)
@@ -50,8 +50,8 @@ def get_leaderboard(max_workers=DEFAULT_MAX_WORKERS, developer_key=None):
     leaderboard = distribute_to_workers(
         get_leaderboard_row,
         submissions.items(),
-        max_workers=max_workers,
-        developer_key=developer_key
+        developer_key=developer_key,
+        max_workers=max_workers
     )
     return pd.DataFrame(leaderboard)
 
