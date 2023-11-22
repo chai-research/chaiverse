@@ -218,17 +218,22 @@ def _remove_punctuation(text):
 
 def _get_processed_leaderboard(df, detailed):
     # maintain backwards compatibility with model_name field
-    df['model_name'] = df['model_name'].fillna(df['submission_id'])
-    if 'is_custom_reward' not in df:
-        df['is_custom_reward'] = None
-    df['is_custom_reward'] = df['is_custom_reward'].fillna(False)
-    if 'reward_repo' not in df:
-        df['reward_repo'] = None
+    _fill_default_value(df, 'model_name', df['submission_id'])
+    _fill_default_value(df, 'is_custom_reward', False)
+    _fill_default_value(df, 'reward_repo', None)
+
     df = _filter_submissions_with_few_feedback(df)
     df = _add_and_sort_by_overall_rank(df)
     df = df if detailed else _get_submissions_with_unique_model(df)
     df = df if detailed else _get_submissions_with_unique_dev_id(df)
     return df
+
+
+def _fill_default_value(df, field, default_value):
+    if field not in df:
+        df[field] = None
+    if default_value is not None:
+        df[field] = df[field].fillna(default_value)
 
 
 def _get_formatted_leaderboard(df, detailed):

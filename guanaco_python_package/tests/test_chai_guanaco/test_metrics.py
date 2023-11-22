@@ -288,97 +288,114 @@ def test_get_repetition_score():
     assert bad_score > good_score
 
 
-def test_get_processed_leaderboard_will_default_model_name_to_submission_id_for_backwards_compatibility():
-    df = with_defaults(pd.DataFrame({
+def test_get_processed_leaderboard_will_default_model_name_to_submission_id_if_not_existed_for_backwards_compatibility():
+    df = make_unique_submissions(2)
+    df.update({'submission_id': ['mock-submission-1', 'mock-submission-2']})
+    assert list(metrics._get_processed_leaderboard(df, True)['model_name']) == ['mock-submission-1', 'mock-submission-2']
+
+
+def test_get_processed_leaderboard_will_default_model_name_to_submission_id_if_none_for_backwards_compatibility():
+    df = make_unique_submissions(2)
+    df['model_name'] = [None, 'mock-model-name']
+    df.update({
         'submission_id': ['mock-submission-1', 'mock-submission-2'],
-        'model_name': [None, 'mock-model-name']
-    }))
+    })
     assert list(metrics._get_processed_leaderboard(df, True)['model_name']) == ['mock-submission-1', 'mock-model-name']
 
 
 def test_get_processed_leaderboard_will_default_is_custom_reward_to_false_if_not_present():
-    df = with_defaults(pd.DataFrame({'submission_id': ['mock-submission-id']}))
+    df = make_unique_submissions(1)
     result = metrics._get_processed_leaderboard(df, True)
     assert result['is_custom_reward'][0] == False
 
 
 def test_get_processed_leaderboard_will_convert_is_custom_reward_to_boolean():
-    df = with_defaults(pd.DataFrame({'submission_id': 'mock-submission', 'is_custom_reward': [None, True, False]}))
+    df = make_unique_submissions(3)
+    df['is_custom_reward'] = [None, True, False]
     assert list(metrics._get_processed_leaderboard(df, True)['is_custom_reward']) == [False, True, False]
 
 
 def tet_get_processed_leaderboard_will_default_reward_repo_to_none():
-    df = with_defaults(pd.DataFrame({'submission_id': 'mock-submission-id'}, index=[1]))
+    df = make_unique_submissions(1)
+    df.update({'submission_id': 'mock-submission-id'})
     assert metrics._get_processed_leaderboard(df, True)['reward_repo'][0] == None
 
 
 def test_get_processed_leaderboard_will_remove_duplicate_submission_of_lower_rank_if_model_repo_and_reward_repo_are_the_same_if_not_in_detailed_mode():
-    df = with_defaults(pd.DataFrame({
+    df = make_unique_submissions(2)
+    df.update({
         'submission_id': ['submission-1', 'submission-2'],
         'model_repo': ['mock-model-repo', 'mock-model-repo'],
         'reward_repo': ['mock-reward-repo', 'mock-reward-repo'],
         'thumbs_up_ratio': [0.8, 0.9]
-    }))
+    })
     result = metrics._get_processed_leaderboard(df, False)
     assert list(result['submission_id']) == ['submission-2']
 
 
 def test_get_processed_leaderboard_will_sort_by_rank_for_same_reward_repo_but_different_model_repo_if_not_in_detailed_mode():
-    df = with_defaults(pd.DataFrame({
+    df = make_unique_submissions(2)
+    df.update({
         'submission_id': ['submission-1', 'submission-2'],
         'reward_repo': ['mock-reward-repo', 'mock-reward-repo'],
         'thumbs_up_ratio': [0.8, 0.9]
-    }))
+    })
     result = metrics._get_processed_leaderboard(df, False)
     assert list(result['submission_id']) == ['submission-2', 'submission-1']
 
 
 def test_get_processed_leaderboard_will_sort_by_rank_for_same_model_repo_but_different_reward_repo_if_not_in_detailed_mode():
-    df = with_defaults(pd.DataFrame({
+    df = make_unique_submissions(2)
+    df.update({
         'submission_id': ['submission-1', 'submission-2'],
         'model_repo': ['mock-model-repo', 'mock-model-repo'],
         'thumbs_up_ratio': [0.8, 0.9]
-    }))
+    })
     result = metrics._get_processed_leaderboard(df, False)
     assert list(result['submission_id']) == ['submission-2', 'submission-1']
 
 
-def test_get_processed_leaderboard_will_sort_but_not_remove_duplicate_by_rank_if_in_detail_mode():
-    df = with_defaults(pd.DataFrame({
+def test_get_processed_leaderboard_will_sort_but_will_not_remove_duplicate_by_rank_if_in_detail_mode():
+    df = make_unique_submissions(2)
+    df.update({
         'submission_id': ['submission-1', 'submission-2'],
         'model_repo': ['mock-model-repo', 'mock-model-repo'],
         'reward_repo': ['mock-reward-repo', 'mock-reward-repo'],
         'thumbs_up_ratio': [0.8, 0.9]
-    }))
+    })
     result = metrics._get_processed_leaderboard(df, True)
     assert list(result['submission_id']) == ['submission-2', 'submission-1']
 
-def test_get_processed_leaderboard_will_remove_duplicate_submission_of_same_dev_id_if_not_in_detailed_mode():
-    df = with_defaults(pd.DataFrame({
+
+def test_get_processed_leaderboard_will_contain_up_to_one_submission_of_one_dev_id_if_not_in_detailed_mode():
+    df = make_unique_submissions(2)
+    df.update({
         'submission_id': ['submission-1', 'submission-2'],
         'developer_uid': ['dev-uid-1', 'dev-uid-1'],
         'thumbs_up_ratio': [0.8, 0.9]
-    }))
+    })
     result = metrics._get_processed_leaderboard(df, False)
     assert list(result['submission_id']) == ['submission-2']
 
 
-def test_get_processed_leaderboard_will_not_remove_duplicate_submission_of_same_dev_id_if_in_detailed_mode():
-    df = with_defaults(pd.DataFrame({
+def test_get_processed_leaderboard_will_not_limit_submissions_of_one_dev_id_if_in_detailed_mode():
+    df = make_unique_submissions(2)
+    df.update({
         'submission_id': ['submission-1', 'submission-2'],
         'developer_uid': ['dev-uid-1', 'dev-uid-1'],
         'thumbs_up_ratio': [0.8, 0.9]
-    }))
+    })
     result = metrics._get_processed_leaderboard(df, True)
     assert list(result['submission_id']) == ['submission-2', 'submission-1']
 
 
 def test_get_processed_leaderboard_will_remove_submissions_with_few_feedback():
-    df = with_defaults(pd.DataFrame({
+    df = make_unique_submissions(3)
+    df.update({
         'submission_id': ['submission-1', 'submission-2', 'submission-3'],
         'model_repo': ['mock-model-repo-1', 'mock-model-repo-2', 'mock-model-repo-3'],
         'total_feedback_count': [149, 150, 151]
-    }))
+    })
     result = metrics._get_processed_leaderboard(df, True)
     assert list(result['submission_id']) == ['submission-2', 'submission-3']
 
@@ -390,14 +407,15 @@ def test_get_processed_leaderboard_will_remove_submissions_with_few_feedback():
         ([0.8, 0.9], [100, 50], [1.0, 2.0], [1,2], 'model2') ])
 def test_get_procssed_leaderboard_will_set_overall_score_and_overall_rank_correctly(
         thumbs_up_ratios, user_writing_speeds, overall_scores, overall_ranks, winning_model):
-    df = with_defaults(pd.DataFrame({
+    df = make_unique_submissions(2)
+    df.update({
         'submission_id': ['submission-1', 'submission-2'],
         'model_repo': ['model1', 'model2'],
         'reward_repo': ['mock-default-repo', 'mock-default-repo'],
         'total_feedback_count': [1000, 1000],
         'thumbs_up_ratio': thumbs_up_ratios,
         'user_writing_speed': user_writing_speeds,
-    }))
+    })
     assert len(df) == 2
     result = metrics._get_processed_leaderboard(df, True)
     assert list(result['overall_score']) == overall_scores
@@ -441,18 +459,19 @@ def historical_submisions():
     }
     return data
 
-def with_defaults(df):
-    if 'model_name' not in df: df['model_name'] = None
-    if 'model_repo' not in df:
-        df['model_repo'] = _get_list_by_format('mock-model-repo-{}', len(df))
-    if 'reward_repo' not in df:
-        df['reward_repo'] = _get_list_by_format('mock-reward-repo-{}', len(df))
-    if 'total_feedback_count' not in df: df['total_feedback_count'] = 1000
-    if 'thumbs_up_ratio' not in df: df['thumbs_up_ratio'] = 0.5
-    if 'user_writing_speed' not in df: df['user_writing_speed'] = 50
-    if 'developer_uid' not in df:
-        df['developer_uid'] = _get_list_by_format('dev_id_{}', len(df))
+
+def make_unique_submissions(count):
+    df = pd.DataFrame(range(count))
+    df['total_feedback_count'] = 1000
+    df['thumbs_up_ratio'] = 0.5
+    df['user_writing_speed'] = 50
+    _fill_unique_ids(df, 'submission_id', prefix='mock-submission-id')
+    _fill_unique_ids(df, 'model_repo', prefix='mock-model-repo')
+    _fill_unique_ids(df, 'reward_repo', prefix='mock-reward-repo')
+    _fill_unique_ids(df, 'developer_uid', prefix='mock-dev-id')
     return df
 
-def _get_list_by_format(format_string, length):
-    return [format_string.format(i) for i in range(length)]
+
+def _fill_unique_ids(df, field_name, prefix):
+    df[field_name] = ["{prefix}-{i}".format(prefix=prefix, i=i) for i in range(len(df))]
+
