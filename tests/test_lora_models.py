@@ -53,7 +53,6 @@ def tiny_model(tiny_base_model_id, tmpdir):
             device_map='cpu'
             )
     tiny_model.instantiate_lora_model(load_in_8bit=False)
-    tiny_model.model.to("cpu")
     return tiny_model
 
 
@@ -170,7 +169,7 @@ def test_training_lora_model(tiny_model, data):
 
     new_params = {}
     for n, param in tiny_model.model.named_parameters():
-        new_params[n] = param.clone()
+        new_params[n] = param.clone().to("cpu")
 
     # check the trainable params have changed
     for n, param in previous_trainable_params.items():
