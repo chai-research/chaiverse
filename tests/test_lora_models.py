@@ -53,6 +53,7 @@ def tiny_model(tiny_base_model_id, tmpdir):
             device_map='cpu'
             )
     tiny_model.instantiate_lora_model(load_in_8bit=False)
+    tiny_model.model.to("cpu")
     return tiny_model
 
 
