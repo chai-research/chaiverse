@@ -25,6 +25,7 @@ LEADERBOARD_DISPLAY_COLS = [
     'repetition',
     'total_feedback_count',
     'overall_rank',
+    'safety_score',
 ]
 
 
