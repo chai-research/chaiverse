@@ -1,4 +1,5 @@
 import asyncio
+import os
 import pytest
 import pytest_asyncio
 from unittest import mock
@@ -6,6 +7,10 @@ from unittest import mock
 import discord
 import discord.ext.test as dpytest
 from discord_bot import discord_bot_client
+import vcr
+
+
+RESOURCE_DIR = os.path.join(os.path.abspath(os.path.join(__file__, '..')), 'resources')
 
 
 @pytest_asyncio.fixture
@@ -18,6 +23,7 @@ async def bot():
 
 
 @pytest.mark.asyncio
+@vcr.use_cassette(os.path.join(RESOURCE_DIR, 'test_new_user_joined_will_be_greeted_with_the_same_token.yaml'))
 async def test_new_user_joined_will_be_greeted_with_the_same_token(bot):
     await dpytest.member_join()
     await dpytest.run_all_events()
