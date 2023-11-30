@@ -10,9 +10,9 @@ from guanaco_database import auth
 
 @asynccontextmanager
 async def discord_bot_client():
-    intents = discord.Intents.default()
-    intents.guild_messages = True
-    intents.members = True
+    intents = discord.Intents.all()
+    #intents.guild_messages = True
+    #intents.members = True
 
     async with discord.ext.commands.Bot(
         command_prefix='/',

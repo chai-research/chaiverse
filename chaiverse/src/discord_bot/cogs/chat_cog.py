@@ -17,7 +17,7 @@ OPTION_BATCH_SIZE = 20
 class ChatCog(commands.Cog):
 
     @commands.command(description='Starts conversation with the bot, served by deployed submission.')
-    async def chat(self, ctx):
+    async def chat2(self, ctx):
         await _start_chat(ctx)
 
     @commands.Cog.listener()

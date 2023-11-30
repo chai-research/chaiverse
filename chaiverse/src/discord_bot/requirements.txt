@@ -1,3 +1,4 @@
+discord.py==2.3.2
 python-dotenv==1.0.0
 urllib3==1.25.11
 dpytest==0.7.0
