@@ -192,3 +192,4 @@ def check_user_accepts_eula(developer_key):
     input_text = input(text)
     if input_text.lower().strip() != 'accept':
         raise ValueError('In order to submit a model, you must agree with our EULA 😢')
+

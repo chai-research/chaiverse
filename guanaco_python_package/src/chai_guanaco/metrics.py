@@ -39,14 +39,29 @@ def display_leaderboard(
         detailed=False,
         max_workers=DEFAULT_MAX_WORKERS
         ):
-    df = cache(get_leaderboard, regenerate)(max_workers=max_workers, developer_key=developer_key)
-    df = _get_processed_leaderboard(df, detailed)
+    df = get_leaderboard(
+        developer_key=developer_key,
+        regenerate=regenerate,
+        detailed=detailed,
+        max_workers=max_workers
+        )
     df = _get_formatted_leaderboard(df, detailed)
     _pprint_leaderboard(df)
 
 
+def get_leaderboard(
+        developer_key=None,
+        regenerate=False,
+        detailed=False,
+        max_workers=DEFAULT_MAX_WORKERS
+        ):
+    df = cache(get_raw_leaderboard, regenerate)(max_workers=max_workers, developer_key=developer_key)
+    df = _get_processed_leaderboard(df, detailed)
+    return df
+
+
 @auto_authenticate
-def get_leaderboard(max_workers=DEFAULT_MAX_WORKERS, developer_key=None):
+def get_raw_leaderboard(max_workers=DEFAULT_MAX_WORKERS, developer_key=None):
     submissions = get_all_historical_submissions(developer_key)
     leaderboard = distribute_to_workers(
         get_leaderboard_row,
@@ -280,3 +295,14 @@ def _get_submissions_with_unique_dev_id(df):
 def _pprint_leaderboard(df):
     print_color(f'\n💎 Leaderboard:', 'red')
     print(df.round(3).head(30))
+
+
+def get_sorted_available_models(developer_key):
+    models = get_all_historical_submissions(developer_key=developer_key)
+    available_models = [k for k, v in models.items() if v['status'] == 'deployed']
+    leaderboard = get_leaderboard(regenerate=False, developer_key=developer_key)
+    model_rank = {model: rank for rank, model in enumerate(leaderboard["submission_id"])}
+    def sort_key(model):
+        return model_rank.get(model, float('inf'))
+    sorted_available_models = sorted(available_models, key=sort_key)
+    return sorted_available_models

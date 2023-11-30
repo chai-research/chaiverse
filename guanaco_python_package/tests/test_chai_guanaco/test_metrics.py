@@ -41,11 +41,11 @@ def test_developer_can_call_get_submission_metrics_and_pass_in_developer_key_as_
 @mock.patch('chai_guanaco.metrics.get_all_historical_submissions')
 @mock.patch('chai_guanaco.utils.guanaco_data_dir')
 @freeze_time('2023-07-28 00:00:00')
-@vcr.use_cassette(os.path.join(RESOURCE_DIR, 'test_get_leaderboard.yaml'))
-def test_get_leaderboard(data_dir_mock, get_ids_mock, tmpdir):
+@vcr.use_cassette(os.path.join(RESOURCE_DIR, 'test_get_raw_leaderboard.yaml'))
+def test_get_raw_leaderboard(data_dir_mock, get_ids_mock, tmpdir):
     data_dir_mock.return_value = str(tmpdir)
     get_ids_mock.return_value = historical_submisions()
-    df = chai.get_leaderboard(max_workers=1, developer_key="key")
+    df = chai.metrics.get_raw_leaderboard(max_workers=1, developer_key="key")
     expected_cols = [
         'submission_id',
         'thumbs_up_ratio',
@@ -424,6 +424,22 @@ def test_get_procssed_leaderboard_will_set_overall_score_and_overall_rank_correc
     assert list(result['overall_rank']) == overall_ranks
     assert result['model_repo'][0] == winning_model
 
+@patch('chai_guanaco.metrics.get_all_historical_submissions')
+@patch('chai_guanaco.metrics.get_leaderboard')
+def test_get_sorted_available_models(get_leaderboard, get_submissions):
+    get_submissions.return_value = {
+        'model1': {'status': 'inactive'},
+        'model2': {'status': 'deployed'},
+        'model3': {'status': 'deployed'},
+        'model4': {'status': 'deployed'}
+    }
+    get_leaderboard.return_value = {
+        "submission_id": ['model4', 'model2']
+    }
+    result = metrics.get_sorted_available_models('mock-key')
+    assert result == ['model4', 'model2', 'model3']
+    get_submissions.called_once_with(developer_key='mock-key')
+    get_leaderboard.called_once_with(regenerate=False, developer_key='mock-key')
 
 def historical_submisions():
     data = {

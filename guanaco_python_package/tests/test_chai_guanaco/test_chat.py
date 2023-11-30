@@ -2,7 +2,7 @@ import mock
 import os
 import json
 
-from chai_guanaco.chat import Bot, BotConfig, SubmissionChatbot, get_chat_endpoint_url
+from chai_guanaco.chat import Bot, BotConfig, SubmissionChatbot, get_chat_endpoint_url, get_bot_names, get_bot_response
 
 
 @mock.patch('builtins.input')
@@ -114,3 +114,32 @@ def test_get_chat_endpoint_url():
     url = get_chat_endpoint_url('my-submission_v2')
     expected_url = "https://guanaco-submitter.chai-research.com/models/my-submission_v2/chat"
     assert url == expected_url
+
+@mock.patch('chai_guanaco.chat.os.listdir')
+def test_get_bot_names(listdir):
+    listdir.return_value = ['x', 'a.json', 'b.json']
+    result = get_bot_names()
+    assert result == ['a', 'b']
+
+@mock.patch('chai_guanaco.chat.requests')
+def test_get_bot_response(requests):
+    bot_config = mock.Mock()
+    bot_config.memory = 'mock-memory'
+    bot_config.prompt = 'mock-prompt'
+    bot_config.bot_label = 'mock-label'
+    bot_config.first_message = 'mock-first-message'
+    http_response = mock.Mock()
+    http_response.status_code = 200
+    http_response.text = 'dummy-resp-text'
+    http_response.json.return_value = {'model_output': 'mock-response'}
+    requests.post.return_value = http_response
+
+    result = get_bot_response(
+        [('apple', 'use'), ('orange', 'bot'), ('pear', 'user')],
+        'mock-submission-id',
+        bot_config,
+        'mock-key'
+    )
+    assert result == 'mock-response'
+    
+    

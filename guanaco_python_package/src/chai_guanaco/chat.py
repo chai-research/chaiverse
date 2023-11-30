@@ -146,3 +146,19 @@ def get_available_bots():
     bots = os.listdir(RESOURCE_DIR)
     avaliable_bots = '\n'.join([bot.replace('.json', '') for bot in bots if bot.endswith('.json')])
     return avaliable_bots
+
+
+def get_bot_names():
+    files = os.listdir(RESOURCE_DIR)
+    bot_names = [file.replace('.json', '') for file in files if file.endswith('.json')]
+    return bot_names
+
+
+def get_bot_response(messages, submission_id, bot_config, developer_key):
+    url = get_chat_endpoint_url(submission_id)
+    chai_bot = Bot(url, developer_key, bot_config)
+    for content, sender in messages[:-1]:
+        chai_bot._update_chat_history(content, sender)
+    content, sender = messages[-1]
+    response = chai_bot.get_response(content)["model_output"]
+    return response
