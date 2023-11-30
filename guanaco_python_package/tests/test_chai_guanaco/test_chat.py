@@ -2,7 +2,7 @@ import mock
 import os
 import json
 
-from chai_guanaco.chat import Bot, BotConfig, SubmissionChatbot, get_chat_endpoint_url, get_bot_names, get_bot_response
+from chai_guanaco.chat import Bot, BotConfig, SubmissionChatbot, get_chat_endpoint_url, get_bot_names, get_bot_config, get_bot_response
 
 
 @mock.patch('builtins.input')
@@ -115,11 +115,29 @@ def test_get_chat_endpoint_url():
     expected_url = "https://guanaco-submitter.chai-research.com/models/my-submission_v2/chat"
     assert url == expected_url
 
+
 @mock.patch('chai_guanaco.chat.os.listdir')
 def test_get_bot_names(listdir):
     listdir.return_value = ['x', 'a.json', 'b.json']
     result = get_bot_names()
     assert result == ['a', 'b']
+
+
+def test_get_bot_config(tmpdir):
+    mock_config = {
+        'memory': 'mock-memory',
+        'prompt': 'mock-prompt',
+        'first_message': 'mock-message',
+        'bot_label': 'mock-label'
+    }
+    with mock.patch('chai_guanaco.chat.RESOURCE_DIR', str(tmpdir)):
+        (tmpdir / 'mock-bot.json').write_text(json.dumps(mock_config), 'UTF-8')
+        result = get_bot_config('mock-bot')
+        assert result.memory == 'mock-memory'
+        assert result.prompt == 'mock-prompt'
+        assert result.first_message == 'mock-message'
+        assert result.bot_label == 'mock-label'
+
 
 @mock.patch('chai_guanaco.chat.requests')
 def test_get_bot_response(requests):

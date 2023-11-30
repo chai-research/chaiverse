@@ -1,6 +1,7 @@
 from dataclasses import dataclass
 import os
 import json
+from pathlib import Path
 import requests
 
 from chai_guanaco.login_cli import auto_authenticate
@@ -152,6 +153,12 @@ def get_bot_names():
     files = os.listdir(RESOURCE_DIR)
     bot_names = [file.replace('.json', '') for file in files if file.endswith('.json')]
     return bot_names
+
+
+def get_bot_config(bot_name):
+    config_file_name = f'{bot_name}.json'
+    bot_config_path = Path(RESOURCE_DIR) / config_file_name
+    return BotConfig.from_json(bot_config_path.absolute())
 
 
 def get_bot_response(messages, submission_id, bot_config, developer_key):

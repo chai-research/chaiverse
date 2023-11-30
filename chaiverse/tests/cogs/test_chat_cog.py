@@ -26,8 +26,7 @@ def chai_metrics():
 @pytest.fixture(autouse=True)
 def chai_chat():
     with patch('discord_bot.cogs.chat_cog.chai_chat') as mock_chai_chat:
-        mock_chai_chat.SubmissionChatbot = Mock()
-        mock_chai_chat.SubmissionChatbot._get_bot_config.return_value = MOCK_BOT_CONFIG
+        mock_chai_chat.get_bot_config.return_value = MOCK_BOT_CONFIG
         mock_chai_chat.get_bot_names.return_value = ['bot1', 'bot2', 'bot3']
         mock_chai_chat.get_bot_response.return_value = 'mock-reply'
         yield mock_chai_chat
@@ -177,7 +176,7 @@ async def test_bot_will_reply_on_message_received_in_chat_thread(chai_chat):
 
     assert thread.typing.call_count == 1
     message.reply.assert_awaited_with('[bot]: mock-reply')
-    chai_chat.SubmissionChatbot._get_bot_config.assert_called_with('bot1')
+    chai_chat.get_bot_config.assert_called_with('bot1')
     chai_chat.get_bot_response.assert_called_once()
     chai_chat.get_bot_response.assert_called_once_with(
         [('mock-msg2', '[bot]'), ('mock-msg3', 'user')],

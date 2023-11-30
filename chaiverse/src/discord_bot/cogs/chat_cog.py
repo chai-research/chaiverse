@@ -75,7 +75,7 @@ async def _prepare_chat(thread, submission_id, bot_name):
     await thread.purge()
     new_thread_name = f"Chat with {bot_name} by {submission_id}"
     await thread.edit(name=new_thread_name)
-    bot_config = chai_chat.SubmissionChatbot._get_bot_config(bot_name)
+    bot_config = chai_chat.get_bot_config(bot_name)
     await thread.send(f"{bot_config.bot_label}: {bot_config.first_message}")
 
 
@@ -89,26 +89,28 @@ async def _prompt_options(thread, options, prompt_message):
 
 
 async def _choose_option(ctx, thread, options):
-    def check_thread(m):
-        return m.channel == thread
+    def is_message_from_thread(message):
+        return message.channel == thread
+
     while True:
-        choice_msg = await ctx.bot.wait_for('message', check=check_thread)
+        choice_msg = await ctx.bot.wait_for('message', check=is_message_from_thread)
         if choice_msg.content.isdigit() and 0 < int(choice_msg.content) <= len(options):
             return options[int(choice_msg.content) - 1]
         await thread.send("Please write a number from the provided list.")
 
 
 def _get_options_text(options_subset, start_idx=0):
-    return "\n".join([f"{index + 1 + start_idx}. {option}" for index, option in enumerate(options_subset)])
+    options = [f"{index + 1 + start_idx}. {option}" for index, option in enumerate(options_subset)]
+    return "\n".join(options)
 
 
 async def _reply_chat_message(message):
     async with message.channel.typing():
         thread = message.channel
         bot_name, submission_id = _parse_thread_name(thread.name)
-        bot_config = chai_chat.SubmissionChatbot._get_bot_config(bot_name)
+        bot_config = chai_chat.get_bot_config(bot_name)
         messages = [
-            _build_chatbot_message(message, bot_config.bot_label) 
+            _build_bot_message(message, bot_config.bot_label) 
             async for message in thread.history(limit=100)
             if not message.is_system()
         ]
@@ -124,7 +126,7 @@ def _parse_thread_name(thread_name):
     return bot_name, submission_id
 
 
-def _build_chatbot_message(message, bot_label):
+def _build_bot_message(message, bot_label):
     content = message.content
     sender = "user"
     if message.author.id == config.APPLICATION_ID:
