@@ -438,8 +438,8 @@ def test_get_sorted_available_models(get_leaderboard, get_submissions):
     }
     result = metrics.get_sorted_available_models('mock-key')
     assert result == ['model4', 'model2', 'model3']
-    get_submissions.called_once_with(developer_key='mock-key')
-    get_leaderboard.called_once_with(regenerate=False, developer_key='mock-key')
+    get_submissions.assert_called_once_with(developer_key='mock-key')
+    get_leaderboard.assert_called_once_with(regenerate=False, developer_key='mock-key')
 
 def historical_submisions():
     data = {
