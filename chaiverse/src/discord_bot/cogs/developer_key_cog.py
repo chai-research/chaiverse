@@ -2,7 +2,6 @@ import logging
 
 import discord
 from discord.ext import commands
-from discord_bot import config
 from guanaco_database import auth
 
 

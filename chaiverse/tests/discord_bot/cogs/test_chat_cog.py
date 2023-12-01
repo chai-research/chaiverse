@@ -3,6 +3,7 @@ import pytest
 from unittest.mock import Mock, AsyncMock, MagicMock, patch
 
 from discord.enums import ChannelType, MessageType
+from discord import Message, Thread
 from discord_bot.cogs import ChatCog
 
 
@@ -43,16 +44,9 @@ def config():
 
 @pytest.mark.asyncio
 async def test_slash_chat_can_start_chat_thread_with_model1_bot1():
-    ctx = Mock()
-    ctx.bot.wait_for = AsyncMock()
-    thread = MagicMock()
-    thread.send = AsyncMock()
-    thread.purge = AsyncMock()
-    thread.edit = AsyncMock()
-    thread.typing = MagicMock(mock_typing)
-    create_thread = AsyncMock()
-    create_thread.return_value = thread
-    ctx.channel.create_thread = create_thread
+    ctx = AsyncMock()
+    ctx.channel.create_thread.return_value.typing = MagicMock(mock_typing)
+    thread = ctx.channel.create_thread.return_value
 
     choice_msg = Mock()
     choice_msg.content = '1'
@@ -74,16 +68,9 @@ async def test_slash_chat_can_start_chat_thread_with_model1_bot1():
 
 @pytest.mark.asyncio
 async def test_slash_chat_can_start_chat_thread_with_model2_bot2():
-    ctx = Mock()
-    ctx.bot.wait_for = AsyncMock()
-    thread = MagicMock()
-    thread.send = AsyncMock()
-    thread.purge = AsyncMock()
-    thread.edit = AsyncMock()
-    thread.typing = MagicMock(mock_typing)
-    create_thread = AsyncMock()
-    create_thread.return_value = thread
-    ctx.channel.create_thread = create_thread
+    ctx = AsyncMock()
+    ctx.channel.create_thread.return_value.typing = MagicMock(mock_typing)
+    thread = ctx.channel.create_thread.return_value
 
     choice_msg = Mock()
     choice_msg.content = '2'
@@ -106,16 +93,9 @@ async def test_slash_chat_can_start_chat_thread_with_model2_bot2():
 @pytest.mark.asyncio
 @patch('discord_bot.cogs.chat_cog.OPTION_BATCH_SIZE', 2)
 async def test_slash_chat_can_send_options_in_batches():
-    ctx = Mock()
-    ctx.bot.wait_for = AsyncMock()
-    thread = MagicMock()
-    thread.send = AsyncMock()
-    thread.purge = AsyncMock()
-    thread.edit = AsyncMock()
-    thread.typing = MagicMock(mock_typing)
-    create_thread = AsyncMock()
-    create_thread.return_value = thread
-    ctx.channel.create_thread = create_thread
+    ctx = AsyncMock()
+    ctx.channel.create_thread.return_value.typing = MagicMock(mock_typing)
+    thread = ctx.channel.create_thread.return_value
 
     choice_msg = Mock()
     choice_msg.content = '2'
@@ -138,7 +118,7 @@ async def test_slash_chat_can_send_options_in_batches():
 
 
 @pytest.mark.asyncio
-async def test_bot_will_reply_on_message_received_in_chat_thread(chai_chat):
+async def test_bot_will_reply_on_chatting_message_received_in_chatting_thread(chai_chat):
     ctx = Mock()
     thread = MagicMock()
     thread.send = AsyncMock()
@@ -210,7 +190,6 @@ async def test_bot_only_reply_in_chatting_thread(reply_chat_message, thread_type
     message = Mock()
     message.type = MessageType.default
     message.is_system.return_value = False
-    message.author = Mock()
     message.author.bot = False
     message.channel = thread
     message.reply = AsyncMock()
@@ -242,7 +221,6 @@ async def test_bot_only_reply_chatting_message(reply_chat_message, message_type,
     message = Mock()
     message.type = message_type
     message.is_system.return_value = message_is_system
-    message.author = Mock()
     message.author.bot = message_author_is_bot
     message.channel = thread
     message.reply = AsyncMock()
