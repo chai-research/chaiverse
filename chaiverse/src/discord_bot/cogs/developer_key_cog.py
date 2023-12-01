@@ -14,7 +14,7 @@ class DeveloperKeyCog(commands.Cog):
     @commands.Cog.listener()
     async def on_member_join(self, member: discord.Member):
         developer_key = auth.get_authenticator().obtain_developer_key(member.name)
-        logger.info('member_joined discord.username={0}'.format(member.name))
+        logger.info('member_joined discord id={0} name={1} global_name={2}'.format(member.id, member.name, member.global_name))
         welcome_text = _get_welcome_text(member.name, developer_key)
         await member.send(welcome_text)
 
