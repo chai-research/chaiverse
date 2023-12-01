@@ -4,7 +4,7 @@ import os
 import pickle
 import time
 
-import time_machine
+from freezegun import freeze_time
 import pytz
 
 from chai_guanaco import utils

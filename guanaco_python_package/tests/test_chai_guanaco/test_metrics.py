@@ -2,7 +2,7 @@ import os
 import unittest.mock as mock
 from mock import patch
 
-import time_machine
+from freezegun import freeze_time
 import pandas as pd
 import pytest
 import numpy as np
@@ -40,7 +40,7 @@ def test_developer_can_call_get_submission_metrics_and_pass_in_developer_key_as_
 
 @mock.patch('chai_guanaco.metrics.get_all_historical_submissions')
 @mock.patch('chai_guanaco.utils.guanaco_data_dir')
-@time_machine.travel('2023-07-28 00:00:00')
+@freeze_time('2023-07-28 00:00:00')
 @vcr.use_cassette(os.path.join(RESOURCE_DIR, 'test_get_raw_leaderboard.yaml'))
 def test_get_raw_leaderboard(data_dir_mock, get_ids_mock, tmpdir):
     data_dir_mock.return_value = str(tmpdir)
@@ -114,7 +114,7 @@ def test_get_raw_leaderboard(data_dir_mock, get_ids_mock, tmpdir):
 
 
 @vcr.use_cassette(os.path.join(RESOURCE_DIR, 'test_get_submission_metrics.yaml'))
-@time_machine.travel('2023-07-14 19:00:00')
+@freeze_time('2023-07-14 19:00:00')
 def test_get_leaderboard_row():
     results = metrics.get_leaderboard_row(('wizard-vicuna-13b-bo4', {'meta-data-key': 'meta-data-value'}), developer_key="key")
     expected_metrics = {
@@ -131,7 +131,7 @@ def test_get_leaderboard_row():
 
 
 @vcr.use_cassette(os.path.join(RESOURCE_DIR, 'test_get_submission_metrics.yaml'))
-@time_machine.travel('2023-07-14 19:00:00')
+@freeze_time('2023-07-14 19:00:00')
 def test_get_submission_metrics():
     results = metrics.get_submission_metrics('wizard-vicuna-13b-bo4', developer_key="key", reload=True)
     expected_metrics = {
