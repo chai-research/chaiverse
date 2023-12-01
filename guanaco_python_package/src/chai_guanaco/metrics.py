@@ -222,6 +222,8 @@ def _get_processed_leaderboard(df, detailed):
     _fill_default_value(df, 'model_name', df['submission_id'])
     _fill_default_value(df, 'is_custom_reward', False)
     _fill_default_value(df, 'reward_repo', None)
+    for col in LEADERBOARD_DISPLAY_COLS:
+        _fill_default_value(df, col, None)
 
     df = _filter_submissions_with_few_feedback(df)
     df = _add_and_sort_by_overall_rank(df)

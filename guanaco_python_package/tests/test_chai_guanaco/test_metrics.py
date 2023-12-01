@@ -243,8 +243,10 @@ def test_print_formatted_leaderboard():
             'model_repo',
             'is_custom_reward',
             'reward_repo',
+            'repetition',
+            'overall_rank',
+            'safety_score',
             'overall_score',
-            'overall_rank'
         ]
     assert list(df.columns) == expected_columns
     assert pd.api.types.is_integer_dtype(df['overall_rank'])
