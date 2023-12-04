@@ -1,11 +1,8 @@
 from contextlib import asynccontextmanager
-import logging
 
 import discord
-from discord.ext import commands
 from discord_bot import config
 from discord_bot.cogs import ChatCog, DeveloperKeyCog, InfoCog
-from guanaco_database import auth
 
 
 @asynccontextmanager

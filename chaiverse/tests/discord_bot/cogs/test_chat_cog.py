@@ -3,7 +3,6 @@ import pytest
 from unittest.mock import Mock, AsyncMock, MagicMock, patch
 
 from discord.enums import ChannelType, MessageType
-from discord import Message, Thread
 from discord_bot.cogs import ChatCog
 
 

@@ -6,13 +6,6 @@ from multiprocessing import Process
 from chai_guanaco import metrics as chai_metrics
 import discord
 from discord_bot import config, discord_bot_client
-import uvicorn
-
-
-# Dummy HTTP server so it can be deployed via CI/CD to Cloud run
-# with other services (else painful to deploy)
-def run_http_server():
-    uvicorn.run("discord_bot_server:app", port=8000, log_level="info")
 
 
 def run_http_server():
