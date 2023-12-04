@@ -424,22 +424,19 @@ def test_get_procssed_leaderboard_will_set_overall_score_and_overall_rank_correc
     assert list(result['overall_rank']) == overall_ranks
     assert result['model_repo'][0] == winning_model
 
+
 @patch('chai_guanaco.metrics.get_all_historical_submissions')
-@patch('chai_guanaco.metrics.get_leaderboard')
-def test_get_sorted_available_models(get_leaderboard, get_submissions):
+def test_get_sorted_available_models(get_submissions):
     get_submissions.return_value = {
         'model1': {'status': 'inactive'},
-        'model2': {'status': 'deployed'},
+        'model4': {'status': 'deployed'},
         'model3': {'status': 'deployed'},
-        'model4': {'status': 'deployed'}
-    }
-    get_leaderboard.return_value = {
-        "submission_id": ['model4', 'model2']
+        'model2': {'status': 'deployed'}
     }
     result = metrics.get_sorted_available_models('mock-key')
-    assert result == ['model4', 'model2', 'model3']
+    assert result == ['model2', 'model3', 'model4']
     get_submissions.assert_called_once_with(developer_key='mock-key')
-    get_leaderboard.assert_called_once_with(regenerate=False, developer_key='mock-key')
+
 
 def historical_submisions():
     data = {

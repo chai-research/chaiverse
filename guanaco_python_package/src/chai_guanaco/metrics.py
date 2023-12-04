@@ -300,9 +300,5 @@ def _pprint_leaderboard(df):
 def get_sorted_available_models(developer_key):
     models = get_all_historical_submissions(developer_key=developer_key)
     available_models = [k for k, v in models.items() if v['status'] == 'deployed']
-    leaderboard = get_leaderboard(regenerate=False, developer_key=developer_key)
-    model_rank = {model: rank for rank, model in enumerate(leaderboard["submission_id"])}
-    def sort_key(model):
-        return model_rank.get(model, float('inf'))
-    sorted_available_models = sorted(available_models, key=sort_key)
+    sorted_available_models = sorted(available_models)
     return sorted_available_models
