@@ -1,5 +1,4 @@
-from mock import patch
-
+from mock import patch, Mock
 import pytest
 
 from chaiverse import submit, formatters, utils
@@ -46,7 +45,15 @@ def mock_submission():
     return submission
 
 
-def test_model_submitter(mock_submission, mock_post, mock_get_pending_to_success):
+@pytest.fixture()
+def developer_key(tmpdir):
+    keyfile = tmpdir.join('developer_key.json')
+    keyfile.write('mock-key')
+    with patch('chaiverse.login_cli._get_cached_key_path', Mock(return_value=f'{keyfile}')):
+        yield keyfile
+
+
+def test_model_submitter(mock_submission, mock_post, mock_get_pending_to_success, developer_key):
     model_submitter = submit.ModelSubmitter(developer_key="mock-key")
     model_submitter._sleep_time = 0
     model_submitter._get_request_interval = 1
@@ -71,7 +78,7 @@ def test_model_submitter(mock_submission, mock_post, mock_get_pending_to_success
 
 
 @patch('builtins.input')
-def test_model_submitter_fails_on_invalid_eula_agreement(text_input):
+def test_model_submitter_fails_on_invalid_eula_agreement(text_input, developer_key):
     model_submitter = submit.ModelSubmitter(developer_key="mock-key")
     text_input.return_value = 'no'
     with pytest.raises(ValueError) as e:
