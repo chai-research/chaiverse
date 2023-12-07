@@ -1,11 +1,11 @@
 import logging
 
-from chai_guanaco import chat as chai_chat, metrics as chai_metrics
 import discord
 from discord.enums import ChannelType, MessageType
 from discord.ext import commands
 from discord_bot import config
 
+from chaiverse import chat as chai_chat, metrics as chai_metrics
 
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.INFO)

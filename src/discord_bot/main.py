@@ -3,7 +3,7 @@ from http.server import HTTPServer, BaseHTTPRequestHandler
 import logging
 from multiprocessing import Process
 
-from chai_guanaco import metrics as chai_metrics
+from chaiverse import metrics as chai_metrics
 import discord
 from discord_bot import config, discord_bot_client
 

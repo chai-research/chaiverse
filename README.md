@@ -25,10 +25,10 @@ It's the world's first open community challenge with real-user evaluations. You 
 
 ## 🧠 How Does It Work?
 
--   The `chai_guanaco` pip package provides a way to easily submit your language model, all you need to do is ensure it is on HuggingFace 🤗
+-   The `chaiverse` pip package provides a way to easily submit your language model, all you need to do is ensure it is on HuggingFace 🤗
 -   We will automatically **Tritonize** your model for fast inference and host it in our internal GPU cluster 🚀
 -   Once deployed, Chai users on our platform who enter the **arena mode** will be rating your model directly, providing you with both quantatitive and verbal feedback 📈
--   Both the public leaderboard and **user feedback** for your model can be directly downloaded via the `chai_guanaco` package 🧠
+-   Both the public leaderboard and **user feedback** for your model can be directly downloaded via the `chaiverse` package 🧠
 -   Cash prizes will be allocated according to your position in the leaderboard 💰
 
 [![Chai Pipeline](https://imgur.com/LtMWOAq.png)](https://www.chai-research.com/competition.html)
