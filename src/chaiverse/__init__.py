@@ -8,5 +8,6 @@ from chaiverse.metrics import (
 from chaiverse.submit import (
     ModelSubmitter,
     deactivate_model,
+    get_model_info,
     get_my_submissions,
 )

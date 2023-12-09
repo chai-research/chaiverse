@@ -2,9 +2,8 @@ from pathlib import Path
 import os
 from setuptools import find_packages, setup
 
-long_description = '''
-Chai Guanaco](https://www.chai-research.com/competition.html) is part of the Chai Prize Competition, accelerating community AGI. It's the world's first open community challenge with real-user evaluations. You models will be directly deployed on the [Chai App](http://tosto.re/chaiapp) where our over 500K daily active users will be providing live feedback. Get to top of the leaderboard and share the $1 million cash prize!
-'''
+current_dir = Path(__file__).parent
+long_description = (current_dir / "README.md").read_text()
 
 def _get_requirements():
     with open('requirements.txt') as f:
@@ -47,17 +46,16 @@ if __name__ == "__main__":
             "chaiverse": "."
         },
         package_data={
-            "chaiverse": ["resources/*"]
+            "chaiverse": ["resources/bot_config/*"]
         },
         url='https://www.chaiverse.com',
         zip_safe=False,
         long_description=long_description,
         long_description_content_type='text/markdown',
         install_requires=_get_requirements(),
-        include_package_data=True,
         entry_points={
             'console_scripts': [
-                'chaiverse=login_cli:cli',
+                'chaiverse=chaiverse.login_cli:cli',
             ],
         },
     )
