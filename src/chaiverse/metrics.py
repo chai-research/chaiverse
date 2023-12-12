@@ -13,7 +13,7 @@ from chaiverse.login_cli import auto_authenticate
 from chaiverse.utils import print_color, cache, get_all_historical_submissions, distribute_to_workers
 
 
-DEFAULT_MAX_WORKERS = min(20, os.cpu_count() * 2)
+DEFAULT_MAX_WORKERS = max(1, min(20, os.cpu_count() - 3))
 PUBLIC_LEADERBOARD_MINIMUM_FEEDBACK_COUNT = 150
 LEADERBOARD_DISPLAY_COLS = [
     'developer_uid',
