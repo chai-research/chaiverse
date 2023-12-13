@@ -23,5 +23,4 @@ if __name__ == "__main__":
     logging.basicConfig(level=logging.DEBUG)
     server_proc = Process(target=run_http_server, daemon=True)
     server_proc.start()
-    chai_metrics.get_sorted_available_models(developer_key=config.DEVELOPER_KEY) # cache metrics
     asyncio.run(run_discord_bot())

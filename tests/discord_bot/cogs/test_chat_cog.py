@@ -24,6 +24,12 @@ def chai_metrics():
 
 
 @pytest.fixture(autouse=True)
+def bot():
+    bot = AsyncMock()
+    yield bot
+
+
+@pytest.fixture(autouse=True)
 def chai_chat():
     with patch('discord_bot.cogs.chat_cog.chai_chat') as mock_chai_chat:
         mock_chai_chat.get_bot_config.return_value = MOCK_BOT_CONFIG
@@ -42,17 +48,17 @@ def config():
 
 
 @pytest.mark.asyncio
-async def test_slash_chat_can_start_chat_thread_with_model1_bot1():
+async def test_slash_chat_can_start_chat_thread_with_model1_bot1(bot):
     ctx = AsyncMock()
     ctx.channel.create_thread.return_value.typing = MagicMock(mock_typing)
     thread = ctx.channel.create_thread.return_value
 
     choice_msg = Mock()
     choice_msg.content = '1'
-    ctx.bot.wait_for.return_value = choice_msg
+    bot.wait_for.return_value = choice_msg
 
-    cog = ChatCog()
-    await cog.chat(cog, ctx)
+    cog = ChatCog(bot)
+    await cog.chat.callback(cog, ctx)
 
     assert ctx.channel.create_thread.await_count == 1
     assert thread.typing.call_count == 1
@@ -66,17 +72,17 @@ async def test_slash_chat_can_start_chat_thread_with_model1_bot1():
 
 
 @pytest.mark.asyncio
-async def test_slash_chat_can_start_chat_thread_with_model2_bot2():
+async def test_slash_chat_can_start_chat_thread_with_model2_bot2(bot):
     ctx = AsyncMock()
     ctx.channel.create_thread.return_value.typing = MagicMock(mock_typing)
     thread = ctx.channel.create_thread.return_value
 
     choice_msg = Mock()
     choice_msg.content = '2'
-    ctx.bot.wait_for.return_value = choice_msg
+    bot.wait_for.return_value = choice_msg
 
-    cog = ChatCog()
-    await cog.chat(cog, ctx)
+    cog = ChatCog(bot)
+    await cog.chat.callback(cog, ctx)
 
     assert ctx.channel.create_thread.await_count == 1
     assert thread.typing.call_count == 1
@@ -91,17 +97,17 @@ async def test_slash_chat_can_start_chat_thread_with_model2_bot2():
 
 @pytest.mark.asyncio
 @patch('discord_bot.cogs.chat_cog.OPTION_BATCH_SIZE', 2)
-async def test_slash_chat_can_send_options_in_batches():
+async def test_slash_chat_can_send_options_in_batches(bot):
     ctx = AsyncMock()
     ctx.channel.create_thread.return_value.typing = MagicMock(mock_typing)
     thread = ctx.channel.create_thread.return_value
 
     choice_msg = Mock()
     choice_msg.content = '2'
-    ctx.bot.wait_for.return_value = choice_msg
+    bot.wait_for.return_value = choice_msg
 
-    cog = ChatCog()
-    await cog.chat(cog, ctx)
+    cog = ChatCog(bot)
+    await cog.chat.callback(cog, ctx)
 
     assert ctx.channel.create_thread.await_count == 1
     assert thread.typing.call_count == 1
@@ -117,7 +123,7 @@ async def test_slash_chat_can_send_options_in_batches():
 
 
 @pytest.mark.asyncio
-async def test_bot_will_reply_on_chatting_message_received_in_chatting_thread(chai_chat):
+async def test_bot_will_reply_on_chatting_message_received_in_chatting_thread(chai_chat, bot):
     ctx = Mock()
     thread = MagicMock()
     thread.send = AsyncMock()
@@ -150,7 +156,7 @@ async def test_bot_will_reply_on_chatting_message_received_in_chatting_thread(ch
     message.channel = thread
     message.reply = AsyncMock()
 
-    cog = ChatCog()
+    cog = ChatCog(bot)
     await cog.on_message(message)
 
     assert thread.typing.call_count == 1
@@ -177,7 +183,7 @@ async def test_bot_will_reply_on_chatting_message_received_in_chatting_thread(ch
     ]
 )
 @patch('discord_bot.cogs.chat_cog._reply_chat_message')
-async def test_bot_only_reply_in_chatting_thread(reply_chat_message, thread_type, thread_archived, thread_locked, thread_name, expected_await_count, chai_chat):
+async def test_bot_only_reply_in_chatting_thread(reply_chat_message, thread_type, thread_archived, thread_locked, thread_name, expected_await_count, bot):
     thread = MagicMock()
     thread.send = AsyncMock()
     thread.typing = MagicMock(mock_typing)
@@ -193,7 +199,7 @@ async def test_bot_only_reply_in_chatting_thread(reply_chat_message, thread_type
     message.channel = thread
     message.reply = AsyncMock()
     
-    cog = ChatCog()
+    cog = ChatCog(bot)
     await cog.on_message(message)
     assert expected_await_count == reply_chat_message.await_count
 
@@ -208,7 +214,7 @@ async def test_bot_only_reply_in_chatting_thread(reply_chat_message, thread_type
     ]
 )
 @patch('discord_bot.cogs.chat_cog._reply_chat_message')
-async def test_bot_only_reply_chatting_message(reply_chat_message, message_type, message_is_system, message_author_is_bot, expected_await_count, chai_chat):
+async def test_bot_only_reply_chatting_message(reply_chat_message, message_type, message_is_system, message_author_is_bot, expected_await_count, bot):
     thread = MagicMock()
     thread.send = AsyncMock()
     thread.typing = MagicMock(mock_typing)
@@ -224,6 +230,6 @@ async def test_bot_only_reply_chatting_message(reply_chat_message, message_type,
     message.channel = thread
     message.reply = AsyncMock()
     
-    cog = ChatCog()
+    cog = ChatCog(bot)
     await cog.on_message(message)
     assert expected_await_count == reply_chat_message.await_count

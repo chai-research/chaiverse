@@ -6,10 +6,9 @@ from discord_bot.cogs import InfoCog
 
 @pytest.mark.asyncio
 async def test_slash_info_will_return_info():
-
-    ctx = AsyncMock()
+    interaction = AsyncMock()
 
     cog = InfoCog()
-    await cog.info(cog, ctx)
+    await cog.info.callback(cog, interaction)
 
-    assert 'commands you need to know' in ctx.reply.call_args_list[0].args[0]
+    assert 'commands you need to know' in interaction.response.send_message.call_args_list[0].args[0]

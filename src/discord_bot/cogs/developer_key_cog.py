@@ -30,4 +30,3 @@ def _get_welcome_text(member_name, developer_key):
            f"checkout our [leaderboard](https://discord.com/channels/1104020730678612001/1134163974296961195) " \
            f"and [write-up](https://discord.com/channels/1104020730678612001/1112835255439740939) channels  🏆"
     return welcome_text
-
