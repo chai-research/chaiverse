@@ -15,10 +15,13 @@ OPTION_BATCH_SIZE = 20
 
 
 class ChatCog(commands.Cog):
+    def __init__(self, bot):
+        self.bot = bot
 
-    @commands.command(description='Starts conversation with the bot, served by deployed submission.')
-    async def chat(self, ctx):
-        await _start_chat(ctx)
+    @discord.app_commands.command(description='Starts conversation with the bot, served by deployed submission.')
+    async def chat(self, interaction):
+        thread = await interaction.channel.create_thread(name="Initializing", type=discord.ChannelType.public_thread)
+        await _start_chat(self.bot, thread)
 
     @commands.Cog.listener()
     async def on_message(self, message: discord.Message):
@@ -49,25 +52,24 @@ def _is_chatting_message(message):
     return True
 
 
-async def _start_chat(ctx):
-    thread = await ctx.channel.create_thread(name="Initializing", type=discord.ChannelType.public_thread)
-    submission_id = await _choose_submission(ctx, thread)
-    bot_name = await _choose_bot(ctx, thread)
+async def _start_chat(bot, thread):
+    submission_id = await _choose_submission(bot, thread)
+    bot_name = await _choose_bot(bot, thread)
     await _prepare_chat(thread, submission_id, bot_name)
 
 
-async def _choose_submission(ctx, thread):
+async def _choose_submission(bot, thread):
     async with thread.typing():
         available_models = chai_metrics.get_sorted_available_models(developer_key=config.DEVELOPER_KEY)
     await _prompt_options(thread, available_models, "Please select a model by typing its number:")
-    submission_id = await _choose_option(ctx, thread, available_models)
+    submission_id = await _choose_option(bot, thread, available_models)
     return submission_id
 
 
-async def _choose_bot(ctx, thread):
+async def _choose_bot(bot, thread):
     available_bots = chai_chat.get_bot_names()
     await _prompt_options(thread, available_bots, "Please select a bot by typing its number:")
-    bot_name = await _choose_option(ctx, thread, available_bots)
+    bot_name = await _choose_option(bot, thread, available_bots)
     return bot_name
 
 
@@ -88,12 +90,12 @@ async def _prompt_options(thread, options, prompt_message):
         await thread.send(options_text)
 
 
-async def _choose_option(ctx, thread, options):
+async def _choose_option(bot, thread, options):
     def is_message_from_thread(message):
         return message.channel == thread
 
     while True:
-        choice_msg = await ctx.bot.wait_for('message', check=is_message_from_thread)
+        choice_msg = await bot.wait_for('message', check=is_message_from_thread)
         if choice_msg.content.isdigit() and 0 < int(choice_msg.content) <= len(options):
             return options[int(choice_msg.content) - 1]
         await thread.send("Please write a number from the provided list.")
@@ -133,4 +135,3 @@ def _build_bot_message(message, bot_label):
         _, content = content.split(": ", 1)
         sender = bot_label
     return content, sender
-
