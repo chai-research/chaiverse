@@ -6,7 +6,7 @@
 
 
 # $1M LLM Prize Hosted By
-<a href="https://www.chai-research.com/"><img src="https://imgur.com/odX7Jz4.png" alt="Chai Logo" height="90"/></a>
+<a href="https://www.chai-research.com/"><img src="https://imgur.com/vwlOrxi.png" alt="Chai Logo" height="90"/></a>
 
 [Chaiverse](https://www.chaiverse.com) is part of the Chai Prize Competition, accelerating community AGI.
 
