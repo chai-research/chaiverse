@@ -1,4 +1,4 @@
-[![Guanaco Banner](https://imgur.com/vUn3OXJ.png)](https://www.chai-research.com/competition.html)
+[![Chaiverse Banner](https://imgur.com/vUn3OXJ.png)](https://www.chaiverse.com/)
 
 [![PyPI version](https://badge.fury.io/py/chaiverse.svg)](https://badge.fury.io/py/chaiverse)
 [![first-timers-only Friendly](https://img.shields.io/badge/first--timers--only-friendly-blue.svg)](http://www.firsttimersonly.com/)
@@ -8,7 +8,7 @@
 # $1M LLM Prize Hosted By
 <a href="https://www.chai-research.com/"><img src="https://imgur.com/odX7Jz4.png" alt="Chai Logo" height="90"/></a>
 
-[Chai Guanaco](https://www.chai-research.com/competition.html) is part of the Chai Prize Competition, accelerating community AGI.
+[Chaiverse](https://www.chaiverse.com) is part of the Chai Prize Competition, accelerating community AGI.
 
 It's the world's first open community challenge with real-user evaluations. You models will be directly deployed on the [Chai App](http://tosto.re/chaiapp) where our over 500K daily active users will be providing live feedback. Get to top of the leaderboard and share the $1 million cash prize!
 
@@ -31,7 +31,7 @@ It's the world's first open community challenge with real-user evaluations. You 
 -   Both the public leaderboard and **user feedback** for your model can be directly downloaded via the `chaiverse` package 🧠
 -   Cash prizes will be allocated according to your position in the leaderboard 💰
 
-[![Chai Pipeline](https://imgur.com/LtMWOAq.png)](https://www.chai-research.com/competition.html)
+[![Chai Pipeline](https://imgur.com/LtMWOAq.png)](https://www.chaiverse.com)
 
 
 ## Resources
@@ -51,4 +51,4 @@ It's the world's first open community challenge with real-user evaluations. You 
 
 <a href="https://www.coreweave.com/"><img src="https://imgur.com/oJyuH8q.png" alt="Coreweave Logo" height="70"/></a>
 
-[CHAI RESEARCH CORP. COMPETITION END USER LICENSE AGREEMENT (EULA)](https://www.chai-research.com/competition-eula.html)
+[CHAI RESEARCH CORP. COMPETITION END USER LICENSE AGREEMENT (EULA)](https://www.chaiverse.com/competition-eula.html)
