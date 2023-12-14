@@ -1,4 +1,4 @@
-[![Chaiverse Banner](https://imgur.com/vUn3OXJ.png)](https://www.chaiverse.com/)
+[![Chaiverse Banner](https://i.imgur.com/HGlydGb.png)](https://www.chaiverse.com/)
 
 [![PyPI version](https://badge.fury.io/py/chaiverse.svg)](https://badge.fury.io/py/chaiverse)
 [![first-timers-only Friendly](https://img.shields.io/badge/first--timers--only-friendly-blue.svg)](http://www.firsttimersonly.com/)
