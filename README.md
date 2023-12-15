@@ -47,4 +47,4 @@ It's the world's first open community challenge with real-user evaluations. You 
 | ❗ [Competition EULA](https://www.chai-research.com/competition-eula.html)| Covers terms of use and competition agreements|
 
 
-[CHAI RESEARCH CORP. COMPETITION END USER LICENSE AGREEMENT (EULA)](https://www.chaiverse.com/competition-eula.html)
+[CHAI RESEARCH CORP. COMPETITION END USER LICENSE AGREEMENT (EULA)](https://www.chai-research.com/competition-eula.html)
