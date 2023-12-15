@@ -47,8 +47,4 @@ It's the world's first open community challenge with real-user evaluations. You 
 | ❗ [Competition EULA](https://www.chai-research.com/competition-eula.html)| Covers terms of use and competition agreements|
 
 
-# Sponsored By
-
-<a href="https://www.coreweave.com/"><img src="https://imgur.com/oJyuH8q.png" alt="Coreweave Logo" height="70"/></a>
-
 [CHAI RESEARCH CORP. COMPETITION END USER LICENSE AGREEMENT (EULA)](https://www.chaiverse.com/competition-eula.html)
