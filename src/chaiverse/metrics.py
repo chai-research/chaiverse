@@ -136,7 +136,10 @@ class FeedbackMetrics():
     def repetition_score(self):
         scores = np.array([m.repetition_score for m in self.convo_metrics])
         is_public = np.array([feedback.get('public', True) for feedback in self.feedbacks])
-        return np.nanmean(scores[is_public])
+        mean = float('NaN')
+        if len(scores[is_public]):
+            mean = np.nanmean(scores[is_public])
+        return mean
 
     @property
     def user_writing_speed(self):
@@ -145,6 +148,8 @@ class FeedbackMetrics():
         for column in df.columns:
             ix = df[column] < np.percentile(df[column], 95)
             df = df[ix]
+            if len(df) == 0:
+                break
         summary = summarise_conversation_profile(df)
         return summary['writing_speed']
 
@@ -281,8 +286,10 @@ def _filter_submissions_with_few_feedback(df):
 def _add_and_sort_by_overall_rank(df):
     thumbs_up_rank = df['thumbs_up_ratio'].rank(ascending=False)
     writing_speed_rank = df['user_writing_speed'].rank(ascending=True)
+    df.loc[:, 'thumbs_up_rank'] = thumbs_up_rank
+    df.loc[:, 'writing_speed_rank'] = writing_speed_rank
     df.loc[:, 'overall_score'] = np.mean([writing_speed_rank, thumbs_up_rank], axis=0)
-    df.loc[:, 'overall_rank'] = df.overall_score.rank().astype(int)
+    df.loc[:, 'overall_rank'] = np.floor(df.overall_score.rank()).astype('Int64')
     df = df.sort_values('overall_rank', ascending=True).reset_index(drop=True)
     return df
 

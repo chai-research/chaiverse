@@ -246,6 +246,8 @@ def test_print_formatted_leaderboard():
             'repetition',
             'overall_rank',
             'safety_score',
+            'thumbs_up_rank',
+            'writing_speed_rank',
             'overall_score',
         ]
     assert list(df.columns) == expected_columns
