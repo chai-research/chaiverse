@@ -145,6 +145,8 @@ class FeedbackMetrics():
         for column in df.columns:
             ix = df[column] < np.percentile(df[column], 95)
             df = df[ix]
+            if len(df) == 0:
+                break
         summary = summarise_conversation_profile(df)
         return summary['writing_speed']
 
