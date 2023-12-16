@@ -1,4 +1,4 @@
-[![Chaiverse Banner](https://imgur.com/vUn3OXJ.png)](https://www.chaiverse.com/)
+[![Chaiverse Banner](https://i.imgur.com/HGlydGb.png)](https://www.chaiverse.com/)
 
 [![PyPI version](https://badge.fury.io/py/chaiverse.svg)](https://badge.fury.io/py/chaiverse)
 [![first-timers-only Friendly](https://img.shields.io/badge/first--timers--only-friendly-blue.svg)](http://www.firsttimersonly.com/)
@@ -6,7 +6,7 @@
 
 
 # $1M LLM Prize Hosted By
-<a href="https://www.chai-research.com/"><img src="https://imgur.com/odX7Jz4.png" alt="Chai Logo" height="90"/></a>
+<a href="https://www.chai-research.com/"><img src="https://imgur.com/vwlOrxi.png" alt="Chai Logo" height="70"/></a>
 
 [Chaiverse](https://www.chaiverse.com) is part of the Chai Prize Competition, accelerating community AGI.
 
@@ -47,8 +47,4 @@ It's the world's first open community challenge with real-user evaluations. You 
 | ❗ [Competition EULA](https://www.chai-research.com/competition-eula.html)| Covers terms of use and competition agreements|
 
 
-# Sponsored By
-
-<a href="https://www.coreweave.com/"><img src="https://imgur.com/oJyuH8q.png" alt="Coreweave Logo" height="70"/></a>
-
-[CHAI RESEARCH CORP. COMPETITION END USER LICENSE AGREEMENT (EULA)](https://www.chaiverse.com/competition-eula.html)
+[CHAI RESEARCH CORP. COMPETITION END USER LICENSE AGREEMENT (EULA)](https://www.chai-research.com/competition-eula.html)
