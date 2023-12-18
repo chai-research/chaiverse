@@ -22,7 +22,6 @@ LEADERBOARD_DISPLAY_COLS = [
     'is_custom_reward',
     'submission_id',
     'thumbs_up_ratio',
-    'user_writing_speed',
     'repetition',
     'total_feedback_count',
     'overall_rank',
@@ -98,7 +97,6 @@ def calc_metrics(feedback):
             'thumbs_up_ratio_se': feedback_metrics.thumbs_up_ratio_se,
             'repetition': feedback_metrics.repetition_score,
             'total_feedback_count': feedback_metrics.total_feedback_count,
-            'user_writing_speed': feedback_metrics.user_writing_speed,
         }
     return metrics
 
@@ -140,18 +138,6 @@ class FeedbackMetrics():
         is_public = np.array([feedback.get('public', True) for feedback in self.feedbacks])
         return np.nanmean(scores[is_public])
 
-    @property
-    def user_writing_speed(self):
-        df = pd.concat([convo.get_conversation_profile() for convo in self.convo_metrics])
-        # remove outliers
-        for column in df.columns:
-            ix = df[column] < np.percentile(df[column], 95)
-            df = df[ix]
-            if len(df) == 0:
-                break
-        summary = summarise_conversation_profile(df)
-        return summary['writing_speed']
-
     def _filter_duplicated_uid_feedbacks(self, feedbacks):
         user_feedbacks = defaultdict(list)
         for feedback in feedbacks:
@@ -175,39 +161,8 @@ class ConversationMetrics():
         score = np.nan if len(responses) < 2 else get_repetition_score(responses)
         return score
 
-    def get_conversation_profile(self):
-        messages = sorted(self.messages, key=lambda x: x['sent_date'])
-        data = {'duration': [], 'bot_num_characters': [], 'user_num_characters': []}
-        for i, m in enumerate(messages):
-            if self._is_from_user(m) and i > 0:
-                sent_time = datetime.fromisoformat(m['sent_date'])
-                received_time = datetime.fromisoformat(messages[i-1]['sent_date'])
-                delta = sent_time - received_time
-                data['duration'].append(delta.total_seconds())
-                data['bot_num_characters'].append(len(messages[i-1]['content'].strip()))
-                data['user_num_characters'].append(len(m['content'].strip()))
-        return pd.DataFrame(data)
-
     def _is_from_user(self, message):
         return '_bot' not in message['sender']['uid']
-
-
-def summarise_conversation_profile(convo_profile: pd.DataFrame):
-    y = convo_profile['duration'].values
-    X = convo_profile[['user_num_characters', 'bot_num_characters']].values
-    X = np.concatenate([X, np.ones(len(X)).reshape(-1, 1)], axis=1)
-    cov = np.dot(X.T, X)
-    if np.isclose(np.linalg.det(cov), 0):
-        inv_cov = cov * np.nan
-    else:
-        inv_cov = np.linalg.inv(cov)
-    beta = np.dot(inv_cov, np.dot(X.T, y))
-    result = {
-        'writing_speed': 1 / beta[0],
-        'reading_speed': 1 / beta[1],
-        'thinking_time': beta[2]
-    }
-    return result
 
 
 def get_repetition_score(responses):
@@ -285,11 +240,9 @@ def _filter_submissions_with_few_feedback(df):
 
 def _add_overall_rank(df):
     thumbs_up_rank = df['thumbs_up_ratio'].rank(ascending=False)
-    writing_speed_rank = df['user_writing_speed'].rank(ascending=True)
     df.loc[:, 'thumbs_up_rank'] = thumbs_up_rank
-    df.loc[:, 'writing_speed_rank'] = writing_speed_rank
-    df.loc[:, 'overall_score'] = np.mean([writing_speed_rank, thumbs_up_rank], axis=0)
-    df.loc[:, 'overall_rank'] = df.overall_score.rank().astype('Int64')
+    df.loc[:, 'overall_score'] = np.mean([thumbs_up_rank], axis=0)
+    df.loc[:, 'overall_rank'] = df.overall_score.rank()
     return df
 
 

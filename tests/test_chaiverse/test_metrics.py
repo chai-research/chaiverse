@@ -49,7 +49,6 @@ def test_get_raw_leaderboard(data_dir_mock, get_ids_mock, tmpdir):
     expected_cols = [
         'submission_id',
         'thumbs_up_ratio',
-        'user_writing_speed',
         'total_feedback_count',
         ]
     for col in expected_cols:
@@ -69,7 +68,6 @@ def test_get_raw_leaderboard(data_dir_mock, get_ids_mock, tmpdir):
             'thumbs_up_ratio_se': 0.043159749410503594,
             'repetition': 0.09309662846841879,
             'total_feedback_count': 33,
-            'user_writing_speed': 2.258729,
             'reward_repo': None,
             'is_custom_reward': None,
             },
@@ -87,7 +85,6 @@ def test_get_raw_leaderboard(data_dir_mock, get_ids_mock, tmpdir):
             'thumbs_up_ratio_se': 0.01675940260012055,
             'repetition': 0.26395981785675354,
             'total_feedback_count': 207,
-            'user_writing_speed': 2.7696244,
             'reward_repo': 'mock-custom-reward-repo',
             'is_custom_reward': True,
             },
@@ -105,7 +102,6 @@ def test_get_raw_leaderboard(data_dir_mock, get_ids_mock, tmpdir):
             'thumbs_up_ratio_se': 0.033698849323782545,
             'repetition': 0.07319031123625354,
             'total_feedback_count': 55,
-            'user_writing_speed': 3.1909,
             'reward_repo': 'mock-default-reward-repo',
             'is_custom_reward': False,
             }
@@ -125,7 +121,6 @@ def test_get_leaderboard_row():
         'thumbs_up_ratio_se': pytest.approx(0.008106970421151738),
         'repetition': pytest.approx(0.10992682598233437),
         'total_feedback_count': 524,
-        'user_writing_speed': pytest.approx(2.2084751053670595),
     }
     assert results == expected_metrics
 
@@ -140,7 +135,6 @@ def test_get_submission_metrics():
         'thumbs_up_ratio_se': pytest.approx(0.008106970421151738),
         'repetition': pytest.approx(0.10992682598233437),
         'total_feedback_count': 524,
-        'user_writing_speed': pytest.approx(2.2084751053670595),
     }
     assert results == expected_metrics
 
@@ -162,56 +156,6 @@ def test_conversation_metrics():
     assert convo_metrics.repetition_score == 0.25
 
 
-def test_conversation_metrics_profile_conversation():
-    bot_sender_data = {'uid': '_bot_123'}
-    user_sender_data = {'uid': 'XLQR6'}
-    messages = [
-        {'deleted': False, 'content': 'hi', 'sender': bot_sender_data, 'sent_date': '2023-09-01T12:00:00'},
-        {'deleted': False, 'content': '123', 'sender': user_sender_data, 'sent_date': '2023-09-01T12:00:30'},
-        {'deleted': True, 'content': 'bye', 'sender': bot_sender_data, 'sent_date': '2023-09-01T12:00:45'},
-        {'deleted': True, 'content': 'bye~', 'sender': bot_sender_data, 'sent_date': '2023-09-01T12:00:55'},
-        {'deleted': False, 'content': 'dont go!', 'sender': bot_sender_data, 'sent_date': '2023-09-01T12:01:05'},
-        {'deleted': False, 'content': '123456', 'sender': user_sender_data, 'sent_date': '2023-09-01T12:01:25'},
-        {'deleted': False, 'content': 'bye', 'sender': bot_sender_data, 'sent_date': '2023-09-01T12:01:30'},
-
-    ]
-    convo_metrics = metrics.ConversationMetrics(messages)
-    out = convo_metrics.get_conversation_profile()
-    expected = pd.DataFrame([
-        {'duration': 30., 'bot_num_characters': 2, 'user_num_characters': 3},
-        {'duration': 20., 'bot_num_characters': 8, 'user_num_characters': 6},
-    ])
-    assert out.equals(expected)
-
-
-def test_summarise_convo_profile():
-    writing_speed = 12
-    reading_speed = 53
-    thinking_time = 21
-    df = pd.DataFrame({
-        'bot_num_characters': [23, 32, 45, 9, 6, 67],
-        'user_num_characters': [12, 89, 34, 68, 54, 90]})
-    df['duration'] = df['bot_num_characters'] / reading_speed + df['user_num_characters'] / writing_speed + thinking_time
-    out = metrics.summarise_conversation_profile(df)
-    assert np.isclose(out['writing_speed'], writing_speed)
-    assert np.isclose(out['reading_speed'], reading_speed)
-    assert np.isclose(out['thinking_time'], thinking_time)
-
-
-def test_summarise_convo_profile_returns_nan_when_not_enough_data_points():
-    writing_speed = 12
-    reading_speed = 53
-    thinking_time = 21
-    df = pd.DataFrame({
-        'bot_num_characters': [23],
-        'user_num_characters': [12]})
-    df['duration'] = df['bot_num_characters'] / reading_speed + df['user_num_characters'] / writing_speed + thinking_time
-    out = metrics.summarise_conversation_profile(df)
-    assert np.isnan(out['writing_speed'])
-    assert np.isnan(out['reading_speed'])
-    assert np.isnan(out['thinking_time'])
-
-
 def test_print_formatted_leaderboard():
     data = {
         'submission_id': ['tom_1689542168', 'tom_1689404889', 'val_1689051887', 'zl_1689542168'],
@@ -219,7 +163,6 @@ def test_print_formatted_leaderboard():
         'mcl': [1.0, 2.0, 3.0, 4.0],
         'retry_score': [.5, .6, .7, .8],
         'thumbs_up_ratio': [0.1, 0.5, 0.8, 0.2],
-        'user_writing_speed': [1.25, 3.2, 1.2, 1.09],
         'model_name': ['psutil', 'htop', 'watch', 'gunzip'],
         'developer_uid': ['tom', 'tom', 'val', 'zl'],
         'timestamp': ['2023-07-24 18:22:40+00:00'] * 3 + ['2023-07-24T18:22:40+00:00'],
@@ -236,7 +179,6 @@ def test_print_formatted_leaderboard():
             'mcl',
             'retry_score',
             'thumbs_up_ratio',
-            'user_writing_speed',
             'model_name',
             'developer_uid',
             'timestamp',
@@ -247,7 +189,6 @@ def test_print_formatted_leaderboard():
             'overall_rank',
             'safety_score',
             'thumbs_up_rank',
-            'writing_speed_rank',
             'overall_score',
         ]
     assert list(df.columns) == expected_columns
@@ -405,12 +346,12 @@ def test_get_processed_leaderboard_will_remove_submissions_with_few_feedback():
 
 
 @pytest.mark.parametrize(
-        "thumbs_up_ratios, user_writing_speeds, overall_scores, overall_ranks, winning_model", [
-        ([0.9, 0.8], [50, 100], [1.0, 2.0], [1,2], 'model1'),
-        ([0.9, 0.8], [100, 50], [1.5, 1.5], [1.5,1.5], 'model1'),
-        ([0.8, 0.9], [100, 50], [1.0, 2.0], [1,2], 'model2') ])
+        "thumbs_up_ratios, overall_scores, overall_ranks, winning_model", [
+        ([0.9, 0.8], [1.0, 2.0], [1,2], 'model1'),
+        ([0.8, 0.8], [1.5, 1.5], [1.5,1.5], 'model1'),
+        ([0.8, 0.9], [1.0, 2.0], [1,2], 'model2') ])
 def test_get_procssed_leaderboard_will_set_overall_score_and_overall_rank_correctly(
-        thumbs_up_ratios, user_writing_speeds, overall_scores, overall_ranks, winning_model):
+        thumbs_up_ratios, overall_scores, overall_ranks, winning_model):
     df = make_unique_submissions(2)
     df.update({
         'submission_id': ['submission-1', 'submission-2'],
@@ -418,7 +359,6 @@ def test_get_procssed_leaderboard_will_set_overall_score_and_overall_rank_correc
         'reward_repo': ['mock-default-repo', 'mock-default-repo'],
         'total_feedback_count': [1000, 1000],
         'thumbs_up_ratio': thumbs_up_ratios,
-        'user_writing_speed': user_writing_speeds,
     })
     assert len(df) == 2
     result = metrics._get_processed_leaderboard(df, True)
@@ -443,15 +383,12 @@ def test_get_sorted_available_models(get_submissions):
 def test_add_overall_rank():
     df = pd.DataFrame({
         "thumbs_up_ratio": [0.8, 0.8, 0.5, 0.7, float('nan')],
-        "user_writing_speed": [3.0, 3.0, 2.0, 1.0, float('nan')]
     })
     expected = pd.DataFrame({
         "thumbs_up_ratio": [0.8, 0.8, 0.5, 0.7, float('nan')],
-        "user_writing_speed": [3.0, 3.0, 2.0, 1.0, float('nan')],
         "thumbs_up_rank": [1.5, 1.5, 4.0, 3.0, float('nan')],
-        "writing_speed_rank": [3.5, 3.5, 2.0, 1.0, float('nan')],
-        "overall_score": [2.5, 2.5, 3.0, 2.0, float('nan')],
-        "overall_rank": [2.5, 2.5, 4.0, 1.0, float('nan')]
+        "overall_score": [1.5, 1.5, 4.0, 3.0, float('nan')],
+        "overall_rank": [1.5, 1.5, 4.0, 3.0, float('nan')]
     })
     result = metrics._add_overall_rank(df)
     pd.testing.assert_frame_equal(result, expected)
@@ -511,7 +448,6 @@ def make_unique_submissions(count):
     df = pd.DataFrame(range(count))
     df['total_feedback_count'] = 1000
     df['thumbs_up_ratio'] = 0.5
-    df['user_writing_speed'] = 50
     _fill_unique_ids(df, 'submission_id', prefix='mock-submission-id')
     _fill_unique_ids(df, 'model_repo', prefix='mock-model-repo')
     _fill_unique_ids(df, 'reward_repo', prefix='mock-reward-repo')
