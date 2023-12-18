@@ -246,10 +246,12 @@ def test_print_formatted_leaderboard():
             'repetition',
             'overall_rank',
             'safety_score',
+            'thumbs_up_rank',
+            'writing_speed_rank',
             'overall_score',
         ]
     assert list(df.columns) == expected_columns
-    assert pd.api.types.is_integer_dtype(df['overall_rank'])
+    assert pd.api.types.is_float_dtype(df['overall_rank'])
 
 
 def test_get_repetition_score_is_one_if_all_responses_are_the_same():
@@ -405,7 +407,7 @@ def test_get_processed_leaderboard_will_remove_submissions_with_few_feedback():
 @pytest.mark.parametrize(
         "thumbs_up_ratios, user_writing_speeds, overall_scores, overall_ranks, winning_model", [
         ([0.9, 0.8], [50, 100], [1.0, 2.0], [1,2], 'model1'),
-        ([0.9, 0.8], [100, 50], [1.5, 1.5], [1,1], 'model1'),
+        ([0.9, 0.8], [100, 50], [1.5, 1.5], [1.5,1.5], 'model1'),
         ([0.8, 0.9], [100, 50], [1.0, 2.0], [1,2], 'model2') ])
 def test_get_procssed_leaderboard_will_set_overall_score_and_overall_rank_correctly(
         thumbs_up_ratios, user_writing_speeds, overall_scores, overall_ranks, winning_model):
@@ -436,6 +438,36 @@ def test_get_sorted_available_models(get_submissions):
     result = metrics.get_sorted_available_models('mock-key')
     assert result == ['model2', 'model3', 'model4']
     get_submissions.assert_called_once_with(developer_key='mock-key')
+
+
+def test_add_overall_rank():
+    df = pd.DataFrame({
+        "thumbs_up_ratio": [0.8, 0.8, 0.5, 0.7, float('nan')],
+        "user_writing_speed": [3.0, 3.0, 2.0, 1.0, float('nan')]
+    })
+    expected = pd.DataFrame({
+        "thumbs_up_ratio": [0.8, 0.8, 0.5, 0.7, float('nan')],
+        "user_writing_speed": [3.0, 3.0, 2.0, 1.0, float('nan')],
+        "thumbs_up_rank": [1.5, 1.5, 4.0, 3.0, float('nan')],
+        "writing_speed_rank": [3.5, 3.5, 2.0, 1.0, float('nan')],
+        "overall_score": [2.5, 2.5, 3.0, 2.0, float('nan')],
+        "overall_rank": [2.5, 2.5, 4.0, 1.0, float('nan')]
+    })
+    result = metrics._add_overall_rank(df)
+    pd.testing.assert_frame_equal(result, expected)
+
+
+def test_sort_by_overall_rank():
+    df = pd.DataFrame({
+        "overall-score": [float('nan'), 40, 25, 25, 10],
+        "overall_rank": [float('nan'), 4, 2.5, 2.5, 1]
+    })
+    expected = pd.DataFrame({
+        "overall-score": [10, 25, 25, 40, float('nan')],
+        "overall_rank": [1, 2.5, 2.5, 4.0, float('nan')]
+    })
+    result = metrics._sort_by_overall_rank(df)
+    pd.testing.assert_frame_equal(result, expected)
 
 
 def historical_submisions():
