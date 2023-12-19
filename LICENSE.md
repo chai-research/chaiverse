@@ -17,11 +17,11 @@ of the Software. Any license notice or attribution required by
 the License must also include this Commons Clause License
 Condition notice.
 
-Software: n8n
+Software: Chaiverse
 
 License: Apache 2.0 with Commons Clause
 
-Licensor: n8n GmbH
+Licensor: Chai Research
 
 
 ---------------------------------------------------------------------
