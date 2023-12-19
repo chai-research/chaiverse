@@ -242,7 +242,7 @@ def _add_overall_rank(df):
     thumbs_up_rank = df['thumbs_up_ratio'].rank(ascending=False)
     df.loc[:, 'thumbs_up_rank'] = thumbs_up_rank
     df.loc[:, 'overall_score'] = np.mean([thumbs_up_rank], axis=0)
-    df.loc[:, 'overall_rank'] = df.overall_score.rank()
+    df['overall_rank'] = df.overall_score.rank().astype(float)
     return df
 
 
