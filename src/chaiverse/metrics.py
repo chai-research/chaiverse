@@ -9,7 +9,7 @@ import warnings
 import numpy as np
 import pandas as pd
 
-from chaiverse.feedback import get_feedback
+from chaiverse.feedback import get_feedback, is_submission_updated
 from chaiverse.login_cli import auto_authenticate
 from chaiverse.utils import print_color, cache, get_all_historical_submissions, distribute_to_workers
 
@@ -75,8 +75,9 @@ def get_raw_leaderboard(max_workers=DEFAULT_MAX_WORKERS, developer_key=None):
 
 def get_leaderboard_row(submission_item, developer_key=None):
     submission_id, meta_data = submission_item
-    is_deployed = meta_data.get('status') == 'deployed'
-    metrics = get_submission_metrics(submission_id, developer_key, reload=is_deployed)
+    server_feedback_no = int(meta_data["thumbs_up"]) + int(meta_data["thumbs_down"])
+    is_updated = is_submission_updated(submission_id, server_feedback_no)
+    metrics = get_submission_metrics(submission_id, developer_key, reload=is_updated)
     return {'submission_id': submission_id, **meta_data, **metrics}
 
 
