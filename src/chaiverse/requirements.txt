@@ -1,6 +1,6 @@
 click
 numpy
 pandas
-pydantic
+pydantic==1.10.7
 requests
 tqdm

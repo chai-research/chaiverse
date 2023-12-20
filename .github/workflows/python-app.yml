@@ -29,6 +29,7 @@ jobs:
         pip install -r src/chaiverse/requirements.txt
         pip install -r src/chaiverse/test_requirements.txt
         pip install -r src/discord_bot/requirements.txt
+        pip install -e src/chaiverse
     - name: Lint with flake8
       run: |
         # stop the build if there are Python syntax errors or undefined names
