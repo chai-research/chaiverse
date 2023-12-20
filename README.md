@@ -6,7 +6,8 @@
 
 
 # $1M LLM Prize Hosted By
-<a href="https://www.chai-research.com/"><img src="https://imgur.com/vwlOrxi.png" alt="Chai Logo" height="70"/></a>
+![Termux Logo](https://imgur.com/vwlOrxi.png#gh-light-mode-only)
+
 
 [Chaiverse](https://www.chaiverse.com) is part of the Chai Prize Competition, accelerating community AGI.
 
