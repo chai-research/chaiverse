@@ -1,0 +1,2 @@
+mock==5.0.2
+freezegun==1.2.2

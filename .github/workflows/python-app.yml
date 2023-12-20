@@ -27,6 +27,7 @@ jobs:
         python -m pip install --upgrade pip
         pip install flake8 pytest
         pip install -r src/chaiverse/requirements.txt
+        pip install -r src/chaiverse/test_requirements.txt
         pip install -r src/discord_bot/requirements.txt
     - name: Lint with flake8
       run: |
