@@ -173,25 +173,27 @@ def test_print_formatted_leaderboard():
     df = metrics._get_processed_leaderboard(all_metrics_df, detailed=True)
 
     assert len(df) == 3
-    expected_columns = [
-            'submission_id',
-            'total_feedback_count',
-            'mcl',
-            'retry_score',
-            'thumbs_up_ratio',
-            'model_name',
-            'developer_uid',
-            'timestamp',
-            'model_repo',
-            'is_custom_reward',
-            'reward_repo',
-            'repetition',
-            'overall_rank',
-            'safety_score',
-            'thumbs_up_rank',
-            'overall_score',
-        ]
-    assert list(df.columns) == expected_columns
+    expected_columns = {
+        'submission_id',
+        'total_feedback_count',
+        'mcl',
+        'retry_score',
+        'thumbs_up_ratio',
+        'model_name',
+        'developer_uid',
+        'timestamp',
+        'model_repo',
+        'is_custom_reward',
+        'reward_repo',
+        'stay_in_character',
+        'overall_rank',
+        'safety_score',
+        'repetition',
+        'thumbs_up_rank',
+        'stay_in_character_rank',
+        'overall_score',
+    }
+    assert set(df.columns) == expected_columns
     assert pd.api.types.is_float_dtype(df['overall_rank'])
 
 
@@ -346,12 +348,15 @@ def test_get_processed_leaderboard_will_remove_submissions_with_few_feedback():
 
 
 @pytest.mark.parametrize(
-        "thumbs_up_ratios, overall_scores, overall_ranks, winning_model", [
-        ([0.9, 0.8], [1.0, 2.0], [1,2], 'model1'),
-        ([0.8, 0.8], [1.5, 1.5], [1.5,1.5], 'model1'),
-        ([0.8, 0.9], [1.0, 2.0], [1,2], 'model2') ])
-def test_get_procssed_leaderboard_will_set_overall_score_and_overall_rank_correctly(
-        thumbs_up_ratios, overall_scores, overall_ranks, winning_model):
+        "thumbs_up_ratios, stay_in_character_scores, overall_ranks, winning_model", [
+        ([0.9, 0.8], [1.0, 1.0], [1, 2], 'model1'),
+        ([0.8, 0.8], [1.0, 1.0], [1.5, 1.5], 'model1'),
+        ([0.8, 0.9], [1.0, 1.0], [2, 1], 'model2'),
+        ([0, 0], [9.0, 8.0], [1, 2], 'model1'),
+        ([0, 0], [8.5, 8.5], [1.5, 1.5], 'model1'),
+        ([0, 0], [8.0, 9.0], [2, 1], 'model2')])
+def test_get_procssed_leaderboard_will_set_overall_score_correctly(
+        thumbs_up_ratios, stay_in_character_scores, overall_ranks, winning_model):
     df = make_unique_submissions(2)
     df.update({
         'submission_id': ['submission-1', 'submission-2'],
@@ -359,11 +364,11 @@ def test_get_procssed_leaderboard_will_set_overall_score_and_overall_rank_correc
         'reward_repo': ['mock-default-repo', 'mock-default-repo'],
         'total_feedback_count': [1000, 1000],
         'thumbs_up_ratio': thumbs_up_ratios,
+        'stay_in_character': stay_in_character_scores,
     })
     assert len(df) == 2
     result = metrics._get_processed_leaderboard(df, True)
-    assert list(result['overall_score']) == overall_scores
-    assert list(result['overall_rank']) == overall_ranks
+    assert list(result['overall_rank']) == sorted(overall_ranks)
     assert result['model_repo'][0] == winning_model
 
 
@@ -380,18 +385,47 @@ def test_get_sorted_available_models(get_submissions):
     get_submissions.assert_called_once_with(developer_key='mock-key')
 
 
+@pytest.mark.parametrize(
+        "value, expected_rank", [
+        ([0.9, 0.8], [1.0, 2.0]),
+        ([0.8, 0.8], [1.5, 1.5]),
+        ([0.8, 0.9], [2.0, 1.0]),
+        ([float('nan'), 0.9], [2.0, 1.0]),
+        ([0.8, float('nan')], [1.0, 2.0])])
+def test_add_individual_rank_descending(value, expected_rank):
+    df = pd.DataFrame({
+        'value': value,
+    })
+    result = metrics._add_individual_rank(df, value_column='value', rank_column='rank', ascending=False)
+    assert list(result['rank']) == expected_rank
+
+
+@pytest.mark.parametrize(
+        "value, expected_rank", [
+        ([0.9, 0.8], [2.0, 1.0]),
+        ([0.8, 0.8], [1.5, 1.5]),
+        ([0.8, 0.9], [1.0, 2.0]),
+        ([float('nan'), 0.9], [2.0, 1.0]),
+        ([0.8, float('nan')], [1.0, 2.0])])
+def test_add_individual_rank_ascending(value, expected_rank):
+    df = pd.DataFrame({
+        'value': value,
+    })
+    result = metrics._add_individual_rank(df, value_column='value', rank_column='rank', ascending=True)
+    assert list(result['rank']) == expected_rank
+
+
 def test_add_overall_rank():
     df = pd.DataFrame({
-        "thumbs_up_ratio": [0.8, 0.8, 0.5, 0.7, float('nan')],
+        "rank1": [float('nan'), 3.0, 4.0, 1.5, 1.5],
+        "rank2": [float('nan'), 4.0, 2.5, 2.5, 1.0 ],
     })
     expected = pd.DataFrame({
-        "thumbs_up_ratio": [0.8, 0.8, 0.5, 0.7, float('nan')],
-        "thumbs_up_rank": [1.5, 1.5, 4.0, 3.0, float('nan')],
-        "overall_score": [1.5, 1.5, 4.0, 3.0, float('nan')],
-        "overall_rank": [1.5, 1.5, 4.0, 3.0, float('nan')]
+        "overall_score": [float('nan'), 7/2, 6.5/2, 4/2, 2.5/2],
+        "overall_rank": [5.0, 4.0, 3.0, 2.0, 1.0],
     })
-    result = metrics._add_overall_rank(df)
-    pd.testing.assert_frame_equal(result, expected)
+    result = metrics._add_overall_rank(df, ['rank1', 'rank2'])
+    pd.testing.assert_frame_equal(result[['overall_score', 'overall_rank']], expected)
 
 
 def test_sort_by_overall_rank():
@@ -448,6 +482,7 @@ def make_unique_submissions(count):
     df = pd.DataFrame(range(count))
     df['total_feedback_count'] = 1000
     df['thumbs_up_ratio'] = 0.5
+    df['stay_in_character'] = 1.313
     _fill_unique_ids(df, 'submission_id', prefix='mock-submission-id')
     _fill_unique_ids(df, 'model_repo', prefix='mock-model-repo')
     _fill_unique_ids(df, 'reward_repo', prefix='mock-reward-repo')
