@@ -194,7 +194,7 @@ def test_print_formatted_leaderboard():
         'overall_score',
     }
     assert set(df.columns) == expected_columns
-    assert pd.api.types.is_float_dtype(df['overall_rank'])
+    assert df['overall_rank'][0] == 1.0
 
 
 def test_get_repetition_score_is_one_if_all_responses_are_the_same():
