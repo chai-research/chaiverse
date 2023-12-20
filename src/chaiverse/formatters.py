@@ -35,24 +35,24 @@ class PromptFormatter(BaseModel):
 
 
 class PygmalionFormatter(PromptFormatter):
-    memory_template = "{bot_name}'s Persona: {memory}\n####\n"
-    prompt_template = "{prompt}\n<START>\n"
-    bot_template = "{bot_name}: {message}\n"
-    user_template = "{user_name}: {message}\n"
-    response_template = "{bot_name}:"
+    memory_template: str = "{bot_name}'s Persona: {memory}\n####\n"
+    prompt_template: str = "{prompt}\n<START>\n"
+    bot_template: str = "{bot_name}: {message}\n"
+    user_template: str = "{user_name}: {message}\n"
+    response_template: str = "{bot_name}:"
 
 
 class VicunaFormatter(PromptFormatter):
-    memory_template = "### Instruction:\n{memory}\n"
-    prompt_template = "### Input:\n{prompt}\n"
-    bot_template = "{bot_name}: {message}\n"
-    user_template = "{user_name}: {message}\n"
-    response_template = "### Response:\n{bot_name}:"
+    memory_template: str = "### Instruction:\n{memory}\n"
+    prompt_template: str = "### Input:\n{prompt}\n"
+    bot_template: str = "{bot_name}: {message}\n"
+    user_template: str = "{user_name}: {message}\n"
+    response_template: str = "### Response:\n{bot_name}:"
 
 
 class ChatMLFormatter(PromptFormatter):
-    memory_template = "<|im_start|>system\n{memory}<|im_end|>\n"
-    prompt_template = "<|im_start|>user\n{prompt}<|im_end|>\n"
-    bot_template = "<|im_start|>assistant\n{bot_name}: {message}<|im_end|>\n"
-    user_template = "<|im_start|>user\n{user_name}: {message}<|im_end|>\n"
-    response_template = "<|im_start|>assistant\n{bot_name}:"
+    memory_template: str = "<|im_start|>system\n{memory}<|im_end|>\n"
+    prompt_template: str = "<|im_start|>user\n{prompt}<|im_end|>\n"
+    bot_template: str = "<|im_start|>assistant\n{bot_name}: {message}<|im_end|>\n"
+    user_template: str = "<|im_start|>user\n{user_name}: {message}<|im_end|>\n"
+    response_template: str = "<|im_start|>assistant\n{bot_name}:"
