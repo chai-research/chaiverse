@@ -28,7 +28,6 @@ jobs:
         pip install flake8 pytest
         pip install -r src/chaiverse/requirements.txt
         pip install -r src/discord_bot/requirements.txt
-        export PYTHONPATH=$PYTHONPATH:$GITHUB_WORKSPACE/src
     - name: Lint with flake8
       run: |
         # stop the build if there are Python syntax errors or undefined names
@@ -37,4 +36,5 @@ jobs:
         flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
     - name: Test with pytest
       run: |
+        export PYTHONPATH=$PYTHONPATH:$GITHUB_WORKSPACE/src
         pytest
