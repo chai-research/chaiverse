@@ -6,8 +6,8 @@
 
 
 # $1M LLM Prize Hosted By
-![Chai Logo Black](https://imgur.com/4OIOYBo.png#gh-light-mode-only)
-![Chai Logo White](https://imgur.com/xjkhNZn.png#gh-dark-mode-only)
+![Chai Logo](https://imgur.com/4OIOYBo.png#gh-light-mode-only)
+![Chai Logo](https://imgur.com/xjkhNZn.png#gh-dark-mode-only)
 
 [Chaiverse](https://www.chaiverse.com) is part of the Chai Prize Competition, accelerating community AGI.
 
