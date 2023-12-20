@@ -2,6 +2,7 @@ discord.py==2.3.2
 python-dotenv==1.0.0
 urllib3==1.25.11
 dpytest==0.7.0
+mock==5.0.2
 pytest==7.4.3
 pytest-asyncio==0.21.1
 
