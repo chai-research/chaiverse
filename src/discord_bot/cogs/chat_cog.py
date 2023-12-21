@@ -20,6 +20,7 @@ class ChatCog(commands.Cog):
 
     @discord.app_commands.command(description='Starts conversation with the bot, served by deployed submission.')
     async def chat(self, interaction):
+        await interaction.response.send_message('OK!', ephemeral=True, silent=True, delete_after=1)
         thread = await interaction.channel.create_thread(name="Initializing", type=discord.ChannelType.public_thread)
         await _start_chat(self.bot, thread)
 
