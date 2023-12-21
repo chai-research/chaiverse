@@ -1,0 +1,5 @@
+mock==5.0.2
+freezegun==1.2.2
+pydantic==1.10.7
+pytest-recording==0.12.2
+vcrpy==5.0.0

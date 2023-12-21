@@ -22,17 +22,20 @@ LEADERBOARD_DISPLAY_COLS = [
     'is_custom_reward',
     'submission_id',
     'thumbs_up_ratio',
-    'repetition',
+    'stay_in_character',
     'total_feedback_count',
     'overall_rank',
     'safety_score',
+    'repetition',
 ]
 
 
 pd.set_option('display.max_columns', 10)
 pd.set_option('display.width', 500)
 
+
 warnings.filterwarnings('ignore', 'Mean of empty slice')
+
 
 def display_leaderboard(
         developer_key=None,
@@ -201,7 +204,9 @@ def _get_processed_leaderboard(df, detailed):
         _fill_default_value(df, col, None)
 
     df = _filter_submissions_with_few_feedback(df)
-    df = _add_overall_rank(df)
+    df = _add_individual_rank(df, value_column='thumbs_up_ratio', rank_column='thumbs_up_rank', ascending=False)
+    df = _add_individual_rank(df, value_column='stay_in_character', rank_column='stay_in_character_rank', ascending=False)
+    df = _add_overall_rank(df, rank_columns=['thumbs_up_rank', 'stay_in_character_rank'])
     df = _sort_by_overall_rank(df)
     df = df if detailed else _get_submissions_with_unique_model(df)
     df = df if detailed else _get_submissions_with_unique_dev_id(df)
@@ -239,16 +244,21 @@ def _filter_submissions_with_few_feedback(df):
     return filtered_df
 
 
-def _add_overall_rank(df):
-    thumbs_up_rank = df['thumbs_up_ratio'].rank(ascending=False)
-    df.loc[:, 'thumbs_up_rank'] = thumbs_up_rank
-    df.loc[:, 'overall_score'] = np.mean([thumbs_up_rank], axis=0)
-    df.loc[:, 'overall_rank'] = df.overall_score.rank()
+def _add_individual_rank(df, value_column, rank_column, ascending=True):
+    df[rank_column] = df[value_column].rank(ascending=ascending, na_option='bottom')
+    return df
+
+
+def _add_overall_rank(df, rank_columns):
+    ranks = [df[column] for column in rank_columns]
+    overall_score = np.mean(ranks, axis=0)
+    df.loc[:, 'overall_score'] = overall_score
+    df.loc[:, 'overall_rank'] = df.overall_score.rank(na_option='bottom')
     return df
 
 
 def _sort_by_overall_rank(df):
-    df = df.sort_values('overall_rank', ascending=True).reset_index(drop=True)
+    df = df.sort_values('overall_rank', ascending=True, na_position='last').reset_index(drop=True)
     return df
 
 

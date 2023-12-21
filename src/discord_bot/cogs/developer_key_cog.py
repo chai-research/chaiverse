@@ -2,7 +2,13 @@ import logging
 
 import discord
 from discord.ext import commands
-from guanaco_database import auth
+
+try:
+    # Try to import Chai internal library
+    from guanaco_database import auth
+except ModuleNotFoundError as ex:
+    from mock import Mock
+    auth = Mock()
 
 
 logger = logging.getLogger(__name__)
