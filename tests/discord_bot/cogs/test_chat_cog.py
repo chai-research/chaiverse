@@ -49,18 +49,19 @@ def config():
 
 @pytest.mark.asyncio
 async def test_slash_chat_can_start_chat_thread_with_model1_bot1(bot):
-    ctx = AsyncMock()
-    ctx.channel.create_thread.return_value.typing = MagicMock(mock_typing)
-    thread = ctx.channel.create_thread.return_value
+    interaction = AsyncMock()
+    interaction.channel.create_thread.return_value.typing = MagicMock(mock_typing)
+    thread = interaction.channel.create_thread.return_value
 
     choice_msg = Mock()
     choice_msg.content = '1'
     bot.wait_for.return_value = choice_msg
 
     cog = ChatCog(bot)
-    await cog.chat.callback(cog, ctx)
+    await cog.chat.callback(cog, interaction)
 
-    assert ctx.channel.create_thread.await_count == 1
+    assert interaction.response.send_message.await_count == 1
+    assert interaction.channel.create_thread.await_count == 1
     assert thread.typing.call_count == 1
     assert 'select a model' in thread.send.call_args_list[0].args[0]
     assert '1. model1\n2. model2\n3. model3' == thread.send.call_args_list[1].args[0]
@@ -73,18 +74,19 @@ async def test_slash_chat_can_start_chat_thread_with_model1_bot1(bot):
 
 @pytest.mark.asyncio
 async def test_slash_chat_can_start_chat_thread_with_model2_bot2(bot):
-    ctx = AsyncMock()
-    ctx.channel.create_thread.return_value.typing = MagicMock(mock_typing)
-    thread = ctx.channel.create_thread.return_value
+    interaction = AsyncMock()
+    interaction.channel.create_thread.return_value.typing = MagicMock(mock_typing)
+    thread = interaction.channel.create_thread.return_value
 
     choice_msg = Mock()
     choice_msg.content = '2'
     bot.wait_for.return_value = choice_msg
 
     cog = ChatCog(bot)
-    await cog.chat.callback(cog, ctx)
+    await cog.chat.callback(cog, interaction)
 
-    assert ctx.channel.create_thread.await_count == 1
+    assert interaction.response.send_message.await_count == 1
+    assert interaction.channel.create_thread.await_count == 1
     assert thread.typing.call_count == 1
     assert 'select a model' in thread.send.call_args_list[0].args[0]
     assert '1. model1\n2. model2\n3. model3' == thread.send.call_args_list[1].args[0]
@@ -98,18 +100,19 @@ async def test_slash_chat_can_start_chat_thread_with_model2_bot2(bot):
 @pytest.mark.asyncio
 @patch('discord_bot.cogs.chat_cog.OPTION_BATCH_SIZE', 2)
 async def test_slash_chat_can_send_options_in_batches(bot):
-    ctx = AsyncMock()
-    ctx.channel.create_thread.return_value.typing = MagicMock(mock_typing)
-    thread = ctx.channel.create_thread.return_value
+    interaction = AsyncMock()
+    interaction.channel.create_thread.return_value.typing = MagicMock(mock_typing)
+    thread = interaction.channel.create_thread.return_value
 
     choice_msg = Mock()
     choice_msg.content = '2'
     bot.wait_for.return_value = choice_msg
 
     cog = ChatCog(bot)
-    await cog.chat.callback(cog, ctx)
+    await cog.chat.callback(cog, interaction)
 
-    assert ctx.channel.create_thread.await_count == 1
+    assert interaction.response.send_message.await_count == 1
+    assert interaction.channel.create_thread.await_count == 1
     assert thread.typing.call_count == 1
     assert 'select a model' in thread.send.call_args_list[0].args[0]
     assert '1. model1\n2. model2' == thread.send.call_args_list[1].args[0]
