@@ -95,17 +95,15 @@ def get_feedback(submission_id: str, developer_key=None, reload=True):
     return feedback
 
 
-def is_submission_updated(submission_id: str, server_fb_no : int) -> bool:
+def is_submission_updated(submission_id: str, server_feedback_num : int) -> bool:
     filename = Path(utils.guanaco_data_dir()) / 'cache' / f'{submission_id}.pkl'
     try:
         feedback = utils._load_from_cache(filename)
-        cached_fb_no = int(feedback.raw_data["thumbs_up"]) + int(feedback.raw_data["thumbs_down"])
-        if cached_fb_no == server_fb_no:
-            return False
-        else:
-            return True
+        cached_feedback_num = int(feedback.raw_data["thumbs_up"]) + int(feedback.raw_data["thumbs_down"])
+        submission_updated = cached_feedback_num < server_feedback_num
     except FileNotFoundError:
-        return True
+        submission_updated = True
+    return submission_updated
 
 
 def _get_latest_feedback(submission_id, developer_key):

@@ -108,15 +108,41 @@ def test_get_raw_leaderboard(data_dir_mock, get_ids_mock, tmpdir):
     ]
     pd.testing.assert_frame_equal(df, pd.DataFrame(expected_data))
 
+@mock.patch('chaiverse.metrics.get_submission_metrics')
+@mock.patch('chaiverse.utils._load_from_cache')
+def test_get_leaderboard_row_no_new_feedback(load_cache_mock, get_submission_mock):
+    submission_item = ("mock_sub_id", {"thumbs_up": 1017, "thumbs_down" : 309})
+    developer_key = "deverloper_key"
+    load_cache_mock.return_value.raw_data = {'thumbs_up' : 1017, 'thumbs_down' : 309}
+    chai.metrics.get_leaderboard_row(submission_item, developer_key)
+    get_submission_mock.assert_called_once_with(submission_item[0], developer_key, reload =  False)
+
+@mock.patch('chaiverse.metrics.get_submission_metrics')
+@mock.patch('chaiverse.utils._load_from_cache')
+def test_get_leaderboard_row_thumbs_up_increase(load_cache_mock, get_submission_mock):
+    submission_item = ("mock_sub_id", {"thumbs_up": 1018, "thumbs_down" : 309})
+    developer_key = "deverloper_key"
+    load_cache_mock.return_value.raw_data = {'thumbs_up' : 1017, 'thumbs_down' : 309}
+    chai.metrics.get_leaderboard_row(submission_item, developer_key)
+    get_submission_mock.assert_called_once_with(submission_item[0], developer_key, reload =  True)
+
+@mock.patch('chaiverse.metrics.get_submission_metrics')
+@mock.patch('chaiverse.utils._load_from_cache')
+def test_get_leaderboard_row_thumbs_down_increase(load_cache_mock, get_submission_mock):
+    submission_item = ("mock_sub_id", {"thumbs_up": 1017, "thumbs_down" : 310})
+    developer_key = "deverloper_key"
+    load_cache_mock.return_value.raw_data = {'thumbs_up' : 1017, 'thumbs_down' : 309}
+    chai.metrics.get_leaderboard_row(submission_item, developer_key)
+    get_submission_mock.assert_called_once_with(submission_item[0], developer_key, reload =  True)
 
 @vcr.use_cassette(os.path.join(RESOURCE_DIR, 'test_get_submission_metrics.yaml'))
 @freeze_time('2023-07-14 19:00:00')
 def test_get_leaderboard_row():
-    results = metrics.get_leaderboard_row(('wizard-vicuna-13b-bo4', {'meta-data-key': 'meta-data-value', 'thumbs_up' : 10, 'thumbs_down': 10}), developer_key="key")
+    results = metrics.get_leaderboard_row(('wizard-vicuna-13b-bo4', {'meta-data-key': 'meta-data-value', 'thumbs_up' : 1016, 'thumbs_down': 309}), developer_key="key")
     expected_metrics = {
         'submission_id': 'wizard-vicuna-13b-bo4',
-        'thumbs_up': 10,
-        'thumbs_down': 10,
+        'thumbs_up': 1016,
+        'thumbs_down': 309,
         'meta-data-key': 'meta-data-value',
         'mcl': pytest.approx(28.620229007633586),
         'thumbs_up_ratio': pytest.approx(0.7538167938931297),
