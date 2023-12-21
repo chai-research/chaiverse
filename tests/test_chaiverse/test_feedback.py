@@ -12,7 +12,21 @@ def mock_get():
         func.return_value.status_code = 200
         func.return_value.json.return_value = {"some": "feedback"}
         yield func
+        
+@patch('chaiverse.utils._load_from_cache')
+def test_is_submission_updated_new_submission(load_cache_mock):
+    load_cache_mock.side_effect = FileNotFoundError()
+    assert feedback.is_submission_updated("file_not_found", 10)
 
+@patch('chaiverse.utils._load_from_cache')
+def test_is_submission_updated_increase_total(load_cache_mock):
+    load_cache_mock.return_value.raw_data = {'thumbs_up' : 10, 'thumbs_down' : 10}
+    assert feedback.is_submission_updated("mock_sub_id", 21)
+
+@patch('chaiverse.utils._load_from_cache')
+def test_is_submission_updated_equal_total(load_cache_mock):
+    load_cache_mock.return_value.raw_data = {'thumbs_up' : 10, 'thumbs_down' : 10}
+    assert not feedback.is_submission_updated("mock_sub_id", 20)
 
 def test_feedback_object(example_feedback):
     data = example_feedback
