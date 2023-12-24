@@ -118,6 +118,7 @@ def _get_latest_feedback(submission_id, developer_key):
     utils._save_to_cache(Path(utils.guanaco_data_dir()) / 'cache' / f'{submission_id}.pkl', feedback)
     return feedback
 
+
 def _get_cached_feedback(submission_id, developer_key):
     filename = Path(utils.guanaco_data_dir()) / 'cache' / f'{submission_id}.pkl'
     try:
