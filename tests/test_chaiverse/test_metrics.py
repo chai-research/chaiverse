@@ -40,9 +40,10 @@ def test_developer_can_call_get_submission_metrics_and_pass_in_developer_key_as_
 
 @mock.patch('chaiverse.metrics.get_all_historical_submissions')
 @mock.patch('chaiverse.utils.guanaco_data_dir')
+@mock.patch('chaiverse.utils._save_to_cache')
 @freeze_time('2023-07-28 00:00:00')
 @vcr.use_cassette(os.path.join(RESOURCE_DIR, 'test_get_raw_leaderboard.yaml'))
-def test_get_raw_leaderboard(data_dir_mock, get_ids_mock, tmpdir):
+def test_get_raw_leaderboard(save_cache_mock, data_dir_mock, get_ids_mock, tmpdir):
     data_dir_mock.return_value = str(tmpdir)
     get_ids_mock.return_value = historical_submisions()
     df = chai.metrics.get_raw_leaderboard(max_workers=1, developer_key="key")
