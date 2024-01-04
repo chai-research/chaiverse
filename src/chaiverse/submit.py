@@ -153,6 +153,16 @@ def get_model_info(submission_id, developer_key=None):
 
 
 @auto_authenticate
+def evaluate_model(submission_id, developer_key=None):
+    url = utils.get_url(EVALUATE_ENDPOINT)
+    url = url.format(submission_id=submission_id)
+    headers = {'Authorization': f"Bearer {developer_key}"}
+    response = requests.get(url=url, headers=headers)
+    assert response.status_code == 200, response.json()
+    return response.json()
+
+
+@auto_authenticate
 def get_my_submissions(developer_key=None):
     url = utils.get_url(ALL_SUBMISSION_STATUS_ENDPOINT)
     headers = {'Authorization': f"Bearer {developer_key}"}
