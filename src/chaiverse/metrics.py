@@ -30,9 +30,9 @@ LEADERBOARD_DISPLAY_COLS = [
 ]
 
 
-pd.set_option('display.max_columns', 10)
+pd.set_option('display.max_columns', 50)
+pd.set_option('display.max_rows', 500)
 pd.set_option('display.width', 500)
-
 
 warnings.filterwarnings('ignore', 'Mean of empty slice')
 
@@ -46,21 +46,31 @@ def display_leaderboard(
     df = get_leaderboard(
         developer_key=developer_key,
         regenerate=regenerate,
-        detailed=detailed,
         max_workers=max_workers
         )
-    df = _get_formatted_leaderboard(df, detailed)
-    _pprint_leaderboard(df)
+
+    display_df = df.copy()
+    display_df = get_display_leaderboard(display_df, detailed)
+    _pprint_leaderboard(display_df)
+
+    return df
 
 
 def get_leaderboard(
         developer_key=None,
         regenerate=False,
-        detailed=False,
         max_workers=DEFAULT_MAX_WORKERS
         ):
     df = cache(get_raw_leaderboard, regenerate)(max_workers=max_workers, developer_key=developer_key)
-    df = _get_processed_leaderboard(df, detailed)
+    df = _get_filled_leaderboard(df)
+    return df
+
+
+def get_display_leaderboard(df, detailed):
+    df = _get_ranked_leaderboard(df)
+    df = df if detailed else _get_deduped_leaderboard(df)
+    df = _get_formatted_leaderboard(df)
+    df = df if detailed else df[LEADERBOARD_DISPLAY_COLS]
     return df
 
 
@@ -195,21 +205,28 @@ def _remove_punctuation(text):
     return cleaned_text.lower()
 
 
-def _get_processed_leaderboard(df, detailed):
+def _get_filled_leaderboard(df):
     # maintain backwards compatibility with model_name field
     _fill_default_value(df, 'model_name', df['submission_id'])
     _fill_default_value(df, 'is_custom_reward', False)
     _fill_default_value(df, 'reward_repo', None)
     for col in LEADERBOARD_DISPLAY_COLS:
         _fill_default_value(df, col, None)
+    return df
 
+
+def _get_ranked_leaderboard(df):
     df = _filter_submissions_with_few_feedback(df)
     df = _add_individual_rank(df, value_column='thumbs_up_ratio', rank_column='thumbs_up_rank', ascending=False)
     df = _add_individual_rank(df, value_column='stay_in_character', rank_column='stay_in_character_rank', ascending=False)
     df = _add_overall_rank(df, rank_columns=['thumbs_up_rank', 'stay_in_character_rank'])
     df = _sort_by_overall_rank(df)
-    df = df if detailed else _get_submissions_with_unique_model(df)
-    df = df if detailed else _get_submissions_with_unique_dev_id(df)
+    return df
+
+
+def _get_deduped_leaderboard(df):
+    df = _get_submissions_with_unique_model(df)
+    df = _get_submissions_with_unique_dev_id(df)
     return df
 
 
@@ -220,7 +237,7 @@ def _fill_default_value(df, field, default_value):
         df[field] = df[field].fillna(default_value)
 
 
-def _get_formatted_leaderboard(df, detailed):
+def _get_formatted_leaderboard(df):
     df['timestamp'] = df.apply(lambda x: datetime.fromisoformat(x['timestamp']), axis=1)
     df['date'] = df['timestamp'].dt.date
     df.drop(['timestamp'], axis=1, inplace=True)
@@ -228,8 +245,6 @@ def _get_formatted_leaderboard(df, detailed):
         True: '✅',
         False: '❌'
     })
-    if not detailed:
-        df = df[LEADERBOARD_DISPLAY_COLS]
     df = df.reset_index(drop=True)
     return df
 
