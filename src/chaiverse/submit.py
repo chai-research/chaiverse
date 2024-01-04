@@ -14,6 +14,7 @@ SUBMISSION_ENDPOINT = "/models/submit"
 ALL_SUBMISSION_STATUS_ENDPOINT = "/models/"
 INFO_ENDPOINT = "/models/{submission_id}"
 DEACTIVATE_ENDPOINT = "/models/{submission_id}/deactivate"
+EVALUATE_ENDPOINT = "/models/{submission_id}/evaluate"
 TEARDOWN_ENDPOINT = "/models/{submission_id}/teardown"
 EULA_ENDPOINT = "/developers/update_eula"
 
