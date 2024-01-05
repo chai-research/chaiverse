@@ -100,7 +100,7 @@ def parse_log_entry(log, timezone=None):
     return message
 
 
-def _distribute_to_multiple_worker(func, *args_iter, max_workers=2, worker_type: Literal['process', 'thread']='process', **kwargs):
+def _distribute_to_multiple_workers(func, *args_iter, max_workers=2, worker_type: Literal['process', 'thread']='process', **kwargs):
     futures = []
     with tqdm(total=None) as progress:
         PoolExecutor = ProcessPoolExecutor if worker_type == 'process' else ThreadPoolExecutor
@@ -125,4 +125,4 @@ def distribute_to_workers(func, *args_iter,  max_workers=1, worker_type: Literal
     if max_workers == 1:
         return _distribute_to_single_worker(func, *args_iter, **kwargs)
     else:
-        return _distribute_to_multiple_worker(func, *args_iter, max_workers=max_workers, worker_type=worker_type, **kwargs)
+        return _distribute_to_multiple_workers(func, *args_iter, max_workers=max_workers, worker_type=worker_type, **kwargs)
