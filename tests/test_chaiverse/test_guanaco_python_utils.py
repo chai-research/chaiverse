@@ -2,6 +2,7 @@ from datetime import datetime
 from mock import patch
 import os
 import pickle
+import pytest
 import time
 
 from freezegun import freeze_time
@@ -94,36 +95,32 @@ def test_parse_log_entry():
     assert actual_parsed_log == expected_parsed_log
 
 
-def test_distribute_to_workers_is_correct_with_one_arg_iterator_and_three_workers():
-    assert list(utils.distribute_to_workers(str, [1,2,3], max_workers=3)) == list('123')
+@pytest.mark.parametrize("worker_type", ['process', 'thread'])
+class TestDistributeToWorkers:
 
+    def test_distribute_to_workers_is_correct_with_one_arg_iterator_and_three_workers(self, worker_type):
+        assert list(utils.distribute_to_workers(str, [1,2,3], max_workers=3, worker_type=worker_type)) == list('123')
 
-def test_distribute_to_workers_is_correct_with_one_arg_iterator_and_two_workers():
-    assert list(utils.distribute_to_workers(str, [1,2,3], max_workers=2)) == list('123')
+    def test_distribute_to_workers_is_correct_with_one_arg_iterator_and_two_workers(self, worker_type):
+        assert list(utils.distribute_to_workers(str, [1,2,3], max_workers=2, worker_type=worker_type)) == list('123')
 
+    def test_distribute_to_workers_is_correct_with_one_arg_iterator_and_one_worker(self, worker_type):
+        assert list(utils.distribute_to_workers(str, [1,2,3], max_workers=1, worker_type=worker_type)) == list('123')
 
-def test_distribute_to_workers_is_correct_with_one_arg_iterator_and_one_worker():
-    assert list(utils.distribute_to_workers(str, [1,2,3], max_workers=1)) == list('123')
+    def test_distribute_to_workers_is_correct_with_one_arg_iterator_and_no_max_workers_specified(self, worker_type):
+        assert list(utils.distribute_to_workers(str, [1,2,3])) == list('123')
 
+    def test_distribute_to_workers_pool_is_correct_with_four_arg_iterators_and_four_workers(self, worker_type):
+        assert list(utils.distribute_to_workers(max, [14, 23, 32, 41], [12, 25, 34, 42], [11, 22, 36, 43], [13, 24, 33, 47], max_workers=4, worker_type=worker_type)) == [14, 25, 36, 47]
 
-def test_distribute_to_workers_is_correct_with_one_arg_iterator_and_no_max_workers_specified():
-    assert list(utils.distribute_to_workers(str, [1,2,3])) == list('123')
+    def test_distribute_to_workers_pool_is_correct_with_four_arg_iterators_and_one_worker(self, worker_type):
+        assert list(utils.distribute_to_workers(max, [14, 23, 32, 41], [12, 25, 34, 42], [11, 22, 36, 43], [13, 24, 33, 47], max_workers=1, worker_type=worker_type)) == [14, 25, 36, 47]
 
+    def test_distribute_to_workers_will_pass_kwargs_with_three_workers(self, worker_type):
+        assert list(utils.distribute_to_workers(sorted, [[2,1,3], [5,3,4]], max_workers=3, worker_type=worker_type, reverse=True)) == [[3,2,1], [5,4,3]]
+        assert list(utils.distribute_to_workers(sorted, [[2,1,3], [5,3,4]], max_workers=3, worker_type=worker_type, reverse=False)) == [[1,2,3], [3,4,5]]
 
-def test_distribute_to_workers_pool_is_correct_with_four_arg_iterators_and_four_workers():
-    assert list(utils.distribute_to_workers(max, [14, 23, 32, 41], [12, 25, 34, 42], [11, 22, 36, 43], [13, 24, 33, 47], max_workers=4)) == [14, 25, 36, 47]
-
-
-def test_distribute_to_workers_pool_is_correct_with_four_arg_iterators_and_one_worker():
-    assert list(utils.distribute_to_workers(max, [14, 23, 32, 41], [12, 25, 34, 42], [11, 22, 36, 43], [13, 24, 33, 47], max_workers=1)) == [14, 25, 36, 47]
-
-
-def test_distribute_to_workers_will_pass_kwargs_with_three_workers():
-    assert list(utils.distribute_to_workers(sorted, [[2,1,3], [5,3,4]], max_workers=3, reverse=True)) == [[3,2,1], [5,4,3]]
-    assert list(utils.distribute_to_workers(sorted, [[2,1,3], [5,3,4]], max_workers=3, reverse=False)) == [[1,2,3], [3,4,5]]
-
-
-def test_distribute_to_workers_will_pass_kwargs_with_one_worker():
-    assert list(utils.distribute_to_workers(sorted, [[2,1,3], [5,3,4]], max_workers=1, reverse=True)) == [[3,2,1], [5,4,3]]
-    assert list(utils.distribute_to_workers(sorted, [[2,1,3], [5,3,4]], max_workers=1, reverse=False)) == [[1,2,3], [3,4,5]]
+    def test_distribute_to_workers_will_pass_kwargs_with_one_worker(self, worker_type):
+        assert list(utils.distribute_to_workers(sorted, [[2,1,3], [5,3,4]], max_workers=1, worker_type=worker_type, reverse=True)) == [[3,2,1], [5,4,3]]
+        assert list(utils.distribute_to_workers(sorted, [[2,1,3], [5,3,4]], max_workers=1, worker_type=worker_type, reverse=False)) == [[1,2,3], [3,4,5]]
 

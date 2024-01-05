@@ -121,6 +121,24 @@ def test_get_model_info(mock_get):
     assert expected == response
 
 
+def test_evaluate_mode_get_called_with_correct_url(mock_get):
+    submit.evaluate_model('name_123456', developer_key='key')
+    expected_url = utils.get_url(submit.EVALUATE_ENDPOINT)
+    mock_get.assert_called_once_with(
+        url=expected_url.format(submission_id='name_123456'),
+        headers={"Authorization": "Bearer key"}
+    )
+
+
+def test_get_evalluate_model_raises_with_error(mock_get):
+    mock_get.return_value.status_code = 500
+    mock_get.return_value.json.return_value = {'error': 'some error'}
+    with pytest.raises(AssertionError) as e:
+        submit.evaluate_model('name_123456', developer_key='key')
+    msg = "some error"
+    assert msg in str(e)
+
+
 def test_get_model_info_called_with_correct_url(mock_get):
     submit.get_model_info('name_123456', developer_key='key')
     expected_url = utils.get_url(submit.INFO_ENDPOINT)
