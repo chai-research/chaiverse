@@ -191,6 +191,7 @@ def test_fill_and_rank_leaderboard():
         'mcl': [1.0, 2.0, 3.0, 4.0],
         'retry_score': [.5, .6, .7, .8],
         'thumbs_up_ratio': [0.1, 0.5, 0.8, 0.2],
+        'stay_in_character': [8.1, 8.2, 8.3, None],
         'model_name': ['psutil', 'htop', 'watch', 'gunzip'],
         'developer_uid': ['tom', 'tom', 'val', 'zl'],
         'timestamp': ['2023-07-24 18:22:40+00:00'] * 3 + ['2023-07-24T18:22:40+00:00'],
@@ -215,11 +216,15 @@ def test_fill_and_rank_leaderboard():
         'is_custom_reward',
         'reward_repo',
         'stay_in_character',
+        'user_preference',
+        'entertaining',
         'overall_rank',
         'safety_score',
         'repetition',
         'thumbs_up_rank',
         'stay_in_character_rank',
+        'user_preference_rank',
+        'entertaining_rank',
         'overall_score',
     }
     assert set(df.columns) == expected_columns
@@ -301,7 +306,7 @@ def test_get_ranked_leaderboard_will_sort_by_rank_for_same_reward_repo_but_diffe
     df.update({
         'submission_id': ['submission-1', 'submission-2'],
         'reward_repo': ['mock-reward-repo', 'mock-reward-repo'],
-        'thumbs_up_ratio': [0.8, 0.9]
+        'stay_in_character': [8, 9]
     })
     result = metrics._get_ranked_leaderboard(df)
     assert list(result['submission_id']) == ['submission-2', 'submission-1']
@@ -312,7 +317,7 @@ def test_get_ranked_leaderboard_will_sort_by_rank_for_same_model_repo_but_differ
     df.update({
         'submission_id': ['submission-1', 'submission-2'],
         'model_repo': ['mock-model-repo', 'mock-model-repo'],
-        'thumbs_up_ratio': [0.8, 0.9]
+        'stay_in_character': [8, 9]
     })
     result = metrics._get_ranked_leaderboard(df)
     assert list(result['submission_id']) == ['submission-2', 'submission-1']
@@ -330,22 +335,22 @@ def test_get_ranked_leaderboard_will_remove_submissions_with_few_feedback():
 
 
 @pytest.mark.parametrize(
-        "thumbs_up_ratios, stay_in_character_scores, overall_ranks, winning_model", [
-        ([0.9, 0.8], [1.0, 1.0], [1, 2], 'model1'),
-        ([0.8, 0.8], [1.0, 1.0], [1.5, 1.5], 'model1'),
-        ([0.8, 0.9], [1.0, 1.0], [2, 1], 'model2'),
-        ([0, 0], [9.0, 8.0], [1, 2], 'model1'),
-        ([0, 0], [8.5, 8.5], [1.5, 1.5], 'model1'),
-        ([0, 0], [8.0, 9.0], [2, 1], 'model2')])
+        "user_preference_scores, stay_in_character_scores, overall_ranks, winning_model", [
+        ([9, 8], [1.0, 1.0], [1, 2], 'model1'),
+        ([8, 8], [1.0, 1.0], [1.5, 1.5], 'model1'),
+        ([8, 9], [1.0, 1.0], [2, 1], 'model2'),
+        ([7, 7], [9.0, 8.0], [1, 2], 'model1'),
+        ([7, 7], [8.5, 8.5], [1.5, 1.5], 'model1'),
+        ([7, 7], [8.0, 9.0], [2, 1], 'model2')])
 def test_get_ranked_leaderboard_will_set_overall_score_correctly(
-        thumbs_up_ratios, stay_in_character_scores, overall_ranks, winning_model):
+        user_preference_scores, stay_in_character_scores, overall_ranks, winning_model):
     df = make_unique_submissions(2)
     df.update({
         'submission_id': ['submission-1', 'submission-2'],
         'model_repo': ['model1', 'model2'],
         'reward_repo': ['mock-default-repo', 'mock-default-repo'],
         'total_feedback_count': [1000, 1000],
-        'thumbs_up_ratio': thumbs_up_ratios,
+        'user_preference': user_preference_scores,
         'stay_in_character': stay_in_character_scores,
     })
     assert len(df) == 2
@@ -485,7 +490,9 @@ def make_unique_submissions(count):
     df = pd.DataFrame(range(count))
     df['total_feedback_count'] = 1000
     df['thumbs_up_ratio'] = 0.5
-    df['stay_in_character'] = 1.313
+    df['stay_in_character'] = 7.7
+    df['user_preference'] = 8.8
+    df['entertaining'] = 9.9
     _fill_unique_ids(df, 'submission_id', prefix='mock-submission-id')
     _fill_unique_ids(df, 'model_repo', prefix='mock-model-repo')
     _fill_unique_ids(df, 'reward_repo', prefix='mock-reward-repo')

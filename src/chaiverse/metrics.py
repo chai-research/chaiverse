@@ -23,12 +23,15 @@ LEADERBOARD_DISPLAY_COLS = [
     'submission_id',
     'thumbs_up_ratio',
     'stay_in_character',
+    'user_preference',
+    'entertaining',
     'total_feedback_count',
     'overall_rank',
     'safety_score',
     'repetition',
 ]
 
+MODEL_EVAL_SCORE_COLS = ['stay_in_character', 'user_preference', 'entertaining']
 
 pd.set_option('display.max_columns', 50)
 pd.set_option('display.max_rows', 500)
@@ -218,8 +221,12 @@ def _get_filled_leaderboard(df):
 def _get_ranked_leaderboard(df):
     df = _filter_submissions_with_few_feedback(df)
     df = _add_individual_rank(df, value_column='thumbs_up_ratio', rank_column='thumbs_up_rank', ascending=False)
-    df = _add_individual_rank(df, value_column='stay_in_character', rank_column='stay_in_character_rank', ascending=False)
-    df = _add_overall_rank(df, rank_columns=['thumbs_up_rank', 'stay_in_character_rank'])
+    rank_columns = []
+    for score_column in MODEL_EVAL_SCORE_COLS:
+        rank_column = f'{score_column}_rank'
+        rank_columns.append(rank_column)
+        df = _add_individual_rank(df, value_column=score_column, rank_column=rank_column, ascending=False)
+    df = _add_overall_rank(df, rank_columns=rank_columns)
     df = _sort_by_overall_rank(df)
     return df
 
