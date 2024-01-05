@@ -15,20 +15,20 @@ from chaiverse.utils import print_color, cache, get_all_historical_submissions, 
 
 
 DEFAULT_MAX_WORKERS = max(1, min(20, os.cpu_count() - 3))
-PUBLIC_LEADERBOARD_MINIMUM_FEEDBACK_COUNT = 150
+PUBLIC_LEADERBOARD_MINIMUM_FEEDBACK_COUNT = 1
 LEADERBOARD_DISPLAY_COLS = [
     'developer_uid',
     'model_name',
-    'is_custom_reward',
     'submission_id',
-    'thumbs_up_ratio',
+    'is_custom_reward',
     'stay_in_character',
     'user_preference',
     'entertaining',
-    'total_feedback_count',
     'overall_rank',
-    'safety_score',
     'repetition',
+    'safety_score',
+    'thumbs_up_ratio',
+    'total_feedback_count',
 ]
 
 MODEL_EVAL_SCORE_COLS = ['stay_in_character', 'user_preference', 'entertaining']
