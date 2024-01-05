@@ -13,6 +13,7 @@ from chaiverse import metrics
 
 RESOURCE_DIR = os.path.join(os.path.abspath(os.path.join(__file__, '..')), 'resources')
 
+MAX_FILTERED_FEEDBACK_COUNT = 0
 
 @mock.patch('chaiverse.metrics.get_all_historical_submissions')
 def test_developer_can_call_display_leaderboard_and_pass_in_developer_key_as_arg(get_submissions_mock):
@@ -187,7 +188,7 @@ def test_conversation_metrics():
 def test_fill_and_rank_leaderboard():
     data = {
         'submission_id': ['tom_1689542168', 'tom_1689404889', 'val_1689051887', 'zl_1689542168'],
-        'total_feedback_count': [151, 160, 290, 101],
+        'total_feedback_count': [151, 160, 290, MAX_FILTERED_FEEDBACK_COUNT],
         'mcl': [1.0, 2.0, 3.0, 4.0],
         'retry_score': [.5, .6, .7, .8],
         'thumbs_up_ratio': [0.1, 0.5, 0.8, 0.2],
@@ -328,7 +329,7 @@ def test_get_ranked_leaderboard_will_remove_submissions_with_few_feedback():
     df.update({
         'submission_id': ['submission-1', 'submission-2', 'submission-3'],
         'model_repo': ['mock-model-repo-1', 'mock-model-repo-2', 'mock-model-repo-3'],
-        'total_feedback_count': [149, 150, 151]
+        'total_feedback_count': [MAX_FILTERED_FEEDBACK_COUNT, MAX_FILTERED_FEEDBACK_COUNT+1, 151]
     })
     result = metrics._get_ranked_leaderboard(df)
     assert list(result['submission_id']) == ['submission-2', 'submission-3']
