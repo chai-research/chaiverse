@@ -1,8 +1,9 @@
-from concurrent.futures import ProcessPoolExecutor, wait, ALL_COMPLETED
+from concurrent.futures import ThreadPoolExecutor, ProcessPoolExecutor, wait, ALL_COMPLETED
 from datetime import datetime
 import inspect
 import os
 import pickle
+from typing import Literal
 from time import time
 
 import requests
@@ -99,10 +100,11 @@ def parse_log_entry(log, timezone=None):
     return message
 
 
-def _distribute_to_multi_process_pool(func, *args_iter, max_workers=2, **kwargs):
+def _distribute_to_multiple_worker(func, *args_iter, max_workers=2, worker_type: Literal['process', 'thread']='process', **kwargs):
     futures = []
     with tqdm(total=None) as progress:
-        with ProcessPoolExecutor(max_workers) as executor:
+        PoolExecutor = ProcessPoolExecutor if worker_type == 'process' else ThreadPoolExecutor
+        with PoolExecutor(max_workers) as executor:
             for func_args in zip(*args_iter):
                 future = executor.submit(func, *func_args, **kwargs)
                 future.add_done_callback(lambda p: progress.update(1))
@@ -113,15 +115,14 @@ def _distribute_to_multi_process_pool(func, *args_iter, max_workers=2, **kwargs)
     return results
 
 
-def _distribute_to_single_process(func, *args_iter, **kwargs):
+def _distribute_to_single_worker(func, *args_iter, **kwargs):
     args_list = list(zip(*args_iter))
     results = [func(*args, **kwargs) for args in tqdm(args_list, total=len(args_list))]
     return results
 
 
-def distribute_to_workers(func, *args_iter,  max_workers=1, **kwargs):
+def distribute_to_workers(func, *args_iter,  max_workers=1, worker_type: Literal['process', 'thread']='process', **kwargs):
     if max_workers == 1:
-        return _distribute_to_single_process(func, *args_iter, **kwargs)
+        return _distribute_to_single_worker(func, *args_iter, **kwargs)
     else:
-        return _distribute_to_multi_process_pool(func, *args_iter, max_workers=max_workers, **kwargs)
-
+        return _distribute_to_multiple_worker(func, *args_iter, max_workers=max_workers, worker_type=worker_type, **kwargs)
