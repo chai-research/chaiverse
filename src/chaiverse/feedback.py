@@ -115,6 +115,7 @@ def _get_latest_feedback(submission_id, developer_key):
     resp = requests.get(url, headers=headers)
     assert resp.status_code == 200, resp.json()
     feedback = Feedback(resp.json())
+    utils._save_to_cache(Path(utils.guanaco_data_dir()) / 'cache' / f'{submission_id}.pkl', feedback)
     return feedback
 
 
