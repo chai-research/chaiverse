@@ -14,6 +14,7 @@ SUBMISSION_ENDPOINT = "/models/submit"
 ALL_SUBMISSION_STATUS_ENDPOINT = "/models/"
 INFO_ENDPOINT = "/models/{submission_id}"
 DEACTIVATE_ENDPOINT = "/models/{submission_id}/deactivate"
+EVALUATE_ENDPOINT = "/models/{submission_id}/evaluate"
 TEARDOWN_ENDPOINT = "/models/{submission_id}/teardown"
 EULA_ENDPOINT = "/developers/update_eula"
 
@@ -145,6 +146,16 @@ def submit_model(model_submission: dict, developer_key=None):
 @auto_authenticate
 def get_model_info(submission_id, developer_key=None):
     url = utils.get_url(INFO_ENDPOINT)
+    url = url.format(submission_id=submission_id)
+    headers = {'Authorization': f"Bearer {developer_key}"}
+    response = requests.get(url=url, headers=headers)
+    assert response.status_code == 200, response.json()
+    return response.json()
+
+
+@auto_authenticate
+def evaluate_model(submission_id, developer_key=None):
+    url = utils.get_url(EVALUATE_ENDPOINT)
     url = url.format(submission_id=submission_id)
     headers = {'Authorization': f"Bearer {developer_key}"}
     response = requests.get(url=url, headers=headers)
