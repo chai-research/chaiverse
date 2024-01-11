@@ -15,6 +15,11 @@ RESOURCE_DIR = os.path.join(os.path.abspath(os.path.join(__file__, '..')), 'reso
 
 MAX_FILTERED_FEEDBACK_COUNT = 0
 
+@pytest.fixture(autouse="session")
+def mock_data_dir(tmpdir):
+    with patch.dict(os.environ, {'GUANACO_DATA_DIR': str(tmpdir)}):
+        yield
+
 @mock.patch('chaiverse.metrics.get_all_historical_submissions')
 def test_developer_can_call_display_leaderboard_and_pass_in_developer_key_as_arg(get_submissions_mock):
     get_submissions_mock.side_effect = KeyError()
@@ -40,11 +45,9 @@ def test_developer_can_call_get_submission_metrics_and_pass_in_developer_key_as_
 
 
 @mock.patch('chaiverse.metrics.get_all_historical_submissions')
-@mock.patch('chaiverse.utils.guanaco_data_dir')
 @freeze_time('2023-07-28 00:00:00')
 @vcr.use_cassette(os.path.join(RESOURCE_DIR, 'test_get_raw_leaderboard.yaml'))
-def test_get_raw_leaderboard(data_dir_mock, get_ids_mock, tmpdir):
-    data_dir_mock.return_value = str(tmpdir)
+def test_get_raw_leaderboard(get_ids_mock):
     get_ids_mock.return_value = historical_submisions()
     df = chai.metrics.get_raw_leaderboard(max_workers=1, developer_key="key")
     expected_cols = [
