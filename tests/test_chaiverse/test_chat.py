@@ -1,6 +1,7 @@
-import mock
 import os
 import json
+
+import mock
 
 from chaiverse.chat import Bot, BotConfig, SubmissionChatbot, get_chat_endpoint_url, get_bot_names, get_bot_config, get_bot_response
 

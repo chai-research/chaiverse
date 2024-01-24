@@ -1,0 +1,2 @@
+[console_scripts]
+chaiverse = chaiverse.login_cli:cli

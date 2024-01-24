@@ -1,0 +1,34 @@
+interactions:
+- request:
+    body: null
+    headers:
+      Accept:
+      - '*/*'
+      Accept-Encoding:
+      - gzip, deflate
+      Connection:
+      - keep-alive
+      User-Agent:
+      - python-requests/2.31.0
+      developer_key:
+      - key
+    method: GET
+    uri: https://guanaco-submitter.chai-research.com/leaderboard
+  response:
+    body:
+      string: '{}'
+    headers:
+      Content-Length:
+      - '61218'
+      Date:
+      - Mon, 22 Jan 2024 20:28:50 GMT
+      Server:
+      - Google Frontend
+      X-Cloud-Trace-Context:
+      - 56eb21b8a3c69b4a75fa1b1a90753a4d
+      content-type:
+      - application/json
+    status:
+      code: 200
+      message: OK
+version: 1

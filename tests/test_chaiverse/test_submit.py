@@ -123,9 +123,9 @@ def test_get_model_info(mock_get):
 
 def test_evaluate_mode_get_called_with_correct_url(mock_get):
     submit.evaluate_model('name_123456', developer_key='key')
-    expected_url = utils.get_url(submit.EVALUATE_ENDPOINT)
+    url = utils.get_url(submit.EVALUATE_ENDPOINT, submission_id='name_123456')
     mock_get.assert_called_once_with(
-        url=expected_url.format(submission_id='name_123456'),
+        url=url,
         headers={"Authorization": "Bearer key"}
     )
 
@@ -141,9 +141,9 @@ def test_get_evalluate_model_raises_with_error(mock_get):
 
 def test_get_model_info_called_with_correct_url(mock_get):
     submit.get_model_info('name_123456', developer_key='key')
-    expected_url = utils.get_url(submit.INFO_ENDPOINT)
+    url = utils.get_url(submit.INFO_ENDPOINT, submission_id='name_123456')
     mock_get.assert_called_once_with(
-        url=expected_url.format(submission_id='name_123456'),
+        url=url,
         headers={"Authorization": "Bearer key"}
     )
 
@@ -182,9 +182,17 @@ def test_deactivate_model(mock_get):
     mock_get.return_value.json.return_value = ""
     submit.deactivate_model("test_model", developer_key="dev_key")
     expected_headers = {"Authorization": "Bearer dev_key"}
-    expected_url = utils.get_url(submit.DEACTIVATE_ENDPOINT)
-    expected_url = expected_url.format(submission_id = "test_model")
-    mock_get.assert_called_once_with(url=expected_url, headers=expected_headers)
+    url = utils.get_url(submit.DEACTIVATE_ENDPOINT, submission_id = "test_model")
+    mock_get.assert_called_once_with(url=url, headers=expected_headers)
+
+
+def test_redeploy_model(mock_get):
+    mock_get.return_value.status_code = 200
+    mock_get.return_value.json.return_value = ""
+    submit.redeploy_model("test_model", developer_key="dev_key")
+    expected_headers = {"Authorization": "Bearer dev_key"}
+    url = utils.get_url(submit.REDEPLOY_ENDPOINT, submission_id = "test_model")
+    mock_get.assert_called_once_with(url=url, headers=expected_headers)
 
 
 def test_teardown_model(mock_get):
@@ -192,7 +200,5 @@ def test_teardown_model(mock_get):
     mock_get.return_value.json.return_value = ""
     submit.teardown_model("test_model", developer_key="dev_key")
     expected_headers = {"Authorization": "Bearer dev_key"}
-    expected_url = utils.get_url(submit.TEARDOWN_ENDPOINT)
-    expected_url = expected_url.format(submission_id = "test_model")
-    expected_url = expected_url.format(submission_id="test_model")
-    mock_get.assert_called_once_with(url=expected_url, headers=expected_headers)
+    url = utils.get_url(submit.TEARDOWN_ENDPOINT, submission_id="test_model")
+    mock_get.assert_called_once_with(url=url, headers=expected_headers)
