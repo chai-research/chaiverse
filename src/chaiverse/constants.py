@@ -23,7 +23,7 @@ COMPETITION_TYPE_CONFIGURATION['default'] = {
         'entertaining',
         'safety_score',
         "overall_rank",
-        'elo_ratings',
+        'elo_rating',
         'num_battles',
         'num_wins',
         'size',
