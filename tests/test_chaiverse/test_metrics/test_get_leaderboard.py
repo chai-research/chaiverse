@@ -213,16 +213,15 @@ def test_get_leaderboard_fetch_and_calc_feedback_for_specific_submission_with_fe
         'start_date': '2024-01-02T13',
         'end_date': '2024-01-02T14',
     }
-    evaluation_date_range = {
-        'start_date': '2024-01-02T13:24:04+00:00',
-        'end_date': '2024-01-02T13:29:00+00:00'
+    feedback_date_range = {
+        'start_date': 1704201844,
+        'end_date': 1704202140
     }
-    
     df = get_leaderboard(
         max_workers=1, 
         developer_key="key", 
         submission_date_range=submission_date_range,
-        evaluation_date_range=evaluation_date_range,
+        feedback_date_range=feedback_date_range,
         submission_ids=["anhnv125-doll_v4"],
         fetch_feedback=True
     )

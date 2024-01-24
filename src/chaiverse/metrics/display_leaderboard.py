@@ -52,8 +52,8 @@ def display_competition_leaderboard(
     competition_type = competition.get('type') or 'submission_closed_feedback_round_robin'
     fetch_feedback = competition_type != 'default'
 
-    submission_date_range = competition.get('submission_date_range')
-    evaluation_date_range = competition.get('evaluation_date_range')
+    submission_date_range = _get_submission_date_range(competition)
+    feedback_date_range = _get_feedback_date_range(competition)
     submission_ids = competition.get('submissions')
     competition_id = competition.get('id')
     display_title = f'{competition_id} Leaderboard'
@@ -62,7 +62,7 @@ def display_competition_leaderboard(
         developer_key=developer_key,
         max_workers=max_workers,
         submission_date_range=submission_date_range,
-        evaluation_date_range=evaluation_date_range,
+        feedback_date_range=feedback_date_range,
         submission_ids=submission_ids,
         fetch_feedback=fetch_feedback
         )
@@ -78,6 +78,22 @@ def display_competition_leaderboard(
     else:
         print('No eligible submissions found!')
     return df
+
+
+def _get_submission_date_range(competition):
+    submission_date_range = {
+        'start_date': competition.get('submission_start_date'),
+        'end_date': competition.get('submission_end_date')
+    }
+    return submission_date_range
+
+
+def _get_feedback_date_range(competition):
+    feedback_date_range = {
+        "start_date": competition.get('start_time') or 0,
+        "end_date": competition.get('end_time') or float('inf')
+    }
+    return feedback_date_range
 
 
 def _pprint_leaderboard(df, title):

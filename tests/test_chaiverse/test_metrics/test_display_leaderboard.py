@@ -50,10 +50,8 @@ def test_display_competition_leaderboard_does_not_regress_for_round_robin_compet
     competition = {
         "id": 'test_closed_submission_round_robin_competition',
         "type": "submission_closed_feedback_round_robin",
-        "submission_date_range": {
-            "start_date": "2024-01-02T13:05+00:00",
-            "end_date": "2024-01-02T13:06+00:00",
-        },
+        "submission_start_date": "2024-01-02T13:05",
+        "submission_end_date": "2024-01-02T13:06",
         "feedback_sampling": {
             "round_robin": {
                 "percentage": 100,
@@ -69,8 +67,6 @@ def test_display_competition_leaderboard_does_not_regress_for_round_robin_compet
         "timestamp": "2024-01-02T13:05:43+00:00",
         "model_name": "anhnv125-doll_v4",
         "model_repo": "anhnv125/doll",
-        'num_battles': 0, 
-        'num_wins': 0,
         "developer_uid": "vietanh",
         "reward_repo": "anhnv125/reward-model-v2",
         "model_num_parameters": None,
@@ -80,8 +76,6 @@ def test_display_competition_leaderboard_does_not_regress_for_round_robin_compet
         "is_custom_reward": True,
         "thumbs_down": 9,
         "thumbs_up": 8,
-        'elo_rating': 1000, 
-        "elo_ratings": None,
         "mcl": 15.076923076923077,
         "thumbs_up_ratio": 0.5384615384615384,
         "thumbs_up_ratio_se": 0.06892724331792788,
@@ -90,6 +84,9 @@ def test_display_competition_leaderboard_does_not_regress_for_round_robin_compet
         "user_preference": None,
         "entertaining": None,
         "overall_rank": None,
+        "elo_ratings": None,
+        "num_battles": None,
+        "num_wins": None,
         "size": None
     }]
     np.testing.assert_equal(expected, result.to_dict('records'))
@@ -100,10 +97,8 @@ def test_display_competition_leaderboard_does_not_regress_for_default_competitio
     competition = {
         "id": 'test_default_competition',
         "type": "default",
-        "submission_date_range": {
-            "start_date": "2024-01-02T13:05:00+00:00",
-            "end_date": "2024-01-02T13:06:00+0:00",
-        },
+        "submission_start_date": "2024-01-02T13:05",
+        "submission_end_date": "2024-01-02T13:06",
         "feedback_sampling": {
             "round_robin": {
                 "percentage": 100,
@@ -121,8 +116,6 @@ def test_display_competition_leaderboard_does_not_regress_for_default_competitio
         "developer_uid": "vietanh",
         "model_name": "anhnv125-doll_v4",
         "model_repo": "anhnv125/doll",
-        'num_battles': 0, 
-        'num_wins': 0,
         "model_num_parameters": None,
         "status": "inactive",
         "stay_in_character": 8.23,
@@ -133,14 +126,14 @@ def test_display_competition_leaderboard_does_not_regress_for_default_competitio
         "user_preference": None,
         "entertaining": None,
         "overall_rank": None,
-        "elo_rating": 1000,
         "elo_ratings": None,
+        "num_battles": None,
+        "num_wins": None,
         "size": None,
         "thumbs_up_ratio": None,
         "total_feedback_count": None,
         "repetition": None
     }]
-    assert expected == result.to_dict('records')
     np.testing.assert_equal(expected, result.to_dict('records'))
 
 
