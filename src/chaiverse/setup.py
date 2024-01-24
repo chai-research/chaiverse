@@ -41,7 +41,7 @@ if __name__ == "__main__":
         author='Chai Research Corp.',
         author_email='hello@chai-research.com',
         license='MIT',
-        packages=['chaiverse', 'chaiverse.lib', 'chaiverse.metrics'],
+        packages=['chaiverse', 'chaiverse.metrics'],
         package_dir={
             "chaiverse": "."
         },

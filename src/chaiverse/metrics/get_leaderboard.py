@@ -10,7 +10,7 @@ def get_leaderboard(
         developer_key=None,
         max_workers=constants.DEFAULT_MAX_WORKERS,
         submission_date_range=None,
-        evaluation_date_range=None,
+        feedback_date_range=None,
         submission_ids=None,
         fetch_feedback=False,
         ):
@@ -21,7 +21,7 @@ def get_leaderboard(
         get_leaderboard_row,
         submissions.items(),
         developer_key=developer_key,
-        evaluation_date_range=evaluation_date_range,
+        feedback_date_range=feedback_date_range,
         max_workers=max_workers,
         fetch_feedback=fetch_feedback
     )
@@ -32,7 +32,7 @@ def get_leaderboard(
     return df
 
 
-def get_leaderboard_row(submission_item, developer_key=None, evaluation_date_range=None, fetch_feedback=False):
+def get_leaderboard_row(submission_item, developer_key=None, feedback_date_range=None, fetch_feedback=False):
     submission_id, submission_data = submission_item
     submission_feedback_total = submission_data['thumbs_up'] + submission_data['thumbs_down']
     is_updated = feedback.is_submission_updated(submission_id, submission_feedback_total)
@@ -42,7 +42,7 @@ def get_leaderboard_row(submission_item, developer_key=None, evaluation_date_ran
             submission_id, 
             developer_key, 
             reload=is_updated, 
-            evaluation_date_range=evaluation_date_range
+            feedback_date_range=feedback_date_range
         )
     return {'submission_id': submission_id, **submission_data, **feedback_metrics}
 
@@ -88,10 +88,10 @@ def _filter_submissions_by_feedback_count(submissions, min_feedback_count):
     return submissions
 
 
-def get_submission_metrics(submission_id, developer_key, reload=True, evaluation_date_range=None):
+def get_submission_metrics(submission_id, developer_key, reload=True, feedback_date_range=None):
     feedback_data = feedback.get_feedback(submission_id, developer_key, reload=reload)
     feedback_metrics = FeedbackMetrics(feedback_data.raw_data)
-    feedback_metrics.filter_for_date_range(evaluation_date_range)
+    feedback_metrics.filter_for_timestamp_range(feedback_date_range)
     feedback_metrics.filter_duplicated_uid()
     metrics = feedback_metrics.calc_metrics()
     return metrics
