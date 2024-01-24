@@ -1,5 +1,6 @@
 from concurrent.futures import ThreadPoolExecutor, ProcessPoolExecutor, wait, ALL_COMPLETED
 from datetime import datetime
+import hashlib
 import inspect
 import os
 import pickle
@@ -14,14 +15,18 @@ BASE_URL = "https://guanaco-submitter.chai-research.com"
 LEADERBOARD_ENDPOINT = "/leaderboard"
 
 
-def get_url(endpoint):
+def get_url(endpoint, **kwarg):
     base_url = BASE_URL
-    return base_url + endpoint
+    return (base_url + endpoint).format(**kwarg)
+
+
+def get_guanaco_data_dir_env():
+    home_dir = os.path.expanduser("~")
+    return os.environ.get('GUANACO_DATA_DIR', f'{home_dir}/.chai-guanaco')
 
 
 def guanaco_data_dir():
-    home_dir = os.path.expanduser("~")
-    data_dir = os.environ.get('GUANACO_DATA_DIR', f'{home_dir}/.chai-guanaco')
+    data_dir = get_guanaco_data_dir_env()
     os.makedirs(os.path.join(data_dir, 'cache'), exist_ok=True)
     return data_dir
 
@@ -37,9 +42,13 @@ def print_color(text, color):
 
 
 def get_all_historical_submissions(developer_key):
+    return get_submissions(developer_key=developer_key)
+
+
+def get_submissions(developer_key=None, params=None):
     headers = {"developer_key": developer_key}
     url = get_url(LEADERBOARD_ENDPOINT)
-    resp = requests.get(url, headers=headers)
+    resp = requests.get(url, headers=headers, params=params)
     assert resp.status_code == 200, resp.json()
     return resp.json()
 
@@ -62,8 +71,16 @@ def cache(func, regenerate=False):
 def _get_cache_file_path(func, args, kwargs):
     cache_dir = os.path.join(guanaco_data_dir(), 'cache')
     os.makedirs(cache_dir, exist_ok=True)
-    fname = _func_call_as_string(func, args, kwargs)
+    func_name = func.__name__
+    signature = _func_call_as_string(func, args, kwargs)
+    signature_hexdigest = get_hexdigest(signature)
+    fname = f'cache-{func_name}-{signature_hexdigest}'
     return os.path.join(cache_dir, f'{fname}.pkl')
+
+
+def get_hexdigest(input_string):
+    hexdigest = hashlib.md5(input_string.encode('UTF-8')).hexdigest()
+    return hexdigest
 
 
 def _load_from_cache(file_path):

@@ -1,4 +1,4 @@
-from mock import patch, Mock
+from mock import ANY, patch, Mock
 import os
 
 import pytest
@@ -12,21 +12,31 @@ def mock_get():
         func.return_value.status_code = 200
         func.return_value.json.return_value = {"some": "feedback"}
         yield func
-        
+
+
 @patch('chaiverse.utils._load_from_cache')
 def test_is_submission_updated_new_submission(load_cache_mock):
     load_cache_mock.side_effect = FileNotFoundError()
     assert feedback.is_submission_updated("file_not_found", 10)
+
+
+@patch('chaiverse.utils._load_from_cache')
+def test_is_submission_updated_cache_contains_no_value(load_cache_mock):
+    load_cache_mock.return_value.raw_data = {}
+    assert feedback.is_submission_updated("mock_sub_id", 1)
+
 
 @patch('chaiverse.utils._load_from_cache')
 def test_is_submission_updated_increase_total(load_cache_mock):
     load_cache_mock.return_value.raw_data = {'thumbs_up' : 10, 'thumbs_down' : 10}
     assert feedback.is_submission_updated("mock_sub_id", 21)
 
+
 @patch('chaiverse.utils._load_from_cache')
 def test_is_submission_updated_equal_total(load_cache_mock):
     load_cache_mock.return_value.raw_data = {'thumbs_up' : 10, 'thumbs_down' : 10}
     assert not feedback.is_submission_updated("mock_sub_id", 20)
+
 
 def test_feedback_object(example_feedback):
     data = example_feedback
@@ -54,19 +64,25 @@ def test_get_feedback_with_cache(tmpdir):
     }
     os.makedirs(os.path.join(tmpdir, 'cache'), exist_ok=True)
 
+    request_mock = Mock()
+    request_mock.get.return_value.status_code = 200
+    request_mock.get.return_value.json.return_value = 'mock-feedback'
+
     with patch.multiple("chaiverse.utils", **mock_methods):
-        with patch('chaiverse.feedback._get_latest_feedback', return_value='feedback'):
+        with patch('chaiverse.feedback.requests', request_mock):
             result = feedback.get_feedback(submission_id, developer_key, reload=False)
             expected_path = tmpdir / "cache" / f"{submission_id}.pkl"
             assert expected_path.exists()
-            assert result == 'feedback'
+            assert result.raw_data == 'mock-feedback'
 
 
-def test_get_latest_feedback(mock_get):
-    feedback._get_latest_feedback(submission_id="test_model", developer_key="key")
+@patch("chaiverse.feedback.utils._save_to_cache")
+def test_get_latest_feedback(save_to_cache_mock, mock_get):
+    result = feedback._get_latest_feedback(submission_id="test_model", developer_key="key")
     expected_headers = {"developer_key": "key"}
     expected_url = "https://guanaco-feedback.chai-research.com/feedback/test_model"
     mock_get.assert_called_once_with(expected_url, headers=expected_headers)
+    save_to_cache_mock.assert_called_once_with(ANY, result)
 
 
 def test_get_latest_feedback_raises_for_bad_request(mock_get):

@@ -12,8 +12,8 @@ BASE_URL = 'https://guanaco-feedback.chai-research.com'
 FEEDBACK_ENDPOINT = "/feedback/{submission_id}"
 
 
-def get_url(endpoint):
-    return BASE_URL + endpoint
+def get_url(endpoint, **kwargs):
+    return (BASE_URL + endpoint).format(**kwargs)
 
 
 class Feedback():
@@ -95,12 +95,12 @@ def get_feedback(submission_id: str, developer_key=None, reload=True):
     return feedback
 
 
-def is_submission_updated(submission_id: str, server_feedback_num : int) -> bool:
+def is_submission_updated(submission_id: str, submission_feedback_total : int) -> bool:
     filename = Path(utils.guanaco_data_dir()) / 'cache' / f'{submission_id}.pkl'
     try:
         feedback = utils._load_from_cache(filename)
-        cached_feedback_num = int(feedback.raw_data["thumbs_up"]) + int(feedback.raw_data["thumbs_down"])
-        submission_updated = cached_feedback_num < server_feedback_num
+        cached_feedback_total = int(feedback.raw_data.get("thumbs_up", 0)) + int(feedback.raw_data.get("thumbs_down", 0))
+        submission_updated = cached_feedback_total < submission_feedback_total
     except FileNotFoundError:
         submission_updated = True
     return submission_updated
@@ -110,20 +110,23 @@ def _get_latest_feedback(submission_id, developer_key):
     headers = {
         "developer_key": developer_key,
     }
-    url = get_url(FEEDBACK_ENDPOINT)
-    url = url.format(submission_id=submission_id)
+    url = get_url(FEEDBACK_ENDPOINT, submission_id=submission_id)
     resp = requests.get(url, headers=headers)
     assert resp.status_code == 200, resp.json()
     feedback = Feedback(resp.json())
-    utils._save_to_cache(Path(utils.guanaco_data_dir()) / 'cache' / f'{submission_id}.pkl', feedback)
+    filename = _get_cached_feedback_filename(submission_id)
+    utils._save_to_cache(filename, feedback)
     return feedback
 
 
 def _get_cached_feedback(submission_id, developer_key):
-    filename = Path(utils.guanaco_data_dir()) / 'cache' / f'{submission_id}.pkl'
+    filename = _get_cached_feedback_filename(submission_id)
     try:
         feedback = utils._load_from_cache(filename)
     except FileNotFoundError:
         feedback = _get_latest_feedback(submission_id, developer_key)
-        utils._save_to_cache(filename, feedback)
     return feedback
+
+
+def _get_cached_feedback_filename(submission_id):
+    return Path(utils.guanaco_data_dir()) / 'cache' / f'{submission_id}.pkl'

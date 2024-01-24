@@ -1,63 +1,130 @@
 from datetime import datetime
-from mock import patch
 import os
 import pickle
-import pytest
+import sys
 import time
 
 from freezegun import freeze_time
+from mock import patch, Mock
+import pytest
 import pytz
+import vcr
 
 from chaiverse import utils
 
 
-@utils.cache
+RESOURCE_DIR = os.path.join(os.path.abspath(os.path.join(__file__, '..')), 'resources')
+MAX_RESPONSE_BODY_SIZE_FOR_URI_CHECKING_ONLY_VCR = 1024
+
+
+
 def add(a, b):
     return a + b
 
-
-def subtract(a, b):
-    return a - b
-
-
-def test_cache_leaderboard_returns_from_cache(tmpdir):
-    with patch('chaiverse.utils.guanaco_data_dir', return_value=tmpdir):
-        assert add(1, 2) == 3
-        cache_file = os.path.join(tmpdir, 'cache', 'add(a=1, b=2).pkl')
-        assert load_from_file(cache_file) == 3
-
-        # on second run, get_leaderboard loads from cache
-        dump_to_file(cache_file, 4)
-        assert add(1, 2) == 4
-
-        # making sure function is re-ran with different input args
-        assert add(2, 2) == 4
-        cache_file = os.path.join(tmpdir, 'cache', 'add(a=2, b=2).pkl')
-        assert load_from_file(cache_file) == 4
+@utils.cache
+def cached_add(a, b):
+    return a + b
 
 
-def test_cache_leaderboard_regenerates_cache_after_12_hours(tmpdir):
-    with patch('chaiverse.utils.guanaco_data_dir', return_value=tmpdir), \
-         patch('os.path.getmtime', return_value=mock_time_past_hours(13)):
-        assert add(1, 2) == 3
-        cache_file = os.path.join(tmpdir, 'cache', 'add(a=1, b=2).pkl')
-        assert load_from_file(cache_file) == 3
-
-        # on second run, get leaderboard does not read from cache as it is
-        # after 12 hour
-        dump_to_file(cache_file, 4)
-        assert add(1, 2) == 3
-        assert load_from_file(cache_file) == 3
+@pytest.fixture(autouse=True)
+def guanado_data_dir(tmpdir):
+    with patch('chaiverse.utils.get_guanaco_data_dir_env') as get_data_dir:
+        get_data_dir.return_value = str(tmpdir)
+        yield get_data_dir
 
 
-def test_cache_leaderboard_can_regenerate(tmpdir):
-    with patch('chaiverse.utils.guanaco_data_dir', return_value=tmpdir):
-        assert utils.cache(subtract)(1, 2) == -1
-        cache_file = os.path.join(tmpdir, 'cache', 'subtract(a=1, b=2).pkl')
-        dump_to_file(cache_file, 8)
+@patch('chaiverse.utils.requests')
+def test_get_all_historical_submissions(requests):
+    mock_response = Mock()
+    requests.get.return_value = mock_response
+    mock_response.status_code = 200
+    mock_response.json.return_value = 'resp'
+    result = utils.get_all_historical_submissions(developer_key='key')
+    assert result == 'resp'
+    expected_url = 'https://guanaco-submitter.chai-research.com/leaderboard'
+    requests.get.assert_called_once_with(expected_url,headers={"developer_key": 'key'}, params=None)
 
-        assert utils.cache(subtract, regenerate=True)(1, 2) == -1
-        assert load_from_file(cache_file) == -1
+
+@pytest.mark.parametrize("test_id, params, expected_uri", [
+    (1, dict(start_date='from', end_date='to'), 'https://guanaco-submitter.chai-research.com/leaderboard?start_date=from&end_date=to'),
+    (2, dict(start_date='from', end_date=None), 'https://guanaco-submitter.chai-research.com/leaderboard?start_date=from'),
+    (3, dict(start_date=None, end_date='to'), 'https://guanaco-submitter.chai-research.com/leaderboard?end_date=to'),
+    (4, None, 'https://guanaco-submitter.chai-research.com/leaderboard'),
+])
+def test_get_submissions(test_id, params, expected_uri):
+    with vcr.use_cassette(os.path.join(RESOURCE_DIR, f'test_get_submissions_in_date_range{test_id}.yaml')) as cassette:
+        utils.get_submissions(developer_key='key', params=params)
+        assert len(cassette.requests) == 1
+        assert cassette.requests[0].uri == expected_uri
+        assert sys.getsizeof(cassette.responses[0]) < MAX_RESPONSE_BODY_SIZE_FOR_URI_CHECKING_ONLY_VCR
+
+
+def test_cache_will_return_from_cache_or_not_based_on_regenerate_flag():
+    mock_function = Mock()
+
+    def my_func(a):
+        return mock_function(a)
+
+    def cached_my_func(a, regenerate=False):
+        return utils.cache(my_func, regenerate)(a)
+
+    mock_function.return_value = 1
+
+    assert cached_my_func(1) == 1
+    mock_function.return_value = 2
+    assert cached_my_func(1) == 1
+    assert cached_my_func(1, regenerate=True) == 2
+    assert len(mock_function.mock_calls) == 2
+
+
+def test_cache_will_not_return_from_cache_if_param_is_different():
+    mock_function = Mock()
+
+    def my_func(a):
+        return mock_function(a)
+
+    def cached_my_func(a, regenerate=False):
+        return utils.cache(my_func, regenerate)(a)
+
+    mock_function.return_value = 1
+
+    assert cached_my_func(1) == 1
+    mock_function.return_value = 2
+    assert cached_my_func(2) == 2
+    assert len(mock_function.mock_calls) == 2
+
+
+@patch('chaiverse.utils.time')
+@patch('os.path.getmtime')
+def test_cache_will_auto_invalidate_after_set_time(getmtime_mock, time_mock):
+    mock_function = Mock()
+
+    def my_func(a):
+        return mock_function(a)
+
+    def cached_my_func(a, regenerate=False):
+        return utils.cache(my_func, regenerate)(a)
+
+    timestamp = 1704096000
+    getmtime_mock.return_value = timestamp
+    time_mock.return_value = timestamp
+    mock_function.return_value = 1
+    assert cached_my_func(1) == 1
+    mock_function.return_value = 2
+    assert cached_my_func(1) == 1
+
+    time_mock.return_value = timestamp + 6*3600 -1
+    assert cached_my_func(1) == 1
+
+    time_mock.return_value = timestamp + 6*3600
+    assert cached_my_func(1) == 2
+
+
+def test_get_hex_digest():
+    digest1 = utils.get_hexdigest('1')
+    digest2 = utils.get_hexdigest('2')
+    assert digest1 != digest2
+    assert f'{digest1}' != f'{digest2}'
 
 
 def load_from_file(filepath):

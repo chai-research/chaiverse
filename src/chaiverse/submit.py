@@ -14,9 +14,10 @@ SUBMISSION_ENDPOINT = "/models/submit"
 ALL_SUBMISSION_STATUS_ENDPOINT = "/models/"
 INFO_ENDPOINT = "/models/{submission_id}"
 DEACTIVATE_ENDPOINT = "/models/{submission_id}/deactivate"
+
+REDEPLOY_ENDPOINT = "/models/{submission_id}/redeploy"
 EVALUATE_ENDPOINT = "/models/{submission_id}/evaluate"
 TEARDOWN_ENDPOINT = "/models/{submission_id}/teardown"
-EULA_ENDPOINT = "/developers/update_eula"
 
 
 class ModelSubmitter:
@@ -136,17 +137,16 @@ class ModelSubmitter:
 
 @auto_authenticate
 def submit_model(model_submission: dict, developer_key=None):
-    submission_url = utils.get_url(SUBMISSION_ENDPOINT)
+    url = utils.get_url(SUBMISSION_ENDPOINT)
     headers = {'Authorization': f"Bearer {developer_key}"}
-    response = requests.post(url=submission_url, json=model_submission, headers=headers)
+    response = requests.post(url=url, json=model_submission, headers=headers)
     assert response.status_code == 200, response.json()
     return response.json()
 
 
 @auto_authenticate
 def get_model_info(submission_id, developer_key=None):
-    url = utils.get_url(INFO_ENDPOINT)
-    url = url.format(submission_id=submission_id)
+    url = utils.get_url(INFO_ENDPOINT, submission_id=submission_id)
     headers = {'Authorization': f"Bearer {developer_key}"}
     response = requests.get(url=url, headers=headers)
     assert response.status_code == 200, response.json()
@@ -155,8 +155,7 @@ def get_model_info(submission_id, developer_key=None):
 
 @auto_authenticate
 def evaluate_model(submission_id, developer_key=None):
-    url = utils.get_url(EVALUATE_ENDPOINT)
-    url = url.format(submission_id=submission_id)
+    url = utils.get_url(EVALUATE_ENDPOINT, submission_id=submission_id)
     headers = {'Authorization': f"Bearer {developer_key}"}
     response = requests.get(url=url, headers=headers)
     assert response.status_code == 200, response.json()
@@ -174,8 +173,17 @@ def get_my_submissions(developer_key=None):
 
 @auto_authenticate
 def deactivate_model(submission_id, developer_key=None):
-    url = utils.get_url(DEACTIVATE_ENDPOINT)
-    url = url.format(submission_id=submission_id)
+    url = utils.get_url(DEACTIVATE_ENDPOINT, submission_id=submission_id)
+    headers = {'Authorization': f"Bearer {developer_key}"}
+    response = requests.get(url=url, headers=headers)
+    assert response.status_code == 200, response.json()
+    print(response.json())
+    return response.json()
+
+
+@auto_authenticate
+def redeploy_model(submission_id, developer_key=None):
+    url = utils.get_url(REDEPLOY_ENDPOINT, submission_id=submission_id)
     headers = {'Authorization': f"Bearer {developer_key}"}
     response = requests.get(url=url, headers=headers)
     assert response.status_code == 200, response.json()
@@ -185,8 +193,7 @@ def deactivate_model(submission_id, developer_key=None):
 
 @auto_authenticate
 def teardown_model(submission_id, developer_key=None):
-    url = utils.get_url(TEARDOWN_ENDPOINT)
-    url = url.format(submission_id=submission_id)
+    url = utils.get_url(TEARDOWN_ENDPOINT, submission_id=submission_id)
     headers = {'Authorization': f"Bearer {developer_key}"}
     response = requests.get(url=url, headers=headers)
     assert response.status_code == 200, response.json()

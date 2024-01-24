@@ -4,3 +4,5 @@ pandas
 pydantic
 requests
 tqdm
+tabulate
+
