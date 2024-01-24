@@ -2,11 +2,11 @@ from mock import patch, Mock
 import pytest
 
 from chaiverse import submit, formatters, utils
-
+from chaiverse import config
 
 @pytest.fixture(autouse="session")
 def mock_post():
-    with patch("chaiverse.submit.requests.post") as func:
+    with patch("chaiverse.http_client.requests.post") as func:
         func.return_value.status_code = 200
         func.return_value.json.return_value = {"submission_id": "name_123456"}
         yield func
@@ -14,7 +14,7 @@ def mock_post():
 
 @pytest.fixture(autouse="session")
 def mock_get():
-    with patch("chaiverse.submit.requests.get") as func:
+    with patch("chaiverse.http_client.requests.get") as func:
         func.return_value.status_code = 200
         func.return_value.json.return_value = {'name_123456': {'status': 'pending'}}
         yield func
@@ -23,7 +23,7 @@ def mock_get():
 @pytest.fixture()
 def mock_get_pending_to_success():
     responses = [{'status': 'pending'}] * 2 + [{'status': 'deployed'}]
-    with patch("chaiverse.submit.requests.get") as func:
+    with patch("chaiverse.http_client.requests.get") as func:
         func.return_value.status_code = 200
         func.return_value.json.side_effect = responses
         yield func
@@ -71,8 +71,8 @@ def test_model_submitter(mock_submission, mock_post, mock_get_pending_to_success
     with patch('builtins.input', return_value='accept'):
         submission_id = model_submitter.submit(model_submitter_params)
     headers = {"Authorization": "Bearer mock-key"}
-    expected_url = utils.get_url(submit.SUBMISSION_ENDPOINT)
-    mock_post.assert_called_once_with(url=expected_url, json=mock_submission, headers=headers)
+    expected_url = utils.get_url(config.SUBMISSION_ENDPOINT)
+    mock_post.assert_called_once_with(url=expected_url, headers=headers, json=mock_submission)
     assert mock_get_pending_to_success.call_count == 3
     assert submission_id == "name_123456"
 
@@ -95,7 +95,7 @@ def test_client(mock_post, mock_submission):
 def test_submit_client_posts_with_correct_payload(mock_post, mock_submission):
     submit.submit_model(mock_submission, developer_key="mock-key")
     headers={"Authorization": "Bearer mock-key"}
-    expected_url = utils.get_url(submit.SUBMISSION_ENDPOINT)
+    expected_url = utils.get_url(config.SUBMISSION_ENDPOINT)
     mock_post.assert_called_once_with(url=expected_url, json=mock_submission, headers=headers)
 
 
@@ -123,7 +123,7 @@ def test_get_model_info(mock_get):
 
 def test_evaluate_mode_get_called_with_correct_url(mock_get):
     submit.evaluate_model('name_123456', developer_key='key')
-    url = utils.get_url(submit.EVALUATE_ENDPOINT, submission_id='name_123456')
+    url = utils.get_url(config.EVALUATE_ENDPOINT, submission_id='name_123456')
     mock_get.assert_called_once_with(
         url=url,
         headers={"Authorization": "Bearer key"}
@@ -141,7 +141,7 @@ def test_get_evalluate_model_raises_with_error(mock_get):
 
 def test_get_model_info_called_with_correct_url(mock_get):
     submit.get_model_info('name_123456', developer_key='key')
-    url = utils.get_url(submit.INFO_ENDPOINT, submission_id='name_123456')
+    url = utils.get_url(config.INFO_ENDPOINT, submission_id='name_123456')
     mock_get.assert_called_once_with(
         url=url,
         headers={"Authorization": "Bearer key"}
@@ -160,7 +160,7 @@ def test_get_model_info_raises_with_error(mock_get):
 def test_get_my_submissions(mock_get):
     mock_get.return_value.json.return_value = {'123': 'pending', '456': 'failed'}
     out = submit.get_my_submissions('dev_key')
-    expected_url = utils.get_url(submit.ALL_SUBMISSION_STATUS_ENDPOINT)
+    expected_url = utils.get_url(config.ALL_SUBMISSION_STATUS_ENDPOINT)
     mock_get.assert_called_once_with(
         url=expected_url,
         headers={"Authorization": "Bearer dev_key"}
@@ -182,7 +182,7 @@ def test_deactivate_model(mock_get):
     mock_get.return_value.json.return_value = ""
     submit.deactivate_model("test_model", developer_key="dev_key")
     expected_headers = {"Authorization": "Bearer dev_key"}
-    url = utils.get_url(submit.DEACTIVATE_ENDPOINT, submission_id = "test_model")
+    url = utils.get_url(config.DEACTIVATE_ENDPOINT, submission_id = "test_model")
     mock_get.assert_called_once_with(url=url, headers=expected_headers)
 
 
@@ -191,7 +191,7 @@ def test_redeploy_model(mock_get):
     mock_get.return_value.json.return_value = ""
     submit.redeploy_model("test_model", developer_key="dev_key")
     expected_headers = {"Authorization": "Bearer dev_key"}
-    url = utils.get_url(submit.REDEPLOY_ENDPOINT, submission_id = "test_model")
+    url = utils.get_url(config.REDEPLOY_ENDPOINT, submission_id = "test_model")
     mock_get.assert_called_once_with(url=url, headers=expected_headers)
 
 
@@ -200,5 +200,5 @@ def test_teardown_model(mock_get):
     mock_get.return_value.json.return_value = ""
     submit.teardown_model("test_model", developer_key="dev_key")
     expected_headers = {"Authorization": "Bearer dev_key"}
-    url = utils.get_url(submit.TEARDOWN_ENDPOINT, submission_id="test_model")
+    url = utils.get_url(config.TEARDOWN_ENDPOINT, submission_id="test_model")
     mock_get.assert_called_once_with(url=url, headers=expected_headers)

@@ -2,13 +2,12 @@ from dataclasses import dataclass
 import json
 import os
 from pathlib import Path
-import requests
 
 from chaiverse.login_cli import auto_authenticate
 from chaiverse.utils import print_color
+from chaiverse.http_client import SubmitterClient
+from chaiverse.config import BASE_SUBMITTER_URL, CHAT_ENDPOINT
 
-
-BASE_URL = "https://guanaco-submitter.chai-research.com"
 
 REPO_PATH = os.path.dirname(os.path.abspath(__file__))
 RESOURCE_DIR = os.path.join(REPO_PATH, 'resources', 'bot_config')
@@ -49,8 +48,7 @@ class SubmissionChatbot():
         show_model_input: bool - whether to display the raw model input to your language model
         """
         bot_config = self._get_bot_config(bot_config_file_name)
-        url = get_chat_endpoint_url(self.submission_id)
-        bot = Bot(url, self.developer_key, bot_config)
+        bot = Bot(self.submission_id, self.developer_key, bot_config)
         self._print_greetings_header(bot_config)
         user_input = input("You: ")
         while user_input != 'exit':
@@ -101,21 +99,22 @@ class Bot:
 
     def __init__(
             self,
-            url_endpoint,
+            submission_id,
             developer_key,
-            bot_config
+            bot_config,
+            endpoint = CHAT_ENDPOINT
     ):
-        self.url = url_endpoint
+        self.submission_id = submission_id
         self.developer_key = developer_key
         self.bot_config = bot_config
+        self.endpoint = endpoint
         self._chat_history = self._init_chat_history()
 
     def get_response(self, user_input):
         response = self._get_raw_response(user_input)
-        assert response.status_code == 200, response.text
-        model_output = response.json()['model_output']
+        model_output = response['model_output']
         self._update_chat_history(model_output, self.bot_config.bot_label)
-        return response.json()
+        return response
 
     def _get_raw_response(self, user_input):
         self._update_chat_history(user_input, 'user')
@@ -126,8 +125,8 @@ class Bot:
             "bot_name": self.bot_config.bot_label,
             "user_name": "You"
         }
-        headers = {"Authorization": f"Bearer {self.developer_key}"}
-        response = requests.post(url=self.url, json=payload, headers=headers, timeout=20)
+        http_client = SubmitterClient(self.developer_key)
+        response = http_client.post(endpoint=self.endpoint, submission_id=self.submission_id, timeout=20, data=payload)
         return response
 
     def _update_chat_history(self, message, sender):
@@ -136,11 +135,6 @@ class Bot:
 
     def _init_chat_history(self):
         return [{"sender": self.bot_config.bot_label, "message": self.bot_config.first_message}]
-
-
-def get_chat_endpoint_url(submission_id):
-    endpoint = f'/models/{submission_id}/chat'
-    return BASE_URL + endpoint
 
 
 def get_available_bots():
@@ -162,8 +156,7 @@ def get_bot_config(bot_name):
 
 
 def get_bot_response(messages, submission_id, bot_config, developer_key):
-    url = get_chat_endpoint_url(submission_id)
-    chai_bot = Bot(url, developer_key, bot_config)
+    chai_bot = Bot(submission_id, developer_key, bot_config)
     for content, sender in messages[:-1]:
         chai_bot._update_chat_history(content, sender)
     content, sender = messages[-1]

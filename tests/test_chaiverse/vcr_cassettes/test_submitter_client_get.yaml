@@ -1,0 +1,555 @@
+interactions:
+- request:
+    body: null
+    headers:
+      Accept:
+      - '*/*'
+      Accept-Encoding:
+      - gzip, deflate, br
+      Connection:
+      - keep-alive
+      User-Agent:
+      - python-requests/2.31.0
+    method: GET
+    uri: https://guanaco-submitter.chai-research.com/models/huggyllama-llama-7b_v2
+  response:
+    body:
+      string: "{\"logs\":[{\"timestamp\":\"2023-12-16T05:00:01.708383+00:00\",\"entry\":\"Deleting
+        key huggyllama-llama-7b-v1-test/config.json from bucket guanaco-mkml-models\",\"level\":\"INFO\",\"line_number\":37,\"path\":\"/home/robert/work/chai_guanaco/guanaco_services/src/guanaco_model_service/model_cache_api.py\"},{\"timestamp\":\"2023-12-16T05:00:01.777890+00:00\",\"entry\":\"Running
+        pipeline stage MKMLizer\",\"level\":\"INFO\",\"line_number\":31,\"path\":\"/home/robert/work/chai_guanaco/guanaco_services/src/guanaco_model_service/pipeline_stage.py\"},{\"timestamp\":\"2023-12-16T05:00:02.098201+00:00\",\"entry\":\"Deleting
+        key huggyllama-llama-7b-v1-test/mkml_model.tensors from bucket guanaco-mkml-models\",\"level\":\"INFO\",\"line_number\":37,\"path\":\"/home/robert/work/chai_guanaco/guanaco_services/src/guanaco_model_service/model_cache_api.py\"},{\"timestamp\":\"2023-12-16T05:00:02.276478+00:00\",\"entry\":\"Starting
+        job with name huggyllama-llama-7b-mkmlizer\",\"level\":\"INFO\",\"line_number\":63,\"path\":\"/home/robert/work/chai_guanaco/guanaco_services/src/guanaco_model_service/job_runner.py\"},{\"timestamp\":\"2023-12-16T05:00:02.460498+00:00\",\"entry\":\"Deleting
+        key huggyllama-llama-7b-v1-test/special_tokens_map.json from bucket guanaco-mkml-models\",\"level\":\"INFO\",\"line_number\":37,\"path\":\"/home/robert/work/chai_guanaco/guanaco_services/src/guanaco_model_service/model_cache_api.py\"},{\"timestamp\":\"2023-12-16T05:00:02.693095+00:00\",\"entry\":\"Waiting
+        for job on huggyllama-llama-7b-mkmlizer to finish\",\"level\":\"INFO\",\"line_number\":86,\"path\":\"/home/robert/work/chai_guanaco/guanaco_services/src/guanaco_model_service/job_runner.py\"},{\"timestamp\":\"2023-12-16T05:00:02.807849+00:00\",\"entry\":\"Deleting
+        key huggyllama-llama-7b-v1-test/tokenizer.json from bucket guanaco-mkml-models\",\"level\":\"INFO\",\"line_number\":37,\"path\":\"/home/robert/work/chai_guanaco/guanaco_services/src/guanaco_model_service/model_cache_api.py\"},{\"timestamp\":\"2023-12-16T05:00:03.181595+00:00\",\"entry\":\"Deleting
+        key huggyllama-llama-7b-v1-test/tokenizer.model from bucket guanaco-mkml-models\",\"level\":\"INFO\",\"line_number\":37,\"path\":\"/home/robert/work/chai_guanaco/guanaco_services/src/guanaco_model_service/model_cache_api.py\"},{\"timestamp\":\"2023-12-16T05:00:03.567610+00:00\",\"entry\":\"Deleting
+        key huggyllama-llama-7b-v1-test/tokenizer_config.json from bucket guanaco-mkml-models\",\"level\":\"INFO\",\"line_number\":37,\"path\":\"/home/robert/work/chai_guanaco/guanaco_services/src/guanaco_model_service/model_cache_api.py\"},{\"timestamp\":\"2023-12-16T05:00:03.942516+00:00\",\"entry\":\"Deleting
+        key huggyllama-llama-7b-v1/config.json from bucket guanaco-mkml-models\",\"level\":\"INFO\",\"line_number\":37,\"path\":\"/home/robert/work/chai_guanaco/guanaco_services/src/guanaco_model_service/model_cache_api.py\"},{\"timestamp\":\"2023-12-16T05:00:04.289022+00:00\",\"entry\":\"Deleting
+        key huggyllama-llama-7b-v1/mkml_model.tensors from bucket guanaco-mkml-models\",\"level\":\"INFO\",\"line_number\":37,\"path\":\"/home/robert/work/chai_guanaco/guanaco_services/src/guanaco_model_service/model_cache_api.py\"},{\"timestamp\":\"2023-12-16T05:00:04.644884+00:00\",\"entry\":\"Deleting
+        key huggyllama-llama-7b-v1/special_tokens_map.json from bucket guanaco-mkml-models\",\"level\":\"INFO\",\"line_number\":37,\"path\":\"/home/robert/work/chai_guanaco/guanaco_services/src/guanaco_model_service/model_cache_api.py\"},{\"timestamp\":\"2023-12-16T05:00:04.992153+00:00\",\"entry\":\"Deleting
+        key huggyllama-llama-7b-v1/tokenizer.json from bucket guanaco-mkml-models\",\"level\":\"INFO\",\"line_number\":37,\"path\":\"/home/robert/work/chai_guanaco/guanaco_services/src/guanaco_model_service/model_cache_api.py\"},{\"timestamp\":\"2023-12-16T05:00:05.337343+00:00\",\"entry\":\"Deleting
+        key huggyllama-llama-7b-v1/tokenizer.model from bucket guanaco-mkml-models\",\"level\":\"INFO\",\"line_number\":37,\"path\":\"/home/robert/work/chai_guanaco/guanaco_services/src/guanaco_model_service/model_cache_api.py\"},{\"timestamp\":\"2023-12-16T05:00:05.667837+00:00\",\"entry\":\"Deleting
+        key huggyllama-llama-7b-v1/tokenizer_config.json from bucket guanaco-mkml-models\",\"level\":\"INFO\",\"line_number\":37,\"path\":\"/home/robert/work/chai_guanaco/guanaco_services/src/guanaco_model_service/model_cache_api.py\"},{\"timestamp\":\"2023-12-16T05:00:06.001312+00:00\",\"entry\":\"Cleaning
+        model data from model cache\",\"level\":\"INFO\",\"line_number\":122,\"path\":\"/home/robert/work/chai_guanaco/guanaco_services/src/guanaco_model_service/mkml/pipeline.py\"},{\"timestamp\":\"2023-12-16T05:00:06.553529+00:00\",\"entry\":\"Deleting
+        key huggyllama-llama-7b-v1_reward/config.json from bucket guanaco-reward-models\",\"level\":\"INFO\",\"line_number\":37,\"path\":\"/home/robert/work/chai_guanaco/guanaco_services/src/guanaco_model_service/model_cache_api.py\"},{\"timestamp\":\"2023-12-16T05:00:06.888527+00:00\",\"entry\":\"Deleting
+        key huggyllama-llama-7b-v1_reward/merges.txt from bucket guanaco-reward-models\",\"level\":\"INFO\",\"line_number\":37,\"path\":\"/home/robert/work/chai_guanaco/guanaco_services/src/guanaco_model_service/model_cache_api.py\"},{\"timestamp\":\"2023-12-16T05:00:07.218537+00:00\",\"entry\":\"Deleting
+        key huggyllama-llama-7b-v1_reward/reward.tensors from bucket guanaco-reward-models\",\"level\":\"INFO\",\"line_number\":37,\"path\":\"/home/robert/work/chai_guanaco/guanaco_services/src/guanaco_model_service/model_cache_api.py\"},{\"timestamp\":\"2023-12-16T05:00:07.561842+00:00\",\"entry\":\"Deleting
+        key huggyllama-llama-7b-v1_reward/special_tokens_map.json from bucket guanaco-reward-models\",\"level\":\"INFO\",\"line_number\":37,\"path\":\"/home/robert/work/chai_guanaco/guanaco_services/src/guanaco_model_service/model_cache_api.py\"},{\"timestamp\":\"2023-12-16T05:00:08.259814+00:00\",\"entry\":\"Deleting
+        key huggyllama-llama-7b-v1_reward/tokenizer.json from bucket guanaco-reward-models\",\"level\":\"INFO\",\"line_number\":37,\"path\":\"/home/robert/work/chai_guanaco/guanaco_services/src/guanaco_model_service/model_cache_api.py\"},{\"timestamp\":\"2023-12-16T05:00:08.619607+00:00\",\"entry\":\"Deleting
+        key huggyllama-llama-7b-v1_reward/tokenizer_config.json from bucket guanaco-reward-models\",\"level\":\"INFO\",\"line_number\":37,\"path\":\"/home/robert/work/chai_guanaco/guanaco_services/src/guanaco_model_service/model_cache_api.py\"},{\"timestamp\":\"2023-12-16T05:00:08.967688+00:00\",\"entry\":\"Deleting
+        key huggyllama-llama-7b-v1_reward/vocab.json from bucket guanaco-reward-models\",\"level\":\"INFO\",\"line_number\":37,\"path\":\"/home/robert/work/chai_guanaco/guanaco_services/src/guanaco_model_service/model_cache_api.py\"},{\"timestamp\":\"2023-12-16T05:00:09.606477+00:00\",\"entry\":\"Pipeline
+        stage MKMLModelDeleter completed in 8.94s\",\"level\":\"INFO\",\"line_number\":35,\"path\":\"/home/robert/work/chai_guanaco/guanaco_services/src/guanaco_model_service/pipeline_stage.py\"},{\"timestamp\":\"2023-12-16T05:00:14.416548+00:00\",\"entry\":\"huggyllama-llama-7b-mkmlizer:
+        \u2554\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2557\",\"level\":\"INFO\",\"line_number\":120,\"path\":\"/home/robert/work/chai_guanaco/guanaco_services/src/guanaco_model_service/job_runner.py\"},{\"timestamp\":\"2023-12-16T05:00:14.511324+00:00\",\"entry\":\"huggyllama-llama-7b-mkmlizer:
+        \u2551   _______ __  __ _______ _____                                      \u2551\",\"level\":\"INFO\",\"line_number\":120,\"path\":\"/home/robert/work/chai_guanaco/guanaco_services/src/guanaco_model_service/job_runner.py\"},{\"timestamp\":\"2023-12-16T05:00:14.610880+00:00\",\"entry\":\"huggyllama-llama-7b-mkmlizer:
+        \u2551  |   |   |  |/  |   |   |     |_                                    \u2551\",\"level\":\"INFO\",\"line_number\":120,\"path\":\"/home/robert/work/chai_guanaco/guanaco_services/src/guanaco_model_service/job_runner.py\"},{\"timestamp\":\"2023-12-16T05:00:14.706699+00:00\",\"entry\":\"huggyllama-llama-7b-mkmlizer:
+        \u2551  |       |     <|       |       |                                   \u2551\",\"level\":\"INFO\",\"line_number\":120,\"path\":\"/home/robert/work/chai_guanaco/guanaco_services/src/guanaco_model_service/job_runner.py\"},{\"timestamp\":\"2023-12-16T05:00:14.806015+00:00\",\"entry\":\"huggyllama-llama-7b-mkmlizer:
+        \u2551  |__|_|__|__|\\\\__|__|_|__|_______|                                   \u2551\",\"level\":\"INFO\",\"line_number\":120,\"path\":\"/home/robert/work/chai_guanaco/guanaco_services/src/guanaco_model_service/job_runner.py\"},{\"timestamp\":\"2023-12-16T05:00:14.891081+00:00\",\"entry\":\"huggyllama-llama-7b-mkmlizer:
+        \u2551                                                                     \u2551\",\"level\":\"INFO\",\"line_number\":120,\"path\":\"/home/robert/work/chai_guanaco/guanaco_services/src/guanaco_model_service/job_runner.py\"},{\"timestamp\":\"2023-12-16T05:00:14.996688+00:00\",\"entry\":\"huggyllama-llama-7b-mkmlizer:
+        \u2551  Copyright 2023 MK ONE TECHNOLOGIES Inc.                            \u2551\",\"level\":\"INFO\",\"line_number\":120,\"path\":\"/home/robert/work/chai_guanaco/guanaco_services/src/guanaco_model_service/job_runner.py\"},{\"timestamp\":\"2023-12-16T05:00:15.094486+00:00\",\"entry\":\"huggyllama-llama-7b-mkmlizer:
+        \u2551                                                                     \u2551\",\"level\":\"INFO\",\"line_number\":120,\"path\":\"/home/robert/work/chai_guanaco/guanaco_services/src/guanaco_model_service/job_runner.py\"},{\"timestamp\":\"2023-12-16T05:00:15.192568+00:00\",\"entry\":\"huggyllama-llama-7b-mkmlizer:
+        \u2551  The license key for the current software has been verified as      \u2551\",\"level\":\"INFO\",\"line_number\":120,\"path\":\"/home/robert/work/chai_guanaco/guanaco_services/src/guanaco_model_service/job_runner.py\"},{\"timestamp\":\"2023-12-16T05:00:15.275702+00:00\",\"entry\":\"huggyllama-llama-7b-mkmlizer:
+        \u2551  belonging to:                                                      \u2551\",\"level\":\"INFO\",\"line_number\":120,\"path\":\"/home/robert/work/chai_guanaco/guanaco_services/src/guanaco_model_service/job_runner.py\"},{\"timestamp\":\"2023-12-16T05:00:15.364921+00:00\",\"entry\":\"huggyllama-llama-7b-mkmlizer:
+        \u2551                                                                     \u2551\",\"level\":\"INFO\",\"line_number\":120,\"path\":\"/home/robert/work/chai_guanaco/guanaco_services/src/guanaco_model_service/job_runner.py\"},{\"timestamp\":\"2023-12-16T05:00:15.461638+00:00\",\"entry\":\"huggyllama-llama-7b-mkmlizer:
+        \u2551  Chai Research Corp                                                 \u2551\",\"level\":\"INFO\",\"line_number\":120,\"path\":\"/home/robert/work/chai_guanaco/guanaco_services/src/guanaco_model_service/job_runner.py\"},{\"timestamp\":\"2023-12-16T05:00:15.556299+00:00\",\"entry\":\"huggyllama-llama-7b-mkmlizer:
+        \u2551  Account ID: 7997a29f-0ceb-4cc7-9adf-840c57b4ae6f                   \u2551\",\"level\":\"INFO\",\"line_number\":120,\"path\":\"/home/robert/work/chai_guanaco/guanaco_services/src/guanaco_model_service/job_runner.py\"},{\"timestamp\":\"2023-12-16T05:00:15.670464+00:00\",\"entry\":\"huggyllama-llama-7b-mkmlizer:
+        \u2551  Expiration: 2024-01-08 23:59:59                                    \u2551\",\"level\":\"INFO\",\"line_number\":120,\"path\":\"/home/robert/work/chai_guanaco/guanaco_services/src/guanaco_model_service/job_runner.py\"},{\"timestamp\":\"2023-12-16T05:00:15.793896+00:00\",\"entry\":\"huggyllama-llama-7b-mkmlizer:
+        \u2551                                                                     \u2551\",\"level\":\"INFO\",\"line_number\":120,\"path\":\"/home/robert/work/chai_guanaco/guanaco_services/src/guanaco_model_service/job_runner.py\"},{\"timestamp\":\"2023-12-16T05:00:15.892706+00:00\",\"entry\":\"huggyllama-llama-7b-mkmlizer:
+        \u255A\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u255D\",\"level\":\"INFO\",\"line_number\":120,\"path\":\"/home/robert/work/chai_guanaco/guanaco_services/src/guanaco_model_service/job_runner.py\"},{\"timestamp\":\"2023-12-16T05:00:15.995657+00:00\",\"entry\":\"huggyllama-llama-7b-mkmlizer:
+        loading model from huggyllama/llama-7b\",\"level\":\"INFO\",\"line_number\":120,\"path\":\"/home/robert/work/chai_guanaco/guanaco_services/src/guanaco_model_service/job_runner.py\"},{\"timestamp\":\"2023-12-16T05:00:16.086746+00:00\",\"entry\":\"huggyllama-llama-7b-mkmlizer:
+        /opt/conda/lib/python3.10/site-packages/transformers/models/auto/configuration_auto.py:1067:
+        FutureWarning: The `use_auth_token` argument is deprecated and will be removed
+        in v5 of Transformers. Please use `token` instead.\",\"level\":\"INFO\",\"line_number\":120,\"path\":\"/home/robert/work/chai_guanaco/guanaco_services/src/guanaco_model_service/job_runner.py\"},{\"timestamp\":\"2023-12-16T05:00:16.182683+00:00\",\"entry\":\"huggyllama-llama-7b-mkmlizer:
+        \  warnings.warn(\",\"level\":\"INFO\",\"line_number\":120,\"path\":\"/home/robert/work/chai_guanaco/guanaco_services/src/guanaco_model_service/job_runner.py\"},{\"timestamp\":\"2023-12-16T05:00:16.278774+00:00\",\"entry\":\"huggyllama-llama-7b-mkmlizer:
+        \\rconfig.json:   0%|          | 0.00/594 [00:00<?, ?B/s]\\rconfig.json: 100%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588|
+        594/594 [00:00<00:00, 6.03MB/s]\",\"level\":\"INFO\",\"line_number\":120,\"path\":\"/home/robert/work/chai_guanaco/guanaco_services/src/guanaco_model_service/job_runner.py\"},{\"timestamp\":\"2023-12-16T05:00:16.382482+00:00\",\"entry\":\"huggyllama-llama-7b-mkmlizer:
+        /opt/conda/lib/python3.10/site-packages/transformers/models/auto/tokenization_auto.py:690:
+        FutureWarning: The `use_auth_token` argument is deprecated and will be removed
+        in v5 of Transformers. Please use `token` instead.\",\"level\":\"INFO\",\"line_number\":120,\"path\":\"/home/robert/work/chai_guanaco/guanaco_services/src/guanaco_model_service/job_runner.py\"},{\"timestamp\":\"2023-12-16T05:00:16.484258+00:00\",\"entry\":\"huggyllama-llama-7b-mkmlizer:
+        \  warnings.warn(\",\"level\":\"INFO\",\"line_number\":120,\"path\":\"/home/robert/work/chai_guanaco/guanaco_services/src/guanaco_model_service/job_runner.py\"},{\"timestamp\":\"2023-12-16T05:00:16.584234+00:00\",\"entry\":\"huggyllama-llama-7b-mkmlizer:
+        \\rtokenizer_config.json:   0%|          | 0.00/700 [00:00<?, ?B/s]\\rtokenizer_config.json:
+        100%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588| 700/700
+        [00:00<00:00, 3.68MB/s]\",\"level\":\"INFO\",\"line_number\":120,\"path\":\"/home/robert/work/chai_guanaco/guanaco_services/src/guanaco_model_service/job_runner.py\"},{\"timestamp\":\"2023-12-16T05:00:16.670890+00:00\",\"entry\":\"huggyllama-llama-7b-mkmlizer:
+        \\rtokenizer.model:   0%|          | 0.00/500k [00:00<?, ?B/s]\\rtokenizer.model:
+        100%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588| 500k/500k
+        [00:00<00:00, 47.4MB/s]\",\"level\":\"INFO\",\"line_number\":120,\"path\":\"/home/robert/work/chai_guanaco/guanaco_services/src/guanaco_model_service/job_runner.py\"},{\"timestamp\":\"2023-12-16T05:00:16.772893+00:00\",\"entry\":\"huggyllama-llama-7b-mkmlizer:
+        \\rtokenizer.json:   0%|          | 0.00/1.84M [00:00<?, ?B/s]\\rtokenizer.json:
+        100%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588| 1.84M/1.84M
+        [00:00<00:00, 18.1MB/s]\\rtokenizer.json: 100%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588|
+        1.84M/1.84M [00:00<00:00, 17.9MB/s]\",\"level\":\"INFO\",\"line_number\":120,\"path\":\"/home/robert/work/chai_guanaco/guanaco_services/src/guanaco_model_service/job_runner.py\"},{\"timestamp\":\"2023-12-16T05:00:16.865952+00:00\",\"entry\":\"huggyllama-llama-7b-mkmlizer:
+        \\rspecial_tokens_map.json:   0%|          | 0.00/411 [00:00<?, ?B/s]\\rspecial_tokens_map.json:
+        100%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588| 411/411
+        [00:00<00:00, 2.97MB/s]\",\"level\":\"INFO\",\"line_number\":120,\"path\":\"/home/robert/work/chai_guanaco/guanaco_services/src/guanaco_model_service/job_runner.py\"},{\"timestamp\":\"2023-12-16T05:00:16.964944+00:00\",\"entry\":\"huggyllama-llama-7b-mkmlizer:
+        /opt/conda/lib/python3.10/site-packages/transformers/models/auto/auto_factory.py:472:
+        FutureWarning: The `use_auth_token` argument is deprecated and will be removed
+        in v5 of Transformers. Please use `token` instead.\",\"level\":\"INFO\",\"line_number\":120,\"path\":\"/home/robert/work/chai_guanaco/guanaco_services/src/guanaco_model_service/job_runner.py\"},{\"timestamp\":\"2023-12-16T05:00:17.072462+00:00\",\"entry\":\"huggyllama-llama-7b-mkmlizer:
+        \  warnings.warn(\",\"level\":\"INFO\",\"line_number\":120,\"path\":\"/home/robert/work/chai_guanaco/guanaco_services/src/guanaco_model_service/job_runner.py\"},{\"timestamp\":\"2023-12-16T05:00:17.168621+00:00\",\"entry\":\"huggyllama-llama-7b-mkmlizer:
+        \\rmodel.safetensors.index.json:   0%|          | 0.00/26.8k [00:00<?, ?B/s]\\rmodel.safetensors.index.json:
+        100%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588| 26.8k/26.8k
+        [00:00<00:00, 146MB/s]\",\"level\":\"INFO\",\"line_number\":120,\"path\":\"/home/robert/work/chai_guanaco/guanaco_services/src/guanaco_model_service/job_runner.py\"},{\"timestamp\":\"2023-12-16T05:00:17.268450+00:00\",\"entry\":\"huggyllama-llama-7b-mkmlizer:
+        \\rDownloading shards:   0%|          | 0/2 [00:00<?, ?it/s]\",\"level\":\"INFO\",\"line_number\":120,\"path\":\"/home/robert/work/chai_guanaco/guanaco_services/src/guanaco_model_service/job_runner.py\"},{\"timestamp\":\"2023-12-16T05:00:17.362103+00:00\",\"entry\":\"huggyllama-llama-7b-mkmlizer:
+        \\rmodel-00001-of-00002.safetensors:   0%|          | 0.00/9.98G [00:00<?,
+        ?B/s]\\u001b[A\",\"level\":\"INFO\",\"line_number\":120,\"path\":\"/home/robert/work/chai_guanaco/guanaco_services/src/guanaco_model_service/job_runner.py\"},{\"timestamp\":\"2023-12-16T05:00:17.459935+00:00\",\"entry\":\"huggyllama-llama-7b-mkmlizer:
+        \\rmodel-00001-of-00002.safetensors:   0%|          | 10.5M/9.98G [00:00<02:29,
+        66.8MB/s]\\u001b[A\",\"level\":\"INFO\",\"line_number\":120,\"path\":\"/home/robert/work/chai_guanaco/guanaco_services/src/guanaco_model_service/job_runner.py\"},{\"timestamp\":\"2023-12-16T05:00:17.545055+00:00\",\"entry\":\"huggyllama-llama-7b-mkmlizer:
+        \\rmodel-00001-of-00002.safetensors:   0%|          | 31.5M/9.98G [00:00<01:15,
+        132MB/s] \\u001b[A\",\"level\":\"INFO\",\"line_number\":120,\"path\":\"/home/robert/work/chai_guanaco/guanaco_services/src/guanaco_model_service/job_runner.py\"},{\"timestamp\":\"2023-12-16T05:00:17.635542+00:00\",\"entry\":\"huggyllama-llama-7b-mkmlizer:
+        \\rmodel-00001-of-00002.safetensors:   1%|          | 62.9M/9.98G [00:00<00:49,
+        202MB/s]\\u001b[A\",\"level\":\"INFO\",\"line_number\":120,\"path\":\"/home/robert/work/chai_guanaco/guanaco_services/src/guanaco_model_service/job_runner.py\"},{\"timestamp\":\"2023-12-16T05:00:17.724994+00:00\",\"entry\":\"huggyllama-llama-7b-mkmlizer:
+        \\rmodel-00001-of-00002.safetensors:   1%|          | 115M/9.98G [00:00<00:46,
+        211MB/s] \\u001b[A\",\"level\":\"INFO\",\"line_number\":120,\"path\":\"/home/robert/work/chai_guanaco/guanaco_services/src/guanaco_model_service/job_runner.py\"},{\"timestamp\":\"2023-12-16T05:00:17.821831+00:00\",\"entry\":\"huggyllama-llama-7b-mkmlizer:
+        \\rmodel-00001-of-00002.safetensors:   1%|\u258F         | 147M/9.98G [00:00<00:50,
+        194MB/s]\\u001b[A\",\"level\":\"INFO\",\"line_number\":120,\"path\":\"/home/robert/work/chai_guanaco/guanaco_services/src/guanaco_model_service/job_runner.py\"},{\"timestamp\":\"2023-12-16T05:00:17.917158+00:00\",\"entry\":\"huggyllama-llama-7b-mkmlizer:
+        \\rmodel-00001-of-00002.safetensors:   2%|\u258F         | 189M/9.98G [00:00<00:44,
+        222MB/s]\\u001b[A\",\"level\":\"INFO\",\"line_number\":120,\"path\":\"/home/robert/work/chai_guanaco/guanaco_services/src/guanaco_model_service/job_runner.py\"},{\"timestamp\":\"2023-12-16T05:00:18.002987+00:00\",\"entry\":\"huggyllama-llama-7b-mkmlizer:
+        \\rmodel-00001-of-00002.safetensors:   3%|\u258E         | 304M/9.98G [00:01<00:22,
+        426MB/s]\\u001b[A\",\"level\":\"INFO\",\"line_number\":120,\"path\":\"/home/robert/work/chai_guanaco/guanaco_services/src/guanaco_model_service/job_runner.py\"},{\"timestamp\":\"2023-12-16T05:00:18.096501+00:00\",\"entry\":\"huggyllama-llama-7b-mkmlizer:
+        \\rmodel-00001-of-00002.safetensors:   4%|\u258D         | 419M/9.98G [00:01<00:15,
+        598MB/s]\\u001b[A\",\"level\":\"INFO\",\"line_number\":120,\"path\":\"/home/robert/work/chai_guanaco/guanaco_services/src/guanaco_model_service/job_runner.py\"},{\"timestamp\":\"2023-12-16T05:00:18.181293+00:00\",\"entry\":\"huggyllama-llama-7b-mkmlizer:
+        \\rmodel-00001-of-00002.safetensors:   7%|\u258B         | 692M/9.98G [00:01<00:08,
+        1.13GB/s]\\u001b[A\",\"level\":\"INFO\",\"line_number\":120,\"path\":\"/home/robert/work/chai_guanaco/guanaco_services/src/guanaco_model_service/job_runner.py\"},{\"timestamp\":\"2023-12-16T05:00:18.268996+00:00\",\"entry\":\"huggyllama-llama-7b-mkmlizer:
+        \\rmodel-00001-of-00002.safetensors:  10%|\u2588         | 1.03G/9.98G [00:01<00:05,
+        1.69GB/s]\\u001b[A\",\"level\":\"INFO\",\"line_number\":120,\"path\":\"/home/robert/work/chai_guanaco/guanaco_services/src/guanaco_model_service/job_runner.py\"},{\"timestamp\":\"2023-12-16T05:00:18.365205+00:00\",\"entry\":\"huggyllama-llama-7b-mkmlizer:
+        \\rmodel-00001-of-00002.safetensors:  12%|\u2588\u258F        | 1.22G/9.98G
+        [00:01<00:06, 1.32GB/s]\\u001b[A\",\"level\":\"INFO\",\"line_number\":120,\"path\":\"/home/robert/work/chai_guanaco/guanaco_services/src/guanaco_model_service/job_runner.py\"},{\"timestamp\":\"2023-12-16T05:00:18.482844+00:00\",\"entry\":\"huggyllama-llama-7b-mkmlizer:
+        \\rmodel-00001-of-00002.safetensors:  14%|\u2588\u258D        | 1.37G/9.98G
+        [00:01<00:07, 1.12GB/s]\\u001b[A\",\"level\":\"INFO\",\"line_number\":120,\"path\":\"/home/robert/work/chai_guanaco/guanaco_services/src/guanaco_model_service/job_runner.py\"},{\"timestamp\":\"2023-12-16T05:00:18.585204+00:00\",\"entry\":\"huggyllama-llama-7b-mkmlizer:
+        \\rmodel-00001-of-00002.safetensors:  15%|\u2588\u258C        | 1.51G/9.98G
+        [00:01<00:08, 1.03GB/s]\\u001b[A\",\"level\":\"INFO\",\"line_number\":120,\"path\":\"/home/robert/work/chai_guanaco/guanaco_services/src/guanaco_model_service/job_runner.py\"},{\"timestamp\":\"2023-12-16T05:00:18.689893+00:00\",\"entry\":\"huggyllama-llama-7b-mkmlizer:
+        \\rmodel-00001-of-00002.safetensors:  16%|\u2588\u258B        | 1.64G/9.98G
+        [00:02<00:08, 953MB/s] \\u001b[A\",\"level\":\"INFO\",\"line_number\":120,\"path\":\"/home/robert/work/chai_guanaco/guanaco_services/src/guanaco_model_service/job_runner.py\"},{\"timestamp\":\"2023-12-16T05:00:18.786018+00:00\",\"entry\":\"huggyllama-llama-7b-mkmlizer:
+        \\rmodel-00001-of-00002.safetensors:  18%|\u2588\u258A        | 1.82G/9.98G
+        [00:02<00:07, 1.14GB/s]\\u001b[A\",\"level\":\"INFO\",\"line_number\":120,\"path\":\"/home/robert/work/chai_guanaco/guanaco_services/src/guanaco_model_service/job_runner.py\"},{\"timestamp\":\"2023-12-16T05:00:18.889025+00:00\",\"entry\":\"huggyllama-llama-7b-mkmlizer:
+        \\rmodel-00001-of-00002.safetensors:  20%|\u2588\u2588        | 2.02G/9.98G
+        [00:02<00:05, 1.33GB/s]\\u001b[A\",\"level\":\"INFO\",\"line_number\":120,\"path\":\"/home/robert/work/chai_guanaco/guanaco_services/src/guanaco_model_service/job_runner.py\"},{\"timestamp\":\"2023-12-16T05:00:29.474758+00:00\",\"entry\":\"huggyllama-llama-7b-mkmlizer:
+        \\rmodel-00001-of-00002.safetensors:  81%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588
+        \ | 8.08G/9.98G [00:07<00:01, 1.62GB/s]\\u001b[A\",\"level\":\"INFO\",\"line_number\":120,\"path\":\"/home/robert/work/chai_guanaco/guanaco_services/src/guanaco_model_service/job_runner.py\"},{\"timestamp\":\"2023-12-16T05:00:29.599108+00:00\",\"entry\":\"huggyllama-llama-7b-mkmlizer:
+        \\rmodel-00001-of-00002.safetensors:  83%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u258E
+        | 8.26G/9.98G [00:07<00:01, 1.64GB/s]\\u001b[A\",\"level\":\"INFO\",\"line_number\":120,\"path\":\"/home/robert/work/chai_guanaco/guanaco_services/src/guanaco_model_service/job_runner.py\"},{\"timestamp\":\"2023-12-16T05:00:29.704558+00:00\",\"entry\":\"huggyllama-llama-7b-mkmlizer:
+        \\rmodel-00001-of-00002.safetensors:  85%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u258D
+        | 8.47G/9.98G [00:07<00:00, 1.73GB/s]\\u001b[A\",\"level\":\"INFO\",\"line_number\":120,\"path\":\"/home/robert/work/chai_guanaco/guanaco_services/src/guanaco_model_service/job_runner.py\"},{\"timestamp\":\"2023-12-16T05:00:29.836648+00:00\",\"entry\":\"huggyllama-llama-7b-mkmlizer:
+        \\rmodel-00001-of-00002.safetensors:  87%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u258B
+        | 8.69G/9.98G [00:07<00:00, 1.66GB/s]\\u001b[A\",\"level\":\"INFO\",\"line_number\":120,\"path\":\"/home/robert/work/chai_guanaco/guanaco_services/src/guanaco_model_service/job_runner.py\"},{\"timestamp\":\"2023-12-16T05:00:29.956992+00:00\",\"entry\":\"huggyllama-llama-7b-mkmlizer:
+        \\rmodel-00001-of-00002.safetensors:  89%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2589
+        | 8.87G/9.98G [00:08<00:00, 1.17GB/s]\\u001b[A\",\"level\":\"INFO\",\"line_number\":120,\"path\":\"/home/robert/work/chai_guanaco/guanaco_services/src/guanaco_model_service/job_runner.py\"},{\"timestamp\":\"2023-12-16T05:00:30.052175+00:00\",\"entry\":\"huggyllama-llama-7b-mkmlizer:
+        \\rmodel-00001-of-00002.safetensors:  91%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588
+        | 9.07G/9.98G [00:08<00:00, 1.33GB/s]\\u001b[A\",\"level\":\"INFO\",\"line_number\":120,\"path\":\"/home/robert/work/chai_guanaco/guanaco_services/src/guanaco_model_service/job_runner.py\"},{\"timestamp\":\"2023-12-16T05:00:30.160475+00:00\",\"entry\":\"huggyllama-llama-7b-mkmlizer:
+        \\rmodel-00001-of-00002.safetensors:  93%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u258E|
+        9.26G/9.98G [00:08<00:00, 1.37GB/s]\\u001b[A\",\"level\":\"INFO\",\"line_number\":120,\"path\":\"/home/robert/work/chai_guanaco/guanaco_services/src/guanaco_model_service/job_runner.py\"},{\"timestamp\":\"2023-12-16T05:00:30.277925+00:00\",\"entry\":\"huggyllama-llama-7b-mkmlizer:
+        \\rmodel-00001-of-00002.safetensors:  94%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u258D|
+        9.42G/9.98G [00:08<00:00, 930MB/s] \\u001b[A\",\"level\":\"INFO\",\"line_number\":120,\"path\":\"/home/robert/work/chai_guanaco/guanaco_services/src/guanaco_model_service/job_runner.py\"},{\"timestamp\":\"2023-12-16T05:00:30.395898+00:00\",\"entry\":\"huggyllama-llama-7b-mkmlizer:
+        \\rmodel-00001-of-00002.safetensors:  96%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u258C|
+        9.55G/9.98G [00:09<00:00, 677MB/s]\\u001b[A\",\"level\":\"INFO\",\"line_number\":120,\"path\":\"/home/robert/work/chai_guanaco/guanaco_services/src/guanaco_model_service/job_runner.py\"},{\"timestamp\":\"2023-12-16T05:00:30.502449+00:00\",\"entry\":\"huggyllama-llama-7b-mkmlizer:
+        \\rmodel-00001-of-00002.safetensors:  97%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u258B|
+        9.65G/9.98G [00:09<00:00, 614MB/s]\\u001b[A\",\"level\":\"INFO\",\"line_number\":120,\"path\":\"/home/robert/work/chai_guanaco/guanaco_services/src/guanaco_model_service/job_runner.py\"},{\"timestamp\":\"2023-12-16T05:00:30.624445+00:00\",\"entry\":\"huggyllama-llama-7b-mkmlizer:
+        \\rmodel-00001-of-00002.safetensors:  98%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u258A|
+        9.79G/9.98G [00:09<00:00, 661MB/s]\\u001b[A\\rmodel-00001-of-00002.safetensors:
+        100%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2589| 9.98G/9.98G
+        [00:09<00:00, 1.04GB/s]\",\"level\":\"INFO\",\"line_number\":120,\"path\":\"/home/robert/work/chai_guanaco/guanaco_services/src/guanaco_model_service/job_runner.py\"},{\"timestamp\":\"2023-12-16T05:00:30.732272+00:00\",\"entry\":\"huggyllama-llama-7b-mkmlizer:
+        \\rDownloading shards:  50%|\u2588\u2588\u2588\u2588\u2588     | 1/2 [00:09<00:09,
+        \ 9.70s/it]\",\"level\":\"INFO\",\"line_number\":120,\"path\":\"/home/robert/work/chai_guanaco/guanaco_services/src/guanaco_model_service/job_runner.py\"},{\"timestamp\":\"2023-12-16T05:00:30.836823+00:00\",\"entry\":\"huggyllama-llama-7b-mkmlizer:
+        \\rmodel-00002-of-00002.safetensors:   0%|          | 0.00/3.50G [00:00<?,
+        ?B/s]\\u001b[A\",\"level\":\"INFO\",\"line_number\":120,\"path\":\"/home/robert/work/chai_guanaco/guanaco_services/src/guanaco_model_service/job_runner.py\"},{\"timestamp\":\"2023-12-16T05:00:30.944995+00:00\",\"entry\":\"huggyllama-llama-7b-mkmlizer:
+        \\rmodel-00002-of-00002.safetensors:   0%|          | 10.5M/3.50G [00:00<01:13,
+        47.5MB/s]\\u001b[A\",\"level\":\"INFO\",\"line_number\":120,\"path\":\"/home/robert/work/chai_guanaco/guanaco_services/src/guanaco_model_service/job_runner.py\"},{\"timestamp\":\"2023-12-16T05:00:31.065385+00:00\",\"entry\":\"huggyllama-llama-7b-mkmlizer:
+        \\rmodel-00002-of-00002.safetensors:   1%|          | 21.0M/3.50G [00:00<01:01,
+        56.6MB/s]\\u001b[A\",\"level\":\"INFO\",\"line_number\":120,\"path\":\"/home/robert/work/chai_guanaco/guanaco_services/src/guanaco_model_service/job_runner.py\"},{\"timestamp\":\"2023-12-16T05:00:31.176596+00:00\",\"entry\":\"huggyllama-llama-7b-mkmlizer:
+        \\rmodel-00002-of-00002.safetensors:   1%|          | 41.9M/3.50G [00:00<00:34,
+        102MB/s] \\u001b[A\",\"level\":\"INFO\",\"line_number\":120,\"path\":\"/home/robert/work/chai_guanaco/guanaco_services/src/guanaco_model_service/job_runner.py\"},{\"timestamp\":\"2023-12-16T05:00:31.283678+00:00\",\"entry\":\"huggyllama-llama-7b-mkmlizer:
+        \\rmodel-00002-of-00002.safetensors:   3%|\u258E         | 105M/3.50G [00:00<00:13,
+        247MB/s] \\u001b[A\",\"level\":\"INFO\",\"line_number\":120,\"path\":\"/home/robert/work/chai_guanaco/guanaco_services/src/guanaco_model_service/job_runner.py\"},{\"timestamp\":\"2023-12-16T05:00:31.391554+00:00\",\"entry\":\"huggyllama-llama-7b-mkmlizer:
+        \\rmodel-00002-of-00002.safetensors:   5%|\u258C         | 178M/3.50G [00:00<00:08,
+        375MB/s]\\u001b[A\",\"level\":\"INFO\",\"line_number\":120,\"path\":\"/home/robert/work/chai_guanaco/guanaco_services/src/guanaco_model_service/job_runner.py\"},{\"timestamp\":\"2023-12-16T05:00:31.493301+00:00\",\"entry\":\"huggyllama-llama-7b-mkmlizer:
+        \\rmodel-00002-of-00002.safetensors:   7%|\u258B         | 262M/3.50G [00:00<00:06,
+        498MB/s]\\u001b[A\",\"level\":\"INFO\",\"line_number\":120,\"path\":\"/home/robert/work/chai_guanaco/guanaco_services/src/guanaco_model_service/job_runner.py\"},{\"timestamp\":\"2023-12-16T05:00:31.594470+00:00\",\"entry\":\"huggyllama-llama-7b-mkmlizer:
+        \\rmodel-00002-of-00002.safetensors:  13%|\u2588\u258E        | 451M/3.50G
+        [00:00<00:03, 896MB/s]\\u001b[A\",\"level\":\"INFO\",\"line_number\":120,\"path\":\"/home/robert/work/chai_guanaco/guanaco_services/src/guanaco_model_service/job_runner.py\"},{\"timestamp\":\"2023-12-16T05:00:31.697252+00:00\",\"entry\":\"huggyllama-llama-7b-mkmlizer:
+        \\rmodel-00002-of-00002.safetensors:  19%|\u2588\u2589        | 682M/3.50G
+        [00:01<00:02, 1.30GB/s]\\u001b[A\",\"level\":\"INFO\",\"line_number\":120,\"path\":\"/home/robert/work/chai_guanaco/guanaco_services/src/guanaco_model_service/job_runner.py\"},{\"timestamp\":\"2023-12-16T05:00:31.800333+00:00\",\"entry\":\"huggyllama-llama-7b-mkmlizer:
+        \\rmodel-00002-of-00002.safetensors:  24%|\u2588\u2588\u258E       | 828M/3.50G
+        [00:01<00:02, 1.20GB/s]\\u001b[A\",\"level\":\"INFO\",\"line_number\":120,\"path\":\"/home/robert/work/chai_guanaco/guanaco_services/src/guanaco_model_service/job_runner.py\"},{\"timestamp\":\"2023-12-16T05:00:31.915455+00:00\",\"entry\":\"huggyllama-llama-7b-mkmlizer:
+        \\rmodel-00002-of-00002.safetensors:  28%|\u2588\u2588\u258A       | 996M/3.50G
+        [00:01<00:01, 1.31GB/s]\\u001b[A\",\"level\":\"INFO\",\"line_number\":120,\"path\":\"/home/robert/work/chai_guanaco/guanaco_services/src/guanaco_model_service/job_runner.py\"},{\"timestamp\":\"2023-12-16T05:00:32.020808+00:00\",\"entry\":\"huggyllama-llama-7b-mkmlizer:
+        \\rmodel-00002-of-00002.safetensors:  33%|\u2588\u2588\u2588\u258E      |
+        1.14G/3.50G [00:01<00:01, 1.33GB/s]\\u001b[A\",\"level\":\"INFO\",\"line_number\":120,\"path\":\"/home/robert/work/chai_guanaco/guanaco_services/src/guanaco_model_service/job_runner.py\"},{\"timestamp\":\"2023-12-16T05:00:32.130392+00:00\",\"entry\":\"huggyllama-llama-7b-mkmlizer:
+        \\rmodel-00002-of-00002.safetensors:  37%|\u2588\u2588\u2588\u258B      |
+        1.31G/3.50G [00:01<00:01, 1.41GB/s]\\u001b[A\",\"level\":\"INFO\",\"line_number\":120,\"path\":\"/home/robert/work/chai_guanaco/guanaco_services/src/guanaco_model_service/job_runner.py\"},{\"timestamp\":\"2023-12-16T05:00:32.235878+00:00\",\"entry\":\"huggyllama-llama-7b-mkmlizer:
+        \\rmodel-00002-of-00002.safetensors:  42%|\u2588\u2588\u2588\u2588\u258F     |
+        1.46G/3.50G [00:01<00:01, 1.35GB/s]\\u001b[A\",\"level\":\"INFO\",\"line_number\":120,\"path\":\"/home/robert/work/chai_guanaco/guanaco_services/src/guanaco_model_service/job_runner.py\"},{\"timestamp\":\"2023-12-16T05:00:32.338116+00:00\",\"entry\":\"huggyllama-llama-7b-mkmlizer:
+        \\rmodel-00002-of-00002.safetensors:  46%|\u2588\u2588\u2588\u2588\u258C     |
+        1.60G/3.50G [00:01<00:01, 1.14GB/s]\\u001b[A\",\"level\":\"INFO\",\"line_number\":120,\"path\":\"/home/robert/work/chai_guanaco/guanaco_services/src/guanaco_model_service/job_runner.py\"},{\"timestamp\":\"2023-12-16T05:00:32.450280+00:00\",\"entry\":\"huggyllama-llama-7b-mkmlizer:
+        \\rmodel-00002-of-00002.safetensors:  49%|\u2588\u2588\u2588\u2588\u2589     |
+        1.73G/3.50G [00:01<00:01, 1.14GB/s]\\u001b[A\",\"level\":\"INFO\",\"line_number\":120,\"path\":\"/home/robert/work/chai_guanaco/guanaco_services/src/guanaco_model_service/job_runner.py\"},{\"timestamp\":\"2023-12-16T05:00:32.559690+00:00\",\"entry\":\"huggyllama-llama-7b-mkmlizer:
+        \\rmodel-00002-of-00002.safetensors:  54%|\u2588\u2588\u2588\u2588\u2588\u258D
+        \   | 1.89G/3.50G [00:02<00:01, 1.24GB/s]\\u001b[A\",\"level\":\"INFO\",\"line_number\":120,\"path\":\"/home/robert/work/chai_guanaco/guanaco_services/src/guanaco_model_service/job_runner.py\"},{\"timestamp\":\"2023-12-16T05:00:32.662921+00:00\",\"entry\":\"huggyllama-llama-7b-mkmlizer:
+        \\rmodel-00002-of-00002.safetensors:  58%|\u2588\u2588\u2588\u2588\u2588\u258A
+        \   | 2.02G/3.50G [00:02<00:01, 1.20GB/s]\\u001b[A\",\"level\":\"INFO\",\"line_number\":120,\"path\":\"/home/robert/work/chai_guanaco/guanaco_services/src/guanaco_model_service/job_runner.py\"},{\"timestamp\":\"2023-12-16T05:00:32.767304+00:00\",\"entry\":\"huggyllama-llama-7b-mkmlizer:
+        \\rmodel-00002-of-00002.safetensors:  61%|\u2588\u2588\u2588\u2588\u2588\u2588\u258F
+        \  | 2.15G/3.50G [00:02<00:01, 1.08GB/s]\\u001b[A\",\"level\":\"INFO\",\"line_number\":120,\"path\":\"/home/robert/work/chai_guanaco/guanaco_services/src/guanaco_model_service/job_runner.py\"},{\"timestamp\":\"2023-12-16T05:00:32.895263+00:00\",\"entry\":\"huggyllama-llama-7b-mkmlizer:
+        \\rmodel-00002-of-00002.safetensors:  67%|\u2588\u2588\u2588\u2588\u2588\u2588\u258B
+        \  | 2.33G/3.50G [00:02<00:00, 1.18GB/s]\\u001b[A\",\"level\":\"INFO\",\"line_number\":120,\"path\":\"/home/robert/work/chai_guanaco/guanaco_services/src/guanaco_model_service/job_runner.py\"},{\"timestamp\":\"2023-12-16T05:00:33.051442+00:00\",\"entry\":\"huggyllama-llama-7b-mkmlizer:
+        \\rmodel-00002-of-00002.safetensors:  71%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588
+        \  | 2.47G/3.50G [00:02<00:00, 1.18GB/s]\\u001b[A\",\"level\":\"INFO\",\"line_number\":120,\"path\":\"/home/robert/work/chai_guanaco/guanaco_services/src/guanaco_model_service/job_runner.py\"},{\"timestamp\":\"2023-12-16T05:00:33.201473+00:00\",\"entry\":\"huggyllama-llama-7b-mkmlizer:
+        \\rmodel-00002-of-00002.safetensors:  75%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u258D
+        \ | 2.62G/3.50G [00:02<00:00, 1.24GB/s]\\u001b[A\",\"level\":\"INFO\",\"line_number\":120,\"path\":\"/home/robert/work/chai_guanaco/guanaco_services/src/guanaco_model_service/job_runner.py\"},{\"timestamp\":\"2023-12-16T05:00:33.300650+00:00\",\"entry\":\"huggyllama-llama-7b-mkmlizer:
+        \\rmodel-00002-of-00002.safetensors:  79%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2589
+        \ | 2.76G/3.50G [00:02<00:00, 1.24GB/s]\\u001b[A\",\"level\":\"INFO\",\"line_number\":120,\"path\":\"/home/robert/work/chai_guanaco/guanaco_services/src/guanaco_model_service/job_runner.py\"},{\"timestamp\":\"2023-12-16T05:00:33.405368+00:00\",\"entry\":\"huggyllama-llama-7b-mkmlizer:
+        \\rmodel-00002-of-00002.safetensors:  84%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u258D
+        | 2.95G/3.50G [00:02<00:00, 1.40GB/s]\\u001b[A\",\"level\":\"INFO\",\"line_number\":120,\"path\":\"/home/robert/work/chai_guanaco/guanaco_services/src/guanaco_model_service/job_runner.py\"},{\"timestamp\":\"2023-12-16T05:00:33.518327+00:00\",\"entry\":\"huggyllama-llama-7b-mkmlizer:
+        \\rmodel-00002-of-00002.safetensors:  92%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u258F|
+        3.21G/3.50G [00:02<00:00, 1.73GB/s]\\u001b[A\",\"level\":\"INFO\",\"line_number\":120,\"path\":\"/home/robert/work/chai_guanaco/guanaco_services/src/guanaco_model_service/job_runner.py\"},{\"timestamp\":\"2023-12-16T05:00:33.615103+00:00\",\"entry\":\"huggyllama-llama-7b-mkmlizer:
+        \\rmodel-00002-of-00002.safetensors:  99%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u258A|
+        3.45G/3.50G [00:03<00:00, 1.92GB/s]\\u001b[A\\rmodel-00002-of-00002.safetensors:
+        100%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2589| 3.50G/3.50G
+        [00:05<00:00, 689MB/s] \",\"level\":\"INFO\",\"line_number\":120,\"path\":\"/home/robert/work/chai_guanaco/guanaco_services/src/guanaco_model_service/job_runner.py\"},{\"timestamp\":\"2023-12-16T05:00:33.713700+00:00\",\"entry\":\"huggyllama-llama-7b-mkmlizer:
+        \\rDownloading shards: 100%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588|
+        2/2 [00:14<00:00,  7.04s/it]\\rDownloading shards: 100%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588|
+        2/2 [00:14<00:00,  7.44s/it]\",\"level\":\"INFO\",\"line_number\":120,\"path\":\"/home/robert/work/chai_guanaco/guanaco_services/src/guanaco_model_service/job_runner.py\"},{\"timestamp\":\"2023-12-16T05:00:33.817890+00:00\",\"entry\":\"huggyllama-llama-7b-mkmlizer:
+        \\rLoading checkpoint shards:   0%|          | 0/2 [00:00<?, ?it/s]\\rLoading
+        checkpoint shards:  50%|\u2588\u2588\u2588\u2588\u2588     | 1/2 [00:01<00:01,
+        \ 1.22s/it]\\rLoading checkpoint shards: 100%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588|
+        2/2 [00:01<00:00,  1.26it/s]\\rLoading checkpoint shards: 100%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588|
+        2/2 [00:01<00:00,  1.17it/s]\",\"level\":\"INFO\",\"line_number\":120,\"path\":\"/home/robert/work/chai_guanaco/guanaco_services/src/guanaco_model_service/job_runner.py\"},{\"timestamp\":\"2023-12-16T05:00:33.921944+00:00\",\"entry\":\"huggyllama-llama-7b-mkmlizer:
+        \\rgeneration_config.json:   0%|          | 0.00/137 [00:00<?, ?B/s]\\rgeneration_config.json:
+        100%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588| 137/137
+        [00:00<00:00, 937kB/s]\",\"level\":\"INFO\",\"line_number\":120,\"path\":\"/home/robert/work/chai_guanaco/guanaco_services/src/guanaco_model_service/job_runner.py\"},{\"timestamp\":\"2023-12-16T05:00:34.043530+00:00\",\"entry\":\"huggyllama-llama-7b-mkmlizer:
+        loaded model in 18.374s\",\"level\":\"INFO\",\"line_number\":120,\"path\":\"/home/robert/work/chai_guanaco/guanaco_services/src/guanaco_model_service/job_runner.py\"},{\"timestamp\":\"2023-12-16T05:01:08.067862+00:00\",\"entry\":\"huggyllama-llama-7b-mkmlizer:
+        saved to disk in 34.824s\",\"level\":\"INFO\",\"line_number\":120,\"path\":\"/home/robert/work/chai_guanaco/guanaco_services/src/guanaco_model_service/job_runner.py\"},{\"timestamp\":\"2023-12-16T05:01:08.207159+00:00\",\"entry\":\"huggyllama-llama-7b-mkmlizer:
+        quantizing model to /tmp/model_cache\",\"level\":\"INFO\",\"line_number\":120,\"path\":\"/home/robert/work/chai_guanaco/guanaco_services/src/guanaco_model_service/job_runner.py\"},{\"timestamp\":\"2023-12-16T05:01:08.328847+00:00\",\"entry\":\"huggyllama-llama-7b-mkmlizer:
+        Saving mkml model at /tmp/model_cache\",\"level\":\"INFO\",\"line_number\":120,\"path\":\"/home/robert/work/chai_guanaco/guanaco_services/src/guanaco_model_service/job_runner.py\"},{\"timestamp\":\"2023-12-16T05:01:08.451817+00:00\",\"entry\":\"huggyllama-llama-7b-mkmlizer:
+        Reading /tmp/tmp4kjvy5z1/model.safetensors.index.json\",\"level\":\"INFO\",\"line_number\":120,\"path\":\"/home/robert/work/chai_guanaco/guanaco_services/src/guanaco_model_service/job_runner.py\"},{\"timestamp\":\"2023-12-16T05:02:23.153892+00:00\",\"entry\":\"huggyllama-llama-7b-mkmlizer:
+        \\rProfiling:   0%|          | 0/291 [00:00<?, ?it/s]\\rProfiling:   0%|          |
+        1/291 [00:00<04:49,  1.00it/s]\\rProfiling:   1%|          | 3/291 [00:01<02:05,
+        \ 2.30it/s]\\rProfiling:   1%|\u258F         | 4/291 [00:01<02:07,  2.26it/s]\\rProfiling:
+        \  2%|\u258F         | 5/291 [00:02<02:06,  2.26it/s]\\rProfiling:   2%|\u258F
+        \        | 7/291 [00:02<01:22,  3.45it/s]\\rProfiling:   3%|\u258E         |
+        8/291 [00:02<01:17,  3.67it/s]\\rProfiling:   3%|\u258E         | 9/291 [00:03<01:11,
+        \ 3.97it/s]\\rProfiling:   3%|\u258E         | 10/291 [00:03<01:06,  4.21it/s]\\rProfiling:
+        \  4%|\u258D         | 12/291 [00:03<01:05,  4.28it/s]\\rProfiling:   4%|\u258D
+        \        | 13/291 [00:04<01:20,  3.46it/s]\\rProfiling:   5%|\u258D         |
+        14/291 [00:04<01:46,  2.61it/s]\\rProfiling:   5%|\u258C         | 16/291
+        [00:05<01:13,  3.75it/s]\\rProfiling:   6%|\u258C         | 17/291 [00:05<01:08,
+        \ 3.98it/s]\\rProfiling:   6%|\u258C         | 18/291 [00:05<01:05,  4.19it/s]\\rProfiling:
+        \  7%|\u258B         | 19/291 [00:05<01:02,  4.36it/s]\\rProfiling:   7%|\u258B
+        \        | 21/291 [00:06<01:01,  4.39it/s]\\rProfiling:   8%|\u258A         |
+        22/291 [00:06<01:16,  3.54it/s]\\rProfiling:   8%|\u258A         | 23/291
+        [00:07<01:29,  2.98it/s]\\rProfiling:   9%|\u258A         | 25/291 [00:07<01:04,
+        \ 4.13it/s]\\rProfiling:   9%|\u2589         | 26/291 [00:07<01:01,  4.29it/s]\\rProfiling:
+        \  9%|\u2589         | 27/291 [00:07<00:59,  4.41it/s]\\rProfiling:  10%|\u2589
+        \        | 28/291 [00:07<00:58,  4.53it/s]\\rProfiling:  10%|\u2588         |
+        30/291 [00:08<00:58,  4.48it/s]\\rProfiling:  11%|\u2588         | 31/291
+        [00:08<01:13,  3.56it/s]\\rProfiling:  11%|\u2588         | 32/291 [00:09<01:23,
+        \ 3.09it/s]\\rProfiling:  12%|\u2588\u258F        | 34/291 [00:09<00:59,  4.31it/s]\\rProfiling:
+        \ 12%|\u2588\u258F        | 35/291 [00:09<00:57,  4.49it/s]\\rProfiling:  12%|\u2588\u258F
+        \       | 36/291 [00:09<00:56,  4.54it/s]\\rProfiling:  13%|\u2588\u258E        |
+        37/291 [00:10<00:54,  4.67it/s]\\rProfiling:  13%|\u2588\u258E        | 39/291
+        [00:10<00:56,  4.46it/s]\\rProfiling:  14%|\u2588\u258E        | 40/291 [00:11<01:11,
+        \ 3.52it/s]\\rProfiling:  14%|\u2588\u258D        | 41/291 [00:11<01:21,  3.07it/s]\\rProfiling:
+        \ 15%|\u2588\u258D        | 43/291 [00:11<00:57,  4.29it/s]\\rProfiling:  15%|\u2588\u258C
+        \       | 44/291 [00:11<00:55,  4.45it/s]\\rProfiling:  15%|\u2588\u258C        |
+        45/291 [00:12<00:54,  4.54it/s]\\rProfiling:  16%|\u2588\u258C        | 46/291
+        [00:12<00:52,  4.65it/s]\\rProfiling:  16%|\u2588\u258C        | 47/291 [00:12<00:54,
+        \ 4.45it/s]\\rProfiling:  16%|\u2588\u258B        | 48/291 [00:12<00:53,  4.58it/s]\\rProfiling:
+        \ 17%|\u2588\u258B        | 49/291 [00:12<00:52,  4.64it/s]\\rProfiling:  17%|\u2588\u258B
+        \       | 50/291 [00:13<00:51,  4.70it/s]\\rProfiling:  18%|\u2588\u258A        |
+        52/291 [00:13<00:56,  4.26it/s]\\rProfiling:  18%|\u2588\u258A        | 53/291
+        [00:14<01:08,  3.49it/s]\\rProfiling:  19%|\u2588\u258A        | 54/291 [00:14<01:18,
+        \ 3.03it/s]\\rProfiling:  19%|\u2588\u2589        | 56/291 [00:14<00:55,  4.24it/s]\\rProfiling:
+        \ 20%|\u2588\u2589        | 57/291 [00:14<00:52,  4.43it/s]\\rProfiling:  20%|\u2588\u2589
+        \       | 58/291 [00:15<00:50,  4.63it/s]\\rProfiling:  20%|\u2588\u2588        |
+        59/291 [00:15<00:50,  4.63it/s]\\rProfiling:  21%|\u2588\u2588        | 60/291
+        [00:15<00:50,  4.53it/s]\\rProfiling:  21%|\u2588\u2588        | 61/291 [00:15<00:50,
+        \ 4.59it/s]\\rProfiling:  21%|\u2588\u2588\u258F       | 62/291 [00:16<00:48,
+        \ 4.73it/s]\\rProfiling:  22%|\u2588\u2588\u258F       | 63/291 [00:16<00:46,
+        \ 4.86it/s]\\rProfiling:  22%|\u2588\u2588\u258F       | 65/291 [00:16<00:50,
+        \ 4.52it/s]\\rProfiling:  23%|\u2588\u2588\u258E       | 66/291 [00:17<01:04,
+        \ 3.51it/s]\\rProfiling:  23%|\u2588\u2588\u258E       | 67/291 [00:17<01:13,
+        \ 3.04it/s]\\rProfiling:  24%|\u2588\u2588\u258D       | 70/291 [00:18<00:51,
+        \ 4.28it/s]\\rProfiling:  24%|\u2588\u2588\u258D       | 71/291 [00:18<01:10,
+        \ 3.10it/s]\\rProfiling:  25%|\u2588\u2588\u258D       | 72/291 [00:19<01:17,
+        \ 2.84it/s]\\rProfiling:  25%|\u2588\u2588\u258C       | 74/291 [00:19<00:55,
+        \ 3.92it/s]\\rProfiling:  26%|\u2588\u2588\u258C       | 75/291 [00:19<00:51,
+        \ 4.18it/s]\\rProfiling:  26%|\u2588\u2588\u258C       | 76/291 [00:19<00:49,
+        \ 4.36it/s]\\rProfiling:  26%|\u2588\u2588\u258B       | 77/291 [00:19<00:46,
+        \ 4.63it/s]\\rProfiling:  27%|\u2588\u2588\u258B       | 79/291 [00:20<00:47,
+        \ 4.44it/s]\\rProfiling:  27%|\u2588\u2588\u258B       | 80/291 [00:20<00:59,
+        \ 3.57it/s]\\rProfiling:  28%|\u2588\u2588\u258A       | 81/291 [00:21<01:09,
+        \ 3.02it/s]\\rProfiling:  29%|\u2588\u2588\u258A       | 83/291 [00:21<00:49,
+        \ 4.20it/s]\\rProfiling:  29%|\u2588\u2588\u2589       | 84/291 [00:21<00:46,
+        \ 4.45it/s]\\rProfiling:  29%|\u2588\u2588\u2589       | 85/291 [00:21<00:43,
+        \ 4.70it/s]\\rProfiling:  30%|\u2588\u2588\u2589       | 86/291 [00:22<00:41,
+        \ 4.92it/s]\\rProfiling:  30%|\u2588\u2588\u2588       | 88/291 [00:22<00:46,
+        \ 4.33it/s]\\rProfiling:  31%|\u2588\u2588\u2588       | 89/291 [00:23<00:56,
+        \ 3.55it/s]\\rProfiling:  31%|\u2588\u2588\u2588       | 90/291 [00:23<01:04,
+        \ 3.10it/s]\\rProfiling:  32%|\u2588\u2588\u2588\u258F      | 92/291 [00:23<00:45,
+        \ 4.40it/s]\\rProfiling:  32%|\u2588\u2588\u2588\u258F      | 93/291 [00:23<00:42,
+        \ 4.63it/s]\\rProfiling:  32%|\u2588\u2588\u2588\u258F      | 94/291 [00:24<00:41,
+        \ 4.76it/s]\\rProfiling:  33%|\u2588\u2588\u2588\u258E      | 95/291 [00:24<00:40,
+        \ 4.81it/s]\\rProfiling:  33%|\u2588\u2588\u2588\u258E      | 97/291 [00:24<00:42,
+        \ 4.53it/s]\\rProfiling:  34%|\u2588\u2588\u2588\u258E      | 98/291 [00:25<00:52,
+        \ 3.64it/s]\\rProfiling:  34%|\u2588\u2588\u2588\u258D      | 99/291 [00:25<01:02,
+        \ 3.05it/s]\\rProfiling:  35%|\u2588\u2588\u2588\u258D      | 101/291 [00:25<00:45,
+        \ 4.17it/s]\\rProfiling:  35%|\u2588\u2588\u2588\u258C      | 102/291 [00:26<00:43,
+        \ 4.32it/s]\\rProfiling:  35%|\u2588\u2588\u2588\u258C      | 103/291 [00:26<00:41,
+        \ 4.48it/s]\\rProfiling:  36%|\u2588\u2588\u2588\u258C      | 104/291 [00:26<00:40,
+        \ 4.66it/s]\\rProfiling:  36%|\u2588\u2588\u2588\u258B      | 106/291 [00:27<00:42,
+        \ 4.33it/s]\\rProfiling:  37%|\u2588\u2588\u2588\u258B      | 107/291 [00:27<00:55,
+        \ 3.34it/s]\\rProfiling:  37%|\u2588\u2588\u2588\u258B      | 108/291 [00:28<01:01,
+        \ 2.99it/s]\\rProfiling:  38%|\u2588\u2588\u2588\u258A      | 111/291 [00:28<00:42,
+        \ 4.21it/s]\\rProfiling:  38%|\u2588\u2588\u2588\u258A      | 112/291 [00:28<00:49,
+        \ 3.59it/s]\\rProfiling:  39%|\u2588\u2588\u2588\u2589      | 113/291 [00:29<00:56,
+        \ 3.17it/s]\\rProfiling:  40%|\u2588\u2588\u2588\u2589      | 115/291 [00:29<00:40,
+        \ 4.36it/s]\\rProfiling:  40%|\u2588\u2588\u2588\u2589      | 116/291 [00:29<00:38,
+        \ 4.59it/s]\\rProfiling:  40%|\u2588\u2588\u2588\u2588      | 117/291 [00:29<00:37,
+        \ 4.70it/s]\\rProfiling:  41%|\u2588\u2588\u2588\u2588      | 118/291 [00:30<00:35,
+        \ 4.92it/s]\\rProfiling:  41%|\u2588\u2588\u2588\u2588      | 120/291 [00:30<00:35,
+        \ 4.83it/s]\\rProfiling:  42%|\u2588\u2588\u2588\u2588\u258F     | 121/291
+        [00:30<00:44,  3.82it/s]\\rProfiling:  42%|\u2588\u2588\u2588\u2588\u258F
+        \    | 122/291 [00:31<00:51,  3.25it/s]\\rProfiling:  43%|\u2588\u2588\u2588\u2588\u258E
+        \    | 124/291 [00:31<00:38,  4.36it/s]\\rProfiling:  43%|\u2588\u2588\u2588\u2588\u258E
+        \    | 125/291 [00:31<00:36,  4.51it/s]\\rProfiling:  43%|\u2588\u2588\u2588\u2588\u258E
+        \    | 126/291 [00:32<00:35,  4.66it/s]\\rProfiling:  44%|\u2588\u2588\u2588\u2588\u258E
+        \    | 127/291 [00:32<00:34,  4.73it/s]\\rProfiling:  44%|\u2588\u2588\u2588\u2588\u258D
+        \    | 129/291 [00:32<00:35,  4.60it/s]\\rProfiling:  45%|\u2588\u2588\u2588\u2588\u258D
+        \    | 130/291 [00:33<00:46,  3.49it/s]\\rProfiling:  45%|\u2588\u2588\u2588\u2588\u258C
+        \    | 131/291 [00:33<00:53,  2.99it/s]\\rProfiling:  46%|\u2588\u2588\u2588\u2588\u258C
+        \    | 133/291 [00:33<00:36,  4.30it/s]\\rProfiling:  46%|\u2588\u2588\u2588\u2588\u258C
+        \    | 134/291 [00:34<00:34,  4.54it/s]\\rProfiling:  46%|\u2588\u2588\u2588\u2588\u258B
+        \    | 135/291 [00:34<00:32,  4.77it/s]\\rProfiling:  47%|\u2588\u2588\u2588\u2588\u258B
+        \    | 136/291 [00:34<00:31,  4.96it/s]\\rProfiling:  47%|\u2588\u2588\u2588\u2588\u258B
+        \    | 138/291 [00:34<00:32,  4.75it/s]\\rProfiling:  48%|\u2588\u2588\u2588\u2588\u258A
+        \    | 139/291 [00:35<00:40,  3.75it/s]\\rProfiling:  48%|\u2588\u2588\u2588\u2588\u258A
+        \    | 140/291 [00:35<00:47,  3.17it/s]\\rProfiling:  49%|\u2588\u2588\u2588\u2588\u2589
+        \    | 142/291 [00:36<00:34,  4.31it/s]\\rProfiling:  49%|\u2588\u2588\u2588\u2588\u2589
+        \    | 143/291 [00:36<00:32,  4.59it/s]\\rProfiling:  49%|\u2588\u2588\u2588\u2588\u2589
+        \    | 144/291 [00:36<00:30,  4.84it/s]\\rProfiling:  50%|\u2588\u2588\u2588\u2588\u2589
+        \    | 145/291 [00:36<00:28,  5.04it/s]\\rProfiling:  51%|\u2588\u2588\u2588\u2588\u2588
+        \    | 147/291 [00:36<00:29,  4.81it/s]\\rProfiling:  51%|\u2588\u2588\u2588\u2588\u2588
+        \    | 148/291 [00:37<00:37,  3.78it/s]\\rProfiling:  51%|\u2588\u2588\u2588\u2588\u2588
+        \    | 149/291 [00:37<00:44,  3.19it/s]\\rProfiling:  52%|\u2588\u2588\u2588\u2588\u2588\u258F
+        \   | 151/291 [00:38<00:31,  4.51it/s]\\rProfiling:  52%|\u2588\u2588\u2588\u2588\u2588\u258F
+        \   | 152/291 [00:38<00:29,  4.74it/s]\\rProfiling:  53%|\u2588\u2588\u2588\u2588\u2588\u258E
+        \   | 153/291 [00:38<00:28,  4.82it/s]\\rProfiling:  53%|\u2588\u2588\u2588\u2588\u2588\u258E
+        \   | 154/291 [00:38<00:27,  4.94it/s]\\rProfiling:  53%|\u2588\u2588\u2588\u2588\u2588\u258E
+        \   | 155/291 [00:38<00:27,  4.99it/s]\\rProfiling:  54%|\u2588\u2588\u2588\u2588\u2588\u258E
+        \   | 156/291 [00:39<00:26,  5.00it/s]\\rProfiling:  54%|\u2588\u2588\u2588\u2588\u2588\u258D
+        \   | 157/291 [00:39<00:25,  5.16it/s]\\rProfiling:  54%|\u2588\u2588\u2588\u2588\u2588\u258D
+        \   | 158/291 [00:39<00:25,  5.29it/s]\\rProfiling:  55%|\u2588\u2588\u2588\u2588\u2588\u258D
+        \   | 160/291 [00:40<00:37,  3.53it/s]\\rProfiling:  55%|\u2588\u2588\u2588\u2588\u2588\u258C
+        \   | 161/291 [00:40<00:41,  3.11it/s]\\rProfiling:  56%|\u2588\u2588\u2588\u2588\u2588\u258C
+        \   | 162/291 [00:41<00:45,  2.83it/s]\\rProfiling:  57%|\u2588\u2588\u2588\u2588\u2588\u258B
+        \   | 165/291 [00:41<00:30,  4.07it/s]\\rProfiling:  57%|\u2588\u2588\u2588\u2588\u2588\u258B
+        \   | 166/291 [00:41<00:35,  3.50it/s]\\rProfiling:  57%|\u2588\u2588\u2588\u2588\u2588\u258B
+        \   | 167/291 [00:42<00:39,  3.12it/s]\\rProfiling:  58%|\u2588\u2588\u2588\u2588\u2588\u258A
+        \   | 169/291 [00:42<00:28,  4.34it/s]\\rProfiling:  58%|\u2588\u2588\u2588\u2588\u2588\u258A
+        \   | 170/291 [00:42<00:26,  4.57it/s]\\rProfiling:  59%|\u2588\u2588\u2588\u2588\u2588\u2589
+        \   | 171/291 [00:42<00:24,  4.81it/s]\\rProfiling:  59%|\u2588\u2588\u2588\u2588\u2588\u2589
+        \   | 172/291 [00:43<00:23,  5.00it/s]\\rProfiling:  60%|\u2588\u2588\u2588\u2588\u2588\u2589
+        \   | 174/291 [00:43<00:24,  4.82it/s]\\rProfiling:  60%|\u2588\u2588\u2588\u2588\u2588\u2588
+        \   | 175/291 [00:43<00:30,  3.84it/s]\\rProfiling:  60%|\u2588\u2588\u2588\u2588\u2588\u2588
+        \   | 176/291 [00:44<00:35,  3.27it/s]\\rProfiling:  61%|\u2588\u2588\u2588\u2588\u2588\u2588
+        \   | 178/291 [00:44<00:24,  4.62it/s]\\rProfiling:  62%|\u2588\u2588\u2588\u2588\u2588\u2588\u258F
+        \  | 179/291 [00:44<00:23,  4.83it/s]\\rProfiling:  62%|\u2588\u2588\u2588\u2588\u2588\u2588\u258F
+        \  | 180/291 [00:44<00:22,  5.01it/s]\\rProfiling:  62%|\u2588\u2588\u2588\u2588\u2588\u2588\u258F
+        \  | 181/291 [00:45<00:21,  5.14it/s]\\rProfiling:  63%|\u2588\u2588\u2588\u2588\u2588\u2588\u258E
+        \  | 183/291 [00:45<00:22,  4.81it/s]\\rProfiling:  63%|\u2588\u2588\u2588\u2588\u2588\u2588\u258E
+        \  | 184/291 [00:46<00:28,  3.81it/s]\\rProfiling:  64%|\u2588\u2588\u2588\u2588\u2588\u2588\u258E
+        \  | 185/291 [00:46<00:32,  3.23it/s]\\rProfiling:  64%|\u2588\u2588\u2588\u2588\u2588\u2588\u258D
+        \  | 187/291 [00:46<00:23,  4.50it/s]\\rProfiling:  65%|\u2588\u2588\u2588\u2588\u2588\u2588\u258D
+        \  | 188/291 [00:46<00:22,  4.49it/s]\\rProfiling:  65%|\u2588\u2588\u2588\u2588\u2588\u2588\u258D
+        \  | 189/291 [00:47<00:21,  4.68it/s]\\rProfiling:  65%|\u2588\u2588\u2588\u2588\u2588\u2588\u258C
+        \  | 190/291 [00:47<00:21,  4.75it/s]\\rProfiling:  66%|\u2588\u2588\u2588\u2588\u2588\u2588\u258C
+        \  | 192/291 [00:47<00:21,  4.66it/s]\\rProfiling:  66%|\u2588\u2588\u2588\u2588\u2588\u2588\u258B
+        \  | 193/291 [00:48<00:26,  3.73it/s]\\rProfiling:  67%|\u2588\u2588\u2588\u2588\u2588\u2588\u258B
+        \  | 194/291 [00:48<00:30,  3.21it/s]\\rProfiling:  67%|\u2588\u2588\u2588\u2588\u2588\u2588\u258B
+        \  | 196/291 [00:48<00:20,  4.57it/s]\\rProfiling:  68%|\u2588\u2588\u2588\u2588\u2588\u2588\u258A
+        \  | 197/291 [00:48<00:19,  4.79it/s]\\rProfiling:  68%|\u2588\u2588\u2588\u2588\u2588\u2588\u258A
+        \  | 198/291 [00:49<00:18,  4.99it/s]\\rProfiling:  68%|\u2588\u2588\u2588\u2588\u2588\u2588\u258A
+        \  | 199/291 [00:49<00:17,  5.16it/s]\\rProfiling:  69%|\u2588\u2588\u2588\u2588\u2588\u2588\u2589
+        \  | 201/291 [00:49<00:18,  4.85it/s]\\rProfiling:  69%|\u2588\u2588\u2588\u2588\u2588\u2588\u2589
+        \  | 202/291 [00:50<00:23,  3.83it/s]\\rProfiling:  70%|\u2588\u2588\u2588\u2588\u2588\u2588\u2589
+        \  | 203/291 [00:50<00:26,  3.26it/s]\\rProfiling:  70%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588
+        \  | 205/291 [00:50<00:18,  4.56it/s]\\rProfiling:  71%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588
+        \  | 206/291 [00:51<00:18,  4.70it/s]\\rProfiling:  71%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588
+        \  | 207/291 [00:51<00:17,  4.82it/s]\\rProfiling:  71%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u258F
+        \ | 208/291 [00:51<00:16,  4.94it/s]\\rProfiling:  72%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u258F
+        \ | 209/291 [00:51<00:16,  5.07it/s]\\rProfiling:  72%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u258F
+        \ | 210/291 [00:51<00:16,  5.06it/s]\\rProfiling:  73%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u258E
+        \ | 211/291 [00:51<00:15,  5.10it/s]\\rProfiling:  73%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u258E
+        \ | 212/291 [00:52<00:15,  5.19it/s]\\rProfiling:  74%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u258E
+        \ | 214/291 [00:52<00:16,  4.62it/s]\\rProfiling:  74%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u258D
+        \ | 215/291 [00:53<00:22,  3.41it/s]\\rProfiling:  74%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u258D
+        \ | 216/291 [00:53<00:24,  3.01it/s]\\rProfiling:  75%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u258C
+        \ | 219/291 [00:54<00:16,  4.29it/s]\\rProfiling:  76%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u258C
+        \ | 220/291 [00:54<00:20,  3.48it/s]\\rProfiling:  76%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u258C
+        \ | 221/291 [00:55<00:23,  2.94it/s]\\rProfiling:  77%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u258B
+        \ | 223/291 [00:55<00:17,  3.91it/s]\\rProfiling:  77%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u258B
+        \ | 224/291 [00:55<00:15,  4.19it/s]\\rProfiling:  77%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u258B
+        \ | 225/291 [00:55<00:14,  4.43it/s]\\rProfiling:  78%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u258A
+        \ | 226/291 [00:55<00:13,  4.70it/s]\\rProfiling:  78%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u258A
+        \ | 228/291 [00:56<00:13,  4.64it/s]\\rProfiling:  79%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u258A
+        \ | 229/291 [00:56<00:16,  3.74it/s]\\rProfiling:  79%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2589
+        \ | 230/291 [00:57<00:18,  3.23it/s]\\rProfiling:  80%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2589
+        \ | 232/291 [00:57<00:13,  4.49it/s]\\rProfiling:  80%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588
+        \ | 233/291 [00:57<00:12,  4.64it/s]\\rProfiling:  80%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588
+        \ | 234/291 [00:57<00:11,  4.76it/s]\\rProfiling:  81%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588
+        \ | 235/291 [00:57<00:11,  4.86it/s]\\rProfiling:  81%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u258F
+        | 237/291 [00:58<00:11,  4.74it/s]\\rProfiling:  82%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u258F
+        | 238/291 [00:58<00:14,  3.74it/s]\\rProfiling:  82%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u258F
+        | 239/291 [00:59<00:16,  3.24it/s]\\rProfiling:  83%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u258E
+        | 241/291 [00:59<00:10,  4.63it/s]\\rProfiling:  83%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u258E
+        | 242/291 [00:59<00:10,  4.83it/s]\\rProfiling:  84%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u258E
+        | 243/291 [00:59<00:09,  5.00it/s]\\rProfiling:  84%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u258D
+        | 244/291 [00:59<00:09,  5.16it/s]\\rProfiling:  85%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u258D
+        | 246/291 [01:00<00:09,  4.87it/s]\\rProfiling:  85%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u258D
+        | 247/291 [01:00<00:11,  3.83it/s]\\rProfiling:  85%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u258C
+        | 248/291 [01:01<00:13,  3.26it/s]\\rProfiling:  86%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u258C
+        | 250/291 [01:01<00:08,  4.58it/s]\\rProfiling:  86%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u258B
+        | 251/291 [01:01<00:08,  4.72it/s]\\rProfiling:  87%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u258B
+        | 252/291 [01:01<00:08,  4.78it/s]\\rProfiling:  87%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u258B
+        | 253/291 [01:02<00:07,  4.88it/s]\\rProfiling:  88%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u258A
+        | 255/291 [01:02<00:07,  4.69it/s]\\rProfiling:  88%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u258A
+        | 256/291 [01:03<00:10,  3.34it/s]\\rProfiling:  88%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u258A
+        | 257/291 [01:03<00:11,  2.98it/s]\\rProfiling:  89%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2589
+        | 259/291 [01:03<00:07,  4.29it/s]\\rProfiling:  89%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2589
+        | 260/291 [01:03<00:06,  4.55it/s]\\rProfiling:  90%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2589
+        | 261/291 [01:04<00:06,  4.79it/s]\\rProfiling:  90%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588
+        | 262/291 [01:04<00:05,  5.03it/s]\\rProfiling:  90%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588
+        | 263/291 [01:04<00:05,  4.95it/s]\\rProfiling:  91%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588
+        | 264/291 [01:04<00:05,  4.63it/s]\\rProfiling:  91%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588
+        | 265/291 [01:04<00:05,  4.36it/s]\\rProfiling:  91%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u258F|
+        266/291 [01:05<00:05,  4.22it/s]\\rProfiling:  92%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u258F|
+        267/291 [01:06<00:12,  1.85it/s]\\rProfiling:  92%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u258F|
+        269/291 [01:06<00:08,  2.47it/s]\\rProfiling:  93%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u258E|
+        270/291 [01:07<00:08,  2.43it/s]\\rProfiling:  93%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u258E|
+        271/291 [01:07<00:08,  2.38it/s]\\rProfiling:  94%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u258D|
+        274/291 [01:08<00:04,  3.59it/s]\\rProfiling:  95%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u258D|
+        275/291 [01:08<00:04,  3.21it/s]\\rProfiling:  95%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u258D|
+        276/291 [01:09<00:05,  2.88it/s]\\rProfiling:  96%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u258C|
+        278/291 [01:09<00:03,  4.00it/s]\\rProfiling:  96%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u258C|
+        279/291 [01:09<00:02,  4.21it/s]\\rProfiling:  96%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u258C|
+        280/291 [01:09<00:02,  4.43it/s]\\rProfiling:  97%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u258B|
+        281/291 [01:10<00:02,  4.60it/s]\\rProfiling:  97%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u258B|
+        283/291 [01:10<00:01,  4.59it/s]\\rProfiling:  98%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u258A|
+        284/291 [01:10<00:01,  3.66it/s]\\rProfiling:  98%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u258A|
+        285/291 [01:11<00:01,  3.14it/s]\\rProfiling:  99%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u258A|
+        287/291 [01:11<00:00,  4.40it/s]\\rProfiling:  99%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2589|
+        288/291 [01:11<00:00,  4.58it/s]\\rProfiling:  99%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2589|
+        289/291 [01:11<00:00,  4.71it/s]\\rProfiling: 100%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2589|
+        290/291 [01:12<00:00,  4.86it/s]\\rProfiling: 100%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588|
+        291/291 [01:12<00:00,  4.03it/s]\",\"level\":\"INFO\",\"line_number\":120,\"path\":\"/home/robert/work/chai_guanaco/guanaco_services/src/guanaco_model_service/job_runner.py\"},{\"timestamp\":\"2023-12-16T05:02:34.339754+00:00\",\"entry\":\"huggyllama-llama-7b-mkmlizer:
+        quantized model in 85.424s\",\"level\":\"INFO\",\"line_number\":120,\"path\":\"/home/robert/work/chai_guanaco/guanaco_services/src/guanaco_model_service/job_runner.py\"},{\"timestamp\":\"2023-12-16T05:02:34.541291+00:00\",\"entry\":\"huggyllama-llama-7b-mkmlizer:
+        Processed model huggyllama/llama-7b in 138.625s\",\"level\":\"INFO\",\"line_number\":120,\"path\":\"/home/robert/work/chai_guanaco/guanaco_services/src/guanaco_model_service/job_runner.py\"},{\"timestamp\":\"2023-12-16T05:02:34.687695+00:00\",\"entry\":\"huggyllama-llama-7b-mkmlizer:
+        creating bucket guanaco-mkml-models\",\"level\":\"INFO\",\"line_number\":120,\"path\":\"/home/robert/work/chai_guanaco/guanaco_services/src/guanaco_model_service/job_runner.py\"},{\"timestamp\":\"2023-12-16T05:02:34.820384+00:00\",\"entry\":\"huggyllama-llama-7b-mkmlizer:
+        Bucket 's3://guanaco-mkml-models/' created\",\"level\":\"INFO\",\"line_number\":120,\"path\":\"/home/robert/work/chai_guanaco/guanaco_services/src/guanaco_model_service/job_runner.py\"},{\"timestamp\":\"2023-12-16T05:02:34.980237+00:00\",\"entry\":\"huggyllama-llama-7b-mkmlizer:
+        uploading /tmp/model_cache to s3://guanaco-mkml-models/huggyllama-llama-7b-v2\",\"level\":\"INFO\",\"line_number\":120,\"path\":\"/home/robert/work/chai_guanaco/guanaco_services/src/guanaco_model_service/job_runner.py\"},{\"timestamp\":\"2023-12-16T05:02:35.118689+00:00\",\"entry\":\"huggyllama-llama-7b-mkmlizer:
+        cp /tmp/model_cache/special_tokens_map.json s3://guanaco-mkml-models/huggyllama-llama-7b-v2/special_tokens_map.json\",\"level\":\"INFO\",\"line_number\":120,\"path\":\"/home/robert/work/chai_guanaco/guanaco_services/src/guanaco_model_service/job_runner.py\"},{\"timestamp\":\"2023-12-16T05:02:35.344454+00:00\",\"entry\":\"huggyllama-llama-7b-mkmlizer:
+        cp /tmp/model_cache/config.json s3://guanaco-mkml-models/huggyllama-llama-7b-v2/config.json\",\"level\":\"INFO\",\"line_number\":120,\"path\":\"/home/robert/work/chai_guanaco/guanaco_services/src/guanaco_model_service/job_runner.py\"},{\"timestamp\":\"2023-12-16T05:02:35.470274+00:00\",\"entry\":\"huggyllama-llama-7b-mkmlizer:
+        cp /tmp/model_cache/tokenizer_config.json s3://guanaco-mkml-models/huggyllama-llama-7b-v2/tokenizer_config.json\",\"level\":\"INFO\",\"line_number\":120,\"path\":\"/home/robert/work/chai_guanaco/guanaco_services/src/guanaco_model_service/job_runner.py\"},{\"timestamp\":\"2023-12-16T05:02:35.610850+00:00\",\"entry\":\"huggyllama-llama-7b-mkmlizer:
+        cp /tmp/model_cache/tokenizer.model s3://guanaco-mkml-models/huggyllama-llama-7b-v2/tokenizer.model\",\"level\":\"INFO\",\"line_number\":120,\"path\":\"/home/robert/work/chai_guanaco/guanaco_services/src/guanaco_model_service/job_runner.py\"},{\"timestamp\":\"2023-12-16T05:02:35.743352+00:00\",\"entry\":\"huggyllama-llama-7b-mkmlizer:
+        cp /tmp/model_cache/tokenizer.json s3://guanaco-mkml-models/huggyllama-llama-7b-v2/tokenizer.json\",\"level\":\"INFO\",\"line_number\":120,\"path\":\"/home/robert/work/chai_guanaco/guanaco_services/src/guanaco_model_service/job_runner.py\"},{\"timestamp\":\"2023-12-16T05:02:46.406466+00:00\",\"entry\":\"huggyllama-llama-7b-mkmlizer:
+        loading reward model from ChaiML/reward_models_100_170000000_cp_498032\",\"level\":\"INFO\",\"line_number\":120,\"path\":\"/home/robert/work/chai_guanaco/guanaco_services/src/guanaco_model_service/job_runner.py\"},{\"timestamp\":\"2023-12-16T05:02:46.577899+00:00\",\"entry\":\"huggyllama-llama-7b-mkmlizer:
+        /opt/conda/lib/python3.10/site-packages/transformers/models/auto/configuration_auto.py:1067:
+        FutureWarning: The `use_auth_token` argument is deprecated and will be removed
+        in v5 of Transformers. Please use `token` instead.\",\"level\":\"INFO\",\"line_number\":120,\"path\":\"/home/robert/work/chai_guanaco/guanaco_services/src/guanaco_model_service/job_runner.py\"},{\"timestamp\":\"2023-12-16T05:02:46.707698+00:00\",\"entry\":\"huggyllama-llama-7b-mkmlizer:
+        \  warnings.warn(\",\"level\":\"INFO\",\"line_number\":120,\"path\":\"/home/robert/work/chai_guanaco/guanaco_services/src/guanaco_model_service/job_runner.py\"},{\"timestamp\":\"2023-12-16T05:02:46.858055+00:00\",\"entry\":\"huggyllama-llama-7b-mkmlizer:
+        \\rconfig.json:   0%|          | 0.00/1.03k [00:00<?, ?B/s]\\rconfig.json:
+        100%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588| 1.03k/1.03k
+        [00:00<00:00, 11.7MB/s]\",\"level\":\"INFO\",\"line_number\":120,\"path\":\"/home/robert/work/chai_guanaco/guanaco_services/src/guanaco_model_service/job_runner.py\"},{\"timestamp\":\"2023-12-16T05:02:47.004520+00:00\",\"entry\":\"huggyllama-llama-7b-mkmlizer:
+        /opt/conda/lib/python3.10/site-packages/transformers/models/auto/tokenization_auto.py:690:
+        FutureWarning: The `use_auth_token` argument is deprecated and will be removed
+        in v5 of Transformers. Please use `token` instead.\",\"level\":\"INFO\",\"line_number\":120,\"path\":\"/home/robert/work/chai_guanaco/guanaco_services/src/guanaco_model_service/job_runner.py\"},{\"timestamp\":\"2023-12-16T05:02:47.207783+00:00\",\"entry\":\"huggyllama-llama-7b-mkmlizer:
+        \  warnings.warn(\",\"level\":\"INFO\",\"line_number\":120,\"path\":\"/home/robert/work/chai_guanaco/guanaco_services/src/guanaco_model_service/job_runner.py\"},{\"timestamp\":\"2023-12-16T05:02:47.363836+00:00\",\"entry\":\"huggyllama-llama-7b-mkmlizer:
+        \\rtokenizer_config.json:   0%|          | 0.00/234 [00:00<?, ?B/s]\\rtokenizer_config.json:
+        100%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588| 234/234
+        [00:00<00:00, 2.80MB/s]\",\"level\":\"INFO\",\"line_number\":120,\"path\":\"/home/robert/work/chai_guanaco/guanaco_services/src/guanaco_model_service/job_runner.py\"},{\"timestamp\":\"2023-12-16T05:02:47.504940+00:00\",\"entry\":\"huggyllama-llama-7b-mkmlizer:
+        \\rvocab.json:   0%|          | 0.00/798k [00:00<?, ?B/s]\\rvocab.json: 100%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588|
+        798k/798k [00:00<00:00, 8.54MB/s]\",\"level\":\"INFO\",\"line_number\":120,\"path\":\"/home/robert/work/chai_guanaco/guanaco_services/src/guanaco_model_service/job_runner.py\"},{\"timestamp\":\"2023-12-16T05:02:47.648254+00:00\",\"entry\":\"huggyllama-llama-7b-mkmlizer:
+        \\rmerges.txt:   0%|          | 0.00/456k [00:00<?, ?B/s]\\rmerges.txt: 100%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588|
+        456k/456k [00:00<00:00, 54.5MB/s]\",\"level\":\"INFO\",\"line_number\":120,\"path\":\"/home/robert/work/chai_guanaco/guanaco_services/src/guanaco_model_service/job_runner.py\"},{\"timestamp\":\"2023-12-16T05:02:47.774218+00:00\",\"entry\":\"huggyllama-llama-7b-mkmlizer:
+        \\rtokenizer.json:   0%|          | 0.00/2.11M [00:00<?, ?B/s]\\rtokenizer.json:
+        100%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588| 2.11M/2.11M
+        [00:00<00:00, 58.1MB/s]\",\"level\":\"INFO\",\"line_number\":120,\"path\":\"/home/robert/work/chai_guanaco/guanaco_services/src/guanaco_model_service/job_runner.py\"},{\"timestamp\":\"2023-12-16T05:02:47.889251+00:00\",\"entry\":\"huggyllama-llama-7b-mkmlizer:
+        \\rspecial_tokens_map.json:   0%|          | 0.00/99.0 [00:00<?, ?B/s]\\rspecial_tokens_map.json:
+        100%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588| 99.0/99.0
+        [00:00<00:00, 1.58MB/s]\",\"level\":\"INFO\",\"line_number\":120,\"path\":\"/home/robert/work/chai_guanaco/guanaco_services/src/guanaco_model_service/job_runner.py\"},{\"timestamp\":\"2023-12-16T05:02:48.002069+00:00\",\"entry\":\"huggyllama-llama-7b-mkmlizer:
+        /opt/conda/lib/python3.10/site-packages/transformers/models/auto/auto_factory.py:472:
+        FutureWarning: The `use_auth_token` argument is deprecated and will be removed
+        in v5 of Transformers. Please use `token` instead.\",\"level\":\"INFO\",\"line_number\":120,\"path\":\"/home/robert/work/chai_guanaco/guanaco_services/src/guanaco_model_service/job_runner.py\"},{\"timestamp\":\"2023-12-16T05:02:48.108048+00:00\",\"entry\":\"huggyllama-llama-7b-mkmlizer:
+        \  warnings.warn(\",\"level\":\"INFO\",\"line_number\":120,\"path\":\"/home/robert/work/chai_guanaco/guanaco_services/src/guanaco_model_service/job_runner.py\"},{\"timestamp\":\"2023-12-16T05:02:48.223999+00:00\",\"entry\":\"huggyllama-llama-7b-mkmlizer:
+        \\rpytorch_model.bin:   0%|          | 0.00/510M [00:00<?, ?B/s]\\rpytorch_model.bin:
+        \  2%|\u258F         | 10.5M/510M [00:00<00:09, 50.8MB/s]\\rpytorch_model.bin:
+        \ 12%|\u2588\u258F        | 59.5M/510M [00:00<00:02, 217MB/s] \\rpytorch_model.bin:
+        \ 40%|\u2588\u2588\u2588\u2588      | 206M/510M [00:00<00:00, 648MB/s] \\rpytorch_model.bin:
+        \ 75%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u258C  | 385M/510M [00:00<00:00,
+        1.01GB/s]\\rpytorch_model.bin:  98%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u258A|
+        500M/510M [00:00<00:00, 638MB/s] \\rpytorch_model.bin: 100%|\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2589|
+        510M/510M [00:00<00:00, 566MB/s]\",\"level\":\"INFO\",\"line_number\":120,\"path\":\"/home/robert/work/chai_guanaco/guanaco_services/src/guanaco_model_service/job_runner.py\"},{\"timestamp\":\"2023-12-16T05:02:48.334417+00:00\",\"entry\":\"huggyllama-llama-7b-mkmlizer:
+        Saving model to /tmp/reward_cache/reward.tensors\",\"level\":\"INFO\",\"line_number\":120,\"path\":\"/home/robert/work/chai_guanaco/guanaco_services/src/guanaco_model_service/job_runner.py\"},{\"timestamp\":\"2023-12-16T05:02:48.507747+00:00\",\"entry\":\"huggyllama-llama-7b-mkmlizer:
+        Saving duration: 0.120s\",\"level\":\"INFO\",\"line_number\":120,\"path\":\"/home/robert/work/chai_guanaco/guanaco_services/src/guanaco_model_service/job_runner.py\"},{\"timestamp\":\"2023-12-16T05:02:48.648098+00:00\",\"entry\":\"huggyllama-llama-7b-mkmlizer:
+        Processed model ChaiML/reward_models_100_170000000_cp_498032 in 3.400s\",\"level\":\"INFO\",\"line_number\":120,\"path\":\"/home/robert/work/chai_guanaco/guanaco_services/src/guanaco_model_service/job_runner.py\"},{\"timestamp\":\"2023-12-16T05:02:48.782369+00:00\",\"entry\":\"huggyllama-llama-7b-mkmlizer:
+        creating bucket guanaco-reward-models\",\"level\":\"INFO\",\"line_number\":120,\"path\":\"/home/robert/work/chai_guanaco/guanaco_services/src/guanaco_model_service/job_runner.py\"},{\"timestamp\":\"2023-12-16T05:02:59.615613+00:00\",\"entry\":\"Job
+        huggyllama-llama-7b-mkmlizer completed after 176.65s with status: succeeded\",\"level\":\"INFO\",\"line_number\":90,\"path\":\"/home/robert/work/chai_guanaco/guanaco_services/src/guanaco_model_service/job_runner.py\"},{\"timestamp\":\"2023-12-16T05:02:59.771085+00:00\",\"entry\":\"Stopping
+        job with name huggyllama-llama-7b-mkmlizer\",\"level\":\"INFO\",\"line_number\":72,\"path\":\"/home/robert/work/chai_guanaco/guanaco_services/src/guanaco_model_service/job_runner.py\"},{\"timestamp\":\"2023-12-16T05:03:00.116953+00:00\",\"entry\":\"Pipeline
+        stage MKMLizer completed in 178.34s\",\"level\":\"INFO\",\"line_number\":35,\"path\":\"/home/robert/work/chai_guanaco/guanaco_services/src/guanaco_model_service/pipeline_stage.py\"},{\"timestamp\":\"2023-12-16T05:03:00.237633+00:00\",\"entry\":\"Running
+        pipeline stage MKMLKubeTemplater\",\"level\":\"INFO\",\"line_number\":31,\"path\":\"/home/robert/work/chai_guanaco/guanaco_services/src/guanaco_model_service/pipeline_stage.py\"},{\"timestamp\":\"2023-12-16T05:03:00.602760+00:00\",\"entry\":\"Pipeline
+        stage MKMLKubeTemplater completed in 0.37s\",\"level\":\"INFO\",\"line_number\":35,\"path\":\"/home/robert/work/chai_guanaco/guanaco_services/src/guanaco_model_service/pipeline_stage.py\"},{\"timestamp\":\"2023-12-16T05:03:00.706434+00:00\",\"entry\":\"Running
+        pipeline stage ISVCDeployer\",\"level\":\"INFO\",\"line_number\":31,\"path\":\"/home/robert/work/chai_guanaco/guanaco_services/src/guanaco_model_service/pipeline_stage.py\"},{\"timestamp\":\"2023-12-16T05:03:00.939023+00:00\",\"entry\":\"Creating
+        inference service huggyllama-llama-7b-v2\",\"level\":\"INFO\",\"line_number\":27,\"path\":\"/home/robert/work/chai_guanaco/guanaco_services/src/guanaco_model_service/inference_service_api.py\"},{\"timestamp\":\"2023-12-16T05:03:06.797684+00:00\",\"entry\":\"Waiting
+        for inference service huggyllama-llama-7b-v2 to be ready\",\"level\":\"INFO\",\"line_number\":46,\"path\":\"/home/robert/work/chai_guanaco/guanaco_services/src/guanaco_model_service/inference_service_api.py\"},{\"timestamp\":\"2023-12-16T05:05:08.817401+00:00\",\"entry\":\"Inference
+        service huggyllama-llama-7b-v2 ready after 121.73887848854065s\",\"level\":\"INFO\",\"line_number\":52,\"path\":\"/home/robert/work/chai_guanaco/guanaco_services/src/guanaco_model_service/inference_service_api.py\"},{\"timestamp\":\"2023-12-16T05:05:09.106083+00:00\",\"entry\":\"Pipeline
+        stage ISVCDeployer completed in 128.40s\",\"level\":\"INFO\",\"line_number\":35,\"path\":\"/home/robert/work/chai_guanaco/guanaco_services/src/guanaco_model_service/pipeline_stage.py\"},{\"timestamp\":\"2023-12-16T05:05:09.228409+00:00\",\"entry\":\"Running
+        pipeline stage StressChecker\",\"level\":\"INFO\",\"line_number\":31,\"path\":\"/home/robert/work/chai_guanaco/guanaco_services/src/guanaco_model_service/pipeline_stage.py\"},{\"timestamp\":\"2023-12-16T05:05:11.409848+00:00\",\"entry\":\"Received
+        healthy response to inference request with status code 200 in 1.9235994815826416s\",\"level\":\"INFO\",\"line_number\":124,\"path\":\"/home/robert/work/chai_guanaco/guanaco_services/src/guanaco_model_service/stress_checks.py\"},{\"timestamp\":\"2023-12-16T05:05:13.145250+00:00\",\"entry\":\"Received
+        healthy response to inference request with status code 200 in 1.5702085494995117s\",\"level\":\"INFO\",\"line_number\":124,\"path\":\"/home/robert/work/chai_guanaco/guanaco_services/src/guanaco_model_service/stress_checks.py\"},{\"timestamp\":\"2023-12-16T05:05:14.383806+00:00\",\"entry\":\"Received
+        healthy response to inference request with status code 200 in 1.0878667831420898s\",\"level\":\"INFO\",\"line_number\":124,\"path\":\"/home/robert/work/chai_guanaco/guanaco_services/src/guanaco_model_service/stress_checks.py\"},{\"timestamp\":\"2023-12-16T05:05:34.603315+00:00\",\"entry\":\"Received
+        no response to inference request from service\",\"level\":\"INFO\",\"line_number\":124,\"path\":\"/home/robert/work/chai_guanaco/guanaco_services/src/guanaco_model_service/stress_checks.py\"},{\"timestamp\":\"2023-12-16T05:05:35.883311+00:00\",\"entry\":\"Received
+        healthy response to inference request with status code 200 in 1.0903139114379883s\",\"level\":\"INFO\",\"line_number\":124,\"path\":\"/home/robert/work/chai_guanaco/guanaco_services/src/guanaco_model_service/stress_checks.py\"},{\"timestamp\":\"2023-12-16T05:05:56.103393+00:00\",\"entry\":\"Received
+        no response to inference request from service\",\"level\":\"INFO\",\"line_number\":124,\"path\":\"/home/robert/work/chai_guanaco/guanaco_services/src/guanaco_model_service/stress_checks.py\"},{\"timestamp\":\"2023-12-16T05:06:16.327248+00:00\",\"entry\":\"Received
+        no response to inference request from service\",\"level\":\"INFO\",\"line_number\":124,\"path\":\"/home/robert/work/chai_guanaco/guanaco_services/src/guanaco_model_service/stress_checks.py\"},{\"timestamp\":\"2023-12-16T05:06:17.970069+00:00\",\"entry\":\"Received
+        healthy response to inference request with status code 200 in 1.4468059539794922s\",\"level\":\"INFO\",\"line_number\":124,\"path\":\"/home/robert/work/chai_guanaco/guanaco_services/src/guanaco_model_service/stress_checks.py\"},{\"timestamp\":\"2023-12-16T05:06:38.190975+00:00\",\"entry\":\"Received
+        no response to inference request from service\",\"level\":\"INFO\",\"line_number\":124,\"path\":\"/home/robert/work/chai_guanaco/guanaco_services/src/guanaco_model_service/stress_checks.py\"},{\"timestamp\":\"2023-12-16T05:06:58.379642+00:00\",\"entry\":\"Received
+        no response to inference request from service\",\"level\":\"INFO\",\"line_number\":124,\"path\":\"/home/robert/work/chai_guanaco/guanaco_services/src/guanaco_model_service/stress_checks.py\"},{\"timestamp\":\"2023-12-16T05:07:00.267461+00:00\",\"entry\":\"Received
+        healthy response to inference request with status code 200 in 1.6696467399597168s\",\"level\":\"INFO\",\"line_number\":124,\"path\":\"/home/robert/work/chai_guanaco/guanaco_services/src/guanaco_model_service/stress_checks.py\"},{\"timestamp\":\"2023-12-16T05:07:20.543295+00:00\",\"entry\":\"Received
+        no response to inference request from service\",\"level\":\"INFO\",\"line_number\":124,\"path\":\"/home/robert/work/chai_guanaco/guanaco_services/src/guanaco_model_service/stress_checks.py\"},{\"timestamp\":\"2023-12-16T05:07:22.177994+00:00\",\"entry\":\"Received
+        healthy response to inference request with status code 200 in 1.4399843215942383s\",\"level\":\"INFO\",\"line_number\":124,\"path\":\"/home/robert/work/chai_guanaco/guanaco_services/src/guanaco_model_service/stress_checks.py\"},{\"timestamp\":\"2023-12-16T05:07:33.695342+00:00\",\"entry\":\"%s,
+        retrying in %s seconds...\",\"level\":\"WARNING\",\"line_number\":40,\"path\":\"/home/robert/.local/lib/python3.8/site-packages/retry/api.py\"},{\"timestamp\":\"2023-12-16T05:08:14.753086+00:00\",\"entry\":\"Running
+        pipeline stage ISVCDeleter\",\"level\":\"INFO\",\"line_number\":31,\"path\":\"/home/robert/work/chai_guanaco/guanaco_services/src/guanaco_model_service/pipeline_stage.py\"},{\"timestamp\":\"2023-12-16T05:08:15.265524+00:00\",\"entry\":\"Checking
+        if service huggyllama-llama-7b-v2 is running\",\"level\":\"INFO\",\"line_number\":258,\"path\":\"/home/robert/work/chai_guanaco/guanaco_services/src/guanaco_model_service/pipeline_stage.py\"},{\"timestamp\":\"2023-12-16T05:08:19.518795+00:00\",\"entry\":\"Tearing
+        down inference service huggyllama-llama-7b-v2\",\"level\":\"INFO\",\"line_number\":39,\"path\":\"/home/robert/work/chai_guanaco/guanaco_services/src/guanaco_model_service/inference_service_api.py\"},{\"timestamp\":\"2023-12-16T05:08:19.990161+00:00\",\"entry\":\"Toredown
+        service huggyllama-llama-7b-v2\",\"level\":\"INFO\",\"line_number\":261,\"path\":\"/home/robert/work/chai_guanaco/guanaco_services/src/guanaco_model_service/pipeline_stage.py\"},{\"timestamp\":\"2023-12-16T05:08:20.294295+00:00\",\"entry\":\"Pipeline
+        stage ISVCDeleter completed in 5.54s\",\"level\":\"INFO\",\"line_number\":35,\"path\":\"/home/robert/work/chai_guanaco/guanaco_services/src/guanaco_model_service/pipeline_stage.py\"},{\"timestamp\":\"2023-12-16T05:08:20.438154+00:00\",\"entry\":\"Running
+        pipeline stage MKMLModelDeleter\",\"level\":\"INFO\",\"line_number\":31,\"path\":\"/home/robert/work/chai_guanaco/guanaco_services/src/guanaco_model_service/pipeline_stage.py\"},{\"timestamp\":\"2023-12-16T05:08:20.719623+00:00\",\"entry\":\"Cleaning
+        model data from S3\",\"level\":\"INFO\",\"line_number\":101,\"path\":\"/home/robert/work/chai_guanaco/guanaco_services/src/guanaco_model_service/mkml/pipeline.py\"},{\"timestamp\":\"2023-12-16T05:08:20.904233+00:00\",\"entry\":\"Cleaning
+        model data from model cache\",\"level\":\"INFO\",\"line_number\":122,\"path\":\"/home/robert/work/chai_guanaco/guanaco_services/src/guanaco_model_service/mkml/pipeline.py\"},{\"timestamp\":\"2023-12-16T05:08:21.525779+00:00\",\"entry\":\"Deleting
+        key huggyllama-llama-7b-v2/config.json from bucket guanaco-mkml-models\",\"level\":\"INFO\",\"line_number\":37,\"path\":\"/home/robert/work/chai_guanaco/guanaco_services/src/guanaco_model_service/model_cache_api.py\"},{\"timestamp\":\"2023-12-16T05:08:21.787522+00:00\",\"entry\":\"Deleting
+        key huggyllama-llama-7b-v2/mkml_model.tensors from bucket guanaco-mkml-models\",\"level\":\"INFO\",\"line_number\":37,\"path\":\"/home/robert/work/chai_guanaco/guanaco_services/src/guanaco_model_service/model_cache_api.py\"},{\"timestamp\":\"2023-12-16T05:08:22.011794+00:00\",\"entry\":\"Deleting
+        key huggyllama-llama-7b-v2/special_tokens_map.json from bucket guanaco-mkml-models\",\"level\":\"INFO\",\"line_number\":37,\"path\":\"/home/robert/work/chai_guanaco/guanaco_services/src/guanaco_model_service/model_cache_api.py\"},{\"timestamp\":\"2023-12-16T05:08:22.234103+00:00\",\"entry\":\"Deleting
+        key huggyllama-llama-7b-v2/tokenizer.json from bucket guanaco-mkml-models\",\"level\":\"INFO\",\"line_number\":37,\"path\":\"/home/robert/work/chai_guanaco/guanaco_services/src/guanaco_model_service/model_cache_api.py\"},{\"timestamp\":\"2023-12-16T05:08:22.474559+00:00\",\"entry\":\"Deleting
+        key huggyllama-llama-7b-v2/tokenizer.model from bucket guanaco-mkml-models\",\"level\":\"INFO\",\"line_number\":37,\"path\":\"/home/robert/work/chai_guanaco/guanaco_services/src/guanaco_model_service/model_cache_api.py\"},{\"timestamp\":\"2023-12-16T05:08:22.692620+00:00\",\"entry\":\"Deleting
+        key huggyllama-llama-7b-v2/tokenizer_config.json from bucket guanaco-mkml-models\",\"level\":\"INFO\",\"line_number\":37,\"path\":\"/home/robert/work/chai_guanaco/guanaco_services/src/guanaco_model_service/model_cache_api.py\"},{\"timestamp\":\"2023-12-16T05:08:22.921392+00:00\",\"entry\":\"Cleaning
+        model data from model cache\",\"level\":\"INFO\",\"line_number\":122,\"path\":\"/home/robert/work/chai_guanaco/guanaco_services/src/guanaco_model_service/mkml/pipeline.py\"},{\"timestamp\":\"2023-12-16T05:08:23.364501+00:00\",\"entry\":\"Deleting
+        key huggyllama-llama-7b-v2_reward/config.json from bucket guanaco-reward-models\",\"level\":\"INFO\",\"line_number\":37,\"path\":\"/home/robert/work/chai_guanaco/guanaco_services/src/guanaco_model_service/model_cache_api.py\"},{\"timestamp\":\"2023-12-16T05:08:23.606123+00:00\",\"entry\":\"Deleting
+        key huggyllama-llama-7b-v2_reward/merges.txt from bucket guanaco-reward-models\",\"level\":\"INFO\",\"line_number\":37,\"path\":\"/home/robert/work/chai_guanaco/guanaco_services/src/guanaco_model_service/model_cache_api.py\"},{\"timestamp\":\"2023-12-16T05:08:23.851344+00:00\",\"entry\":\"Deleting
+        key huggyllama-llama-7b-v2_reward/reward.tensors from bucket guanaco-reward-models\",\"level\":\"INFO\",\"line_number\":37,\"path\":\"/home/robert/work/chai_guanaco/guanaco_services/src/guanaco_model_service/model_cache_api.py\"},{\"timestamp\":\"2023-12-16T05:08:24.069429+00:00\",\"entry\":\"Deleting
+        key huggyllama-llama-7b-v2_reward/special_tokens_map.json from bucket guanaco-reward-models\",\"level\":\"INFO\",\"line_number\":37,\"path\":\"/home/robert/work/chai_guanaco/guanaco_services/src/guanaco_model_service/model_cache_api.py\"},{\"timestamp\":\"2023-12-16T05:08:24.317979+00:00\",\"entry\":\"Deleting
+        key huggyllama-llama-7b-v2_reward/tokenizer.json from bucket guanaco-reward-models\",\"level\":\"INFO\",\"line_number\":37,\"path\":\"/home/robert/work/chai_guanaco/guanaco_services/src/guanaco_model_service/model_cache_api.py\"},{\"timestamp\":\"2023-12-16T05:08:24.542017+00:00\",\"entry\":\"Deleting
+        key huggyllama-llama-7b-v2_reward/tokenizer_config.json from bucket guanaco-reward-models\",\"level\":\"INFO\",\"line_number\":37,\"path\":\"/home/robert/work/chai_guanaco/guanaco_services/src/guanaco_model_service/model_cache_api.py\"},{\"timestamp\":\"2023-12-16T05:08:24.772049+00:00\",\"entry\":\"Deleting
+        key huggyllama-llama-7b-v2_reward/vocab.json from bucket guanaco-reward-models\",\"level\":\"INFO\",\"line_number\":37,\"path\":\"/home/robert/work/chai_guanaco/guanaco_services/src/guanaco_model_service/model_cache_api.py\"},{\"timestamp\":\"2023-12-16T05:08:25.141410+00:00\",\"entry\":\"Pipeline
+        stage MKMLModelDeleter completed in 4.70s\",\"level\":\"INFO\",\"line_number\":35,\"path\":\"/home/robert/work/chai_guanaco/guanaco_services/src/guanaco_model_service/pipeline_stage.py\"}],\"submission_id\":\"huggyllama-llama-7b_v2\",\"developer_uid\":\"end_to_end_test\",\"status\":\"torndown\",\"model_repo\":\"huggyllama/llama-7b\",\"reward_repo\":\"ChaiML/reward_models_100_170000000_cp_498032\",\"generation_params\":{\"temperature\":1.0,\"top_p\":0.99,\"top_k\":40,\"presence_penalty\":0.0,\"frequency_penalty\":0.0,\"stopping_words\":[\"\\n\"],\"max_input_tokens\":1024,\"best_of\":4},\"formatter\":{\"memory_template\":\"{bot_name}'s
+        Persona: {memory}\\n####\\n\",\"prompt_template\":\"{prompt}\\n<START>\\n\",\"bot_template\":\"{bot_name}:
+        {message}\\n\",\"user_template\":\"{user_name}: {message}\\n\",\"response_template\":\"{bot_name}:\"},\"timestamp\":\"2023-12-16T05:00:00+00:00\",\"safety_score\":null}"
+    headers:
+      Content-Length:
+      - '76154'
+      Date:
+      - Wed, 17 Jan 2024 22:04:02 GMT
+      Server:
+      - Google Frontend
+      X-Cloud-Trace-Context:
+      - e13e061df5c596a44ca67464868ada84
+      content-type:
+      - application/json
+    status:
+      code: 200
+      message: OK
+version: 1

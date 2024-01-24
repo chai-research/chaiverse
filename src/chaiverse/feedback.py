@@ -1,19 +1,12 @@
 from pathlib import Path
-import requests
 
 import pandas as pd
 
 from chaiverse import utils
 from chaiverse.login_cli import auto_authenticate
+from chaiverse.http_client import FeedbackClient
 from chaiverse.utils import print_color
-
-
-BASE_URL = 'https://guanaco-feedback.chai-research.com'
-FEEDBACK_ENDPOINT = "/feedback/{submission_id}"
-
-
-def get_url(endpoint, **kwargs):
-    return (BASE_URL + endpoint).format(**kwargs)
+from chaiverse.config import BASE_FEEDBACK_URL, FEEDBACK_ENDPOINT
 
 
 class Feedback():
@@ -106,14 +99,11 @@ def is_submission_updated(submission_id: str, submission_feedback_total : int) -
     return submission_updated
 
 
+@auto_authenticate
 def _get_latest_feedback(submission_id, developer_key):
-    headers = {
-        "developer_key": developer_key,
-    }
-    url = get_url(FEEDBACK_ENDPOINT, submission_id=submission_id)
-    resp = requests.get(url, headers=headers)
-    assert resp.status_code == 200, resp.json()
-    feedback = Feedback(resp.json())
+    http_client = FeedbackClient(developer_key)
+    response = http_client.get(endpoint=FEEDBACK_ENDPOINT, submission_id=submission_id)
+    feedback = Feedback(response)
     filename = _get_cached_feedback_filename(submission_id)
     utils._save_to_cache(filename, feedback)
     return feedback

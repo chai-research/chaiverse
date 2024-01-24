@@ -1,0 +1,32 @@
+interactions:
+- request:
+    body: null
+    headers:
+      Accept:
+      - '*/*'
+      Accept-Encoding:
+      - gzip, deflate, br
+      Connection:
+      - keep-alive
+      User-Agent:
+      - python-requests/2.31.0
+    method: GET
+    uri: https://guanaco-feedback.chai-research.com/feedback/chai-non-exist-submission
+  response:
+    body:
+      string: '{"feedback":{},"thumbs_up":0,"thumbs_down":0}'
+    headers:
+      Content-Length:
+      - '45'
+      Date:
+      - Wed, 17 Jan 2024 22:08:20 GMT
+      Server:
+      - Google Frontend
+      X-Cloud-Trace-Context:
+      - 0844590cc76fb11630d6c4e5c6c772c0
+      content-type:
+      - application/json
+    status:
+      code: 200
+      message: OK
+version: 1

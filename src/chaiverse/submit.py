@@ -1,23 +1,15 @@
 import itertools
 import sys
 
-import requests
 import time
 
 from chaiverse import utils
 from chaiverse.login_cli import auto_authenticate
+from chaiverse.http_client import SubmitterClient
+from chaiverse import config
 
 if 'ipykernel' in sys.modules:
     from IPython.core.display import display
-
-SUBMISSION_ENDPOINT = "/models/submit"
-ALL_SUBMISSION_STATUS_ENDPOINT = "/models/"
-INFO_ENDPOINT = "/models/{submission_id}"
-DEACTIVATE_ENDPOINT = "/models/{submission_id}/deactivate"
-
-REDEPLOY_ENDPOINT = "/models/{submission_id}/redeploy"
-EVALUATE_ENDPOINT = "/models/{submission_id}/evaluate"
-TEARDOWN_ENDPOINT = "/models/{submission_id}/teardown"
 
 
 class ModelSubmitter:
@@ -137,68 +129,54 @@ class ModelSubmitter:
 
 @auto_authenticate
 def submit_model(model_submission: dict, developer_key=None):
-    url = utils.get_url(SUBMISSION_ENDPOINT)
-    headers = {'Authorization': f"Bearer {developer_key}"}
-    response = requests.post(url=url, json=model_submission, headers=headers)
-    assert response.status_code == 200, response.json()
-    return response.json()
+    http_client = SubmitterClient(developer_key)
+    response = http_client.post(endpoint=config.SUBMISSION_ENDPOINT, data=model_submission)
+    return response
 
 
 @auto_authenticate
 def get_model_info(submission_id, developer_key=None):
-    url = utils.get_url(INFO_ENDPOINT, submission_id=submission_id)
-    headers = {'Authorization': f"Bearer {developer_key}"}
-    response = requests.get(url=url, headers=headers)
-    assert response.status_code == 200, response.json()
-    return response.json()
+    http_client = SubmitterClient(developer_key)
+    response = http_client.get(endpoint=config.INFO_ENDPOINT, submission_id=submission_id)
+    return response
 
 
 @auto_authenticate
 def evaluate_model(submission_id, developer_key=None):
-    url = utils.get_url(EVALUATE_ENDPOINT, submission_id=submission_id)
-    headers = {'Authorization': f"Bearer {developer_key}"}
-    response = requests.get(url=url, headers=headers)
-    assert response.status_code == 200, response.json()
-    return response.json()
+    http_client = SubmitterClient(developer_key)
+    response = http_client.get(endpoint=config.EVALUATE_ENDPOINT, submission_id=submission_id)
+    return response
 
 
 @auto_authenticate
 def get_my_submissions(developer_key=None):
-    url = utils.get_url(ALL_SUBMISSION_STATUS_ENDPOINT)
-    headers = {'Authorization': f"Bearer {developer_key}"}
-    response = requests.get(url=url, headers=headers)
-    assert response.status_code == 200, response.json()
-    return response.json()
+    http_client = SubmitterClient(developer_key)
+    response = http_client.get(endpoint=config.ALL_SUBMISSION_STATUS_ENDPOINT)
+    return response
 
 
 @auto_authenticate
 def deactivate_model(submission_id, developer_key=None):
-    url = utils.get_url(DEACTIVATE_ENDPOINT, submission_id=submission_id)
-    headers = {'Authorization': f"Bearer {developer_key}"}
-    response = requests.get(url=url, headers=headers)
-    assert response.status_code == 200, response.json()
-    print(response.json())
-    return response.json()
+    http_client = SubmitterClient(developer_key)
+    response = http_client.get(endpoint=config.DEACTIVATE_ENDPOINT,submission_id=submission_id)
+    print(response)
+    return response
 
 
 @auto_authenticate
 def redeploy_model(submission_id, developer_key=None):
-    url = utils.get_url(REDEPLOY_ENDPOINT, submission_id=submission_id)
-    headers = {'Authorization': f"Bearer {developer_key}"}
-    response = requests.get(url=url, headers=headers)
-    assert response.status_code == 200, response.json()
-    print(response.json())
-    return response.json()
+    http_client = SubmitterClient(developer_key)
+    response = http_client.get(endpoint=config.REDEPLOY_ENDPOINT, submission_id=submission_id)
+    print(response)
+    return response
 
 
 @auto_authenticate
 def teardown_model(submission_id, developer_key=None):
-    url = utils.get_url(TEARDOWN_ENDPOINT, submission_id=submission_id)
-    headers = {'Authorization': f"Bearer {developer_key}"}
-    response = requests.get(url=url, headers=headers)
-    assert response.status_code == 200, response.json()
-    print(response.json())
-    return response.json()
+    http_client = SubmitterClient(developer_key)
+    response = http_client.get(endpoint=config.TEARDOWN_ENDPOINT, submission_id=submission_id)
+    print(response)
+    return response
 
 
 @auto_authenticate

@@ -10,14 +10,13 @@ from time import time
 import requests
 from tqdm import tqdm
 
+from chaiverse.config import BASE_SUBMITTER_URL, LEADERBOARD_ENDPOINT
+
 CACHE_UPDATE_HOURS = 6
-BASE_URL = "https://guanaco-submitter.chai-research.com"
-LEADERBOARD_ENDPOINT = "/leaderboard"
 
 
-def get_url(endpoint, **kwarg):
-    base_url = BASE_URL
-    return (base_url + endpoint).format(**kwarg)
+def get_url(endpoint, hostname=BASE_SUBMITTER_URL, **kwarg):
+    return (hostname + endpoint).format(**kwarg)
 
 
 def get_guanaco_data_dir_env():
