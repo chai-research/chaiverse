@@ -4,6 +4,7 @@ from chaiverse.login_cli import auto_authenticate
 from chaiverse.config import BASE_SUBMITTER_URL, BASE_FEEDBACK_URL
 from chaiverse.utils import get_url
 
+
 class _ChaiverseHTTPClient():
     def __init__(self, developer_key=None, hostname=None):
         self.developer_key = developer_key
