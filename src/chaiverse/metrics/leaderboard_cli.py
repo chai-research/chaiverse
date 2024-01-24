@@ -1,3 +1,6 @@
+__all__ = ["display_leaderboard", "display_competition_leaderboard"]
+
+
 import warnings
 
 import pandas as pd
@@ -5,9 +8,8 @@ from tabulate import tabulate
 
 from chaiverse.competition import get_competitions
 from chaiverse import constants
-from chaiverse.login_cli import auto_authenticate
-from chaiverse.metrics.get_display_leaderboard import get_display_leaderboard
-from chaiverse.metrics.get_leaderboard import get_leaderboard
+from chaiverse.metrics.leaderboard_formatter import format_leaderboard
+from chaiverse.metrics.leaderboard_api import get_leaderboard
 from chaiverse.utils import print_color, cache
 
 pd.set_option('display.max_columns', 50)
@@ -69,7 +71,7 @@ def display_competition_leaderboard(
 
     if len(df) > 0:
         display_df = df.copy()
-        display_df = get_display_leaderboard(
+        display_df = format_leaderboard(
             display_df, 
             detailed=detailed, 
             competition_type=competition_type

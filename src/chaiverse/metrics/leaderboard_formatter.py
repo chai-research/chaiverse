@@ -1,3 +1,6 @@
+__all__ = ["format_leaderboard"]
+
+
 from datetime import datetime
 
 import numpy as np
@@ -5,7 +8,7 @@ import numpy as np
 from chaiverse import constants
 
 
-def get_display_leaderboard(df, detailed, competition_type):
+def format_leaderboard(df, detailed, competition_type):
     competition_configuration = constants.COMPETITION_TYPE_CONFIGURATION[competition_type]
     sort_params = competition_configuration['sort_params']
     output_columns = competition_configuration['output_columns']

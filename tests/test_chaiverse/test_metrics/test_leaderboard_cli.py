@@ -18,7 +18,7 @@ def guanado_data_dir(tmpdir):
         yield get_data_dir
 
 
-@mock.patch('chaiverse.metrics.get_leaderboard.get_submissions')
+@mock.patch('chaiverse.metrics.leaderboard_api.get_submissions')
 def test_developer_can_call_display_leaderboard_and_pass_in_developer_key_as_arg(get_submissions_mock):
     get_submissions_mock.side_effect = KeyError()
     with pytest.raises(KeyError):
@@ -26,7 +26,7 @@ def test_developer_can_call_display_leaderboard_and_pass_in_developer_key_as_arg
     get_submissions_mock.assert_called_with('bad-developer-key', ANY)
 
 
-@mock.patch('chaiverse.metrics.display_leaderboard.display_competition_leaderboard')
+@mock.patch('chaiverse.metrics.leaderboard_cli.display_competition_leaderboard')
 def test_display_leaderboard_will_call_display_competition_leaderboard(display_competition_leaderboard_mock):
     display_competition_leaderboard_mock.return_value = 'leaderboard-data'
     result = chai.display_leaderboard(max_workers=1)

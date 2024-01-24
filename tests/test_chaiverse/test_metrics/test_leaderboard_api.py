@@ -7,7 +7,7 @@ import pandas as pd
 import pytest
 import vcr
 
-from chaiverse.metrics.get_leaderboard import (
+from chaiverse.metrics.leaderboard_api import (
     get_leaderboard, 
     _get_filled_leaderboard, 
     _filter_submissions_by_submission_ids, 
@@ -24,7 +24,7 @@ def guanado_data_dir(tmpdir):
         yield get_data_dir
 
 
-@patch('chaiverse.metrics.get_leaderboard.get_submissions')
+@patch('chaiverse.metrics.leaderboard_api.get_submissions')
 def test_developer_can_call_get_leaderboard_and_pass_in_developer_key_as_arg(get_submissions_mock):
     get_submissions_mock.side_effect = KeyError()
     with pytest.raises(KeyError):
@@ -32,7 +32,7 @@ def test_developer_can_call_get_leaderboard_and_pass_in_developer_key_as_arg(get
     get_submissions_mock.assert_called_with('bad-developer-key', ANY)
 
 
-@patch('chaiverse.metrics.get_leaderboard.get_submissions')
+@patch('chaiverse.metrics.leaderboard_api.get_submissions')
 @freeze_time('2023-07-28 00:00:00')
 def test_get_leaderboard_without_feedback(get_submissions_mock):
     get_submissions_mock.return_value = historical_submisions()
@@ -126,7 +126,7 @@ def test_get_leaderboard_without_feedback(get_submissions_mock):
     np.testing.assert_equal(list(range(1, len(df)+1)), df.index.values)
 
 
-@patch('chaiverse.metrics.get_leaderboard.get_submissions')
+@patch('chaiverse.metrics.leaderboard_api.get_submissions')
 @freeze_time('2023-07-28 00:00:00')
 def test_get_leaderboard_with_submission_ids_filter(get_submissions_mock):
     get_submissions_mock.return_value = historical_submisions()

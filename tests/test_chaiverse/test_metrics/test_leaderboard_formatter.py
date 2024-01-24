@@ -5,7 +5,7 @@ import pandas as pd
 import pytest
 
 
-from chaiverse.metrics.get_display_leaderboard import (
+from chaiverse.metrics.leaderboard_formatter import (
     _add_individual_rank,
     _add_overall_rank,
     _get_isoformatted_timestamp,
