@@ -2,24 +2,23 @@ from collections import defaultdict
 
 import numpy as np
 
+from chaiverse.lib import date_tools
 from chaiverse.metrics.conversation_metrics import ConversationMetrics
 
 
 class FeedbackMetrics():
     def __init__(self, feedback_data):
         feedback_dict = feedback_data['feedback']
-        feedback_dict = _insert_server_timestamp(feedback_dict)
+        feedback_dict = _insert_server_epoch_time(feedback_dict)
         self.feedbacks = list(feedback_dict.values())
 
     def filter_duplicated_uid(self):
         self.feedbacks = _filter_duplicated_uid_feedbacks(self.feedbacks)
 
-    def filter_for_timestamp_range(self, feedback_date_range):
-        start_date = (feedback_date_range or {}).get('start_date') or 0
-        end_date = (feedback_date_range or {}).get('end_date') or float('inf')
+    def filter_for_date_range(self, evaluation_date_range):
         self.feedbacks = [
             feedback for feedback in self.feedbacks
-            if start_date < feedback['server_timestamp'] < end_date
+            if date_tools.is_epoch_time_in_date_range(feedback['server_epoch_time'], evaluation_date_range)
         ]
 
     def calc_metrics(self):
@@ -67,9 +66,9 @@ class FeedbackMetrics():
         return np.nanmean(scores[is_public])
 
 
-def _insert_server_timestamp(feedback_dict):
+def _insert_server_epoch_time(feedback_dict):
     for feedback_id, feedback in feedback_dict.items():
-        feedback['server_timestamp'] = int(feedback_id.split('_')[-1])
+        feedback['server_epoch_time'] = int(feedback_id.split('_')[-1])
     return feedback_dict
 
 
