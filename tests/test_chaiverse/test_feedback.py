@@ -8,7 +8,7 @@ from chaiverse import feedback
 
 @pytest.fixture()
 def mock_get():
-    with patch("chaiverse.feedback.requests.get") as func:
+    with patch("chaiverse.http_client.requests.get") as func:
         func.return_value.status_code = 200
         func.return_value.json.return_value = {"some": "feedback"}
         yield func
@@ -69,7 +69,7 @@ def test_get_feedback_with_cache(tmpdir):
     request_mock.get.return_value.json.return_value = 'mock-feedback'
 
     with patch.multiple("chaiverse.utils", **mock_methods):
-        with patch('chaiverse.feedback.requests', request_mock):
+        with patch('chaiverse.http_client.requests', request_mock):
             result = feedback.get_feedback(submission_id, developer_key, reload=False)
             expected_path = tmpdir / "cache" / f"{submission_id}.pkl"
             assert expected_path.exists()
@@ -79,9 +79,9 @@ def test_get_feedback_with_cache(tmpdir):
 @patch("chaiverse.feedback.utils._save_to_cache")
 def test_get_latest_feedback(save_to_cache_mock, mock_get):
     result = feedback._get_latest_feedback(submission_id="test_model", developer_key="key")
-    expected_headers = {"developer_key": "key"}
+    expected_headers = {'Authorization': 'Bearer key'}
     expected_url = "https://guanaco-feedback.chai-research.com/feedback/test_model"
-    mock_get.assert_called_once_with(expected_url, headers=expected_headers)
+    mock_get.assert_called_once_with(url=expected_url, headers=expected_headers)
     save_to_cache_mock.assert_called_once_with(ANY, result)
 
 

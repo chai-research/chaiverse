@@ -1,17 +1,16 @@
 import os
 import json
-
 import mock
 
-from chaiverse.chat import Bot, BotConfig, SubmissionChatbot, get_chat_endpoint_url, get_bot_names, get_bot_config, get_bot_response
+from chaiverse.chat import Bot, BotConfig, SubmissionChatbot, get_bot_names, get_bot_config, get_bot_response
 
 
 @mock.patch('builtins.input')
-@mock.patch('chaiverse.chat.requests')
-def test_submission_chatbot(mock_requests, mock_input, tmpdir):
+@mock.patch('chaiverse.http_client.requests.post')
+def test_submission_chatbot(mock_post, mock_input, tmpdir):
     mock_input.side_effect = ['hello', 'how are you?', 'exit']
     response = {'model_input': 'some_input', 'model_output': 'whatsup?'}
-    mock_request = mock_requests.post.return_value
+    mock_request = mock_post.return_value
     mock_request.status_code = 200
     mock_request.json.return_value = response
 
@@ -20,7 +19,7 @@ def test_submission_chatbot(mock_requests, mock_input, tmpdir):
         chatbot = SubmissionChatbot('dummy_submission_id', 'CR-123')
         chatbot.chat('dummy_bot')
 
-    mock_requests.post.assert_called_with(
+    mock_post.assert_called_with(
         url="https://guanaco-submitter.chai-research.com/models/dummy_submission_id/chat",
         headers={"Authorization": "Bearer CR-123"},
         json={
@@ -40,9 +39,10 @@ def test_submission_chatbot(mock_requests, mock_input, tmpdir):
 
 
 
-@mock.patch('chaiverse.chat.requests')
-def test_chat(mock_request):
-    url = 'http://guanaco/test-model/chat'
+@mock.patch('chaiverse.http_client.requests.post')
+def test_chat(mock_post):
+    url = 'https://guanaco-submitter.chai-research.com/models/dummy_submission/chat'
+    submission_id = "dummy_submission"
     developer_key = 'CR-devkey'
 
     config_bot = BotConfig(
@@ -51,10 +51,10 @@ def test_chat(mock_request):
         first_message='this is the first message',
         bot_label='Bot name')
 
-    bot = Bot(url, developer_key, config_bot)
+    bot = Bot(submission_id, developer_key, config_bot)
 
     output = {'model_input': 'some_input', 'model_output': 'how are you?'}
-    response = mock_request.post.return_value
+    response = mock_post.return_value
     response.status_code = 200
     response.json.return_value = output
 
@@ -72,10 +72,10 @@ def test_chat(mock_request):
         "user_name": "You",
     }
     expected_headers = {"Authorization": "Bearer CR-devkey"}
-    mock_request.post.assert_called_once_with(
+    mock_post.assert_called_once_with(
         url=url,
-        json=expected_payload,
         headers=expected_headers,
+        json=expected_payload,
         timeout=20
     )
 
@@ -92,7 +92,7 @@ def test_chat(mock_request):
         "bot_name": 'Bot name',
         "user_name": "You",
     }
-    mock_request.post.assert_called_with(
+    mock_post.assert_called_with(
         url=url,
         json=expected_payload,
         headers=expected_headers,
@@ -109,12 +109,6 @@ def create_dummy_bot_config(save_dir):
     save_path = os.path.join(save_dir, 'dummy_bot.json')
     with open(save_path, 'w') as f:
         json.dump(bot_config, f)
-
-
-def test_get_chat_endpoint_url():
-    url = get_chat_endpoint_url('my-submission_v2')
-    expected_url = "https://guanaco-submitter.chai-research.com/models/my-submission_v2/chat"
-    assert url == expected_url
 
 
 @mock.patch('chaiverse.chat.os.listdir')
@@ -140,8 +134,8 @@ def test_get_bot_config(tmpdir):
         assert result.bot_label == 'mock-label'
 
 
-@mock.patch('chaiverse.chat.requests')
-def test_get_bot_response(requests):
+@mock.patch('chaiverse.http_client.requests.post')
+def test_get_bot_response(mock_post):
     bot_config = mock.Mock()
     bot_config.memory = 'mock-memory'
     bot_config.prompt = 'mock-prompt'
@@ -151,7 +145,7 @@ def test_get_bot_response(requests):
     http_response.status_code = 200
     http_response.text = 'dummy-resp-text'
     http_response.json.return_value = {'model_output': 'mock-response'}
-    requests.post.return_value = http_response
+    mock_post.return_value = http_response
 
     result = get_bot_response(
         [('apple', 'use'), ('orange', 'bot'), ('pear', 'user')],
@@ -160,5 +154,3 @@ def test_get_bot_response(requests):
         'mock-key'
     )
     assert result == 'mock-response'
-    
-    

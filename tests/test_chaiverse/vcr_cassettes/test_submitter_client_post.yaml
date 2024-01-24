@@ -1,0 +1,51 @@
+interactions:
+- request:
+    body: '{"memory": "He is from planet Earth", "prompt": "Just another human", "chat_history":
+      [{"sender": "Tom", "message": "Hi"}, {"sender": "user", "message": "hello"},
+      {"sender": "Tom", "message": "whatsup?"}, {"sender": "user", "message": "how
+      are you?"}], "bot_name": "Tom", "user_name": "You"}'
+    headers:
+      Accept:
+      - '*/*'
+      Accept-Encoding:
+      - gzip, deflate, br
+      Connection:
+      - keep-alive
+      Content-Length:
+      - '291'
+      Content-Type:
+      - application/json
+      User-Agent:
+      - python-requests/2.31.0
+    method: POST
+    uri: https://guanaco-submitter.chai-research.com/models/anhnv125-llama-op-v17-1_v26/chat
+  response:
+    body:
+      string: "{\"model_input\":\"### Instruction:\\nAs the assistant, your task is
+        to fully embody the given character, creating immersive, captivating narratives.
+        Stay true to the character's personality and background, generating responses
+        that not only reflect their core traits but are also accurate to their character.
+        Your responses should evoke emotion, suspense, and anticipation in the user.
+        The more detailed and descriptive your response, the more vivid the narrative
+        becomes. Aim to create a fertile environment for ongoing interaction \u2013
+        introduce new elements, offer choices, or ask questions to invite the user
+        to participate more fully in the conversation. This conversation is a dance,
+        always continuing, always evolving.\\nYour character: Tom.\\nContext: He is
+        from planet Earth\\n### Input:\\nJust another human\\nTom: Hi\\nYou: hello\\nTom:
+        whatsup?\\nYou: how are you?\\n### Response:\\nTom:\",\"reward_input\":null,\"model_output\":\"Alright,
+        been busy with work. You?\",\"model_name\":\"anhnv125-llama-op-v17-1_v26\"}"
+    headers:
+      Content-Length:
+      - '1002'
+      Date:
+      - Wed, 17 Jan 2024 22:06:52 GMT
+      Server:
+      - Google Frontend
+      X-Cloud-Trace-Context:
+      - d98d2bc53e2bfb53b10a5790af9f13e6
+      content-type:
+      - application/json
+    status:
+      code: 200
+      message: OK
+version: 1
