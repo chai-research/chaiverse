@@ -37,6 +37,7 @@ def test_display_leaderboard_will_call_display_competition_leaderboard(display_c
             'type': 'default',
             'submission_start_date': None,
             'submission_end_date': None,
+            'leaderboard_should_use_feedback': False,
         }, 
         detailed=False, 
         regenerate=False, 
@@ -54,13 +55,9 @@ def test_display_competition_leaderboard_does_not_regress_for_round_robin_compet
             "start_date": "2024-01-02T13:05+00:00",
             "end_date": "2024-01-02T13:06+00:00",
         },
-        "feedback_sampling": {
-            "round_robin": {
-                "percentage": 100,
-            },
-    },
-    "submissions": [
-        "anhnv125-doll_v4"
+        'leaderboard_should_use_feedback': True,
+        "enrolled_submission_ids": [
+            "anhnv125-doll_v4"
         ]
     }
     result = chai.display_competition_leaderboard(max_workers=1, competition=competition)
@@ -100,16 +97,12 @@ def test_display_competition_leaderboard_does_not_regress_for_default_competitio
         "id": 'test_default_competition',
         "type": "default",
         "submission_date_range": {
-            "start_date": "2024-01-02T13:05:00+00:00",
-            "end_date": "2024-01-02T13:06:00+0:00",
+            "start_date": '2024-01-02T13:05:00+00:00',
+            "end_date": '2024-01-02T13:06:00+00:00',
         },
-        "feedback_sampling": {
-            "round_robin": {
-                "percentage": 100,
-            },
-    },
-    "submissions": [
-        "anhnv125-doll_v4"
+        'leaderboard_should_use_feedback': False,
+        "enrolled_submission_ids": [
+            "anhnv125-doll_v4"
         ]
     }
     result = chai.display_competition_leaderboard(max_workers=1, competition=competition)
@@ -136,9 +129,11 @@ def test_display_competition_leaderboard_does_not_regress_for_default_competitio
         "size": None,
         "thumbs_up_ratio": None,
         "total_feedback_count": None,
-        "repetition": None
+        "repetition": None,
+        'thumbs_up_ratio': 0.47058823529411764,
+        'thumbs_up_ratio_se': 0.06042410035507257,
+        'total_feedback_count': 17,
     }]
-    assert expected == result.to_dict('records')
     np.testing.assert_equal(expected, result.to_dict('records'))
 
 

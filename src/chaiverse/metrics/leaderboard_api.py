@@ -4,6 +4,7 @@ __all__ = ["get_leaderboard"]
 import numpy as np
 import pandas as pd
 
+from chaiverse.lib import binomial_tools
 from chaiverse.utils import get_submissions, distribute_to_workers
 from chaiverse.metrics.feedback_metrics import FeedbackMetrics
 from chaiverse import constants, feedback
@@ -39,7 +40,12 @@ def get_leaderboard_row(submission_item, developer_key=None, evaluation_date_ran
     submission_id, submission_data = submission_item
     submission_feedback_total = submission_data['thumbs_up'] + submission_data['thumbs_down']
     is_updated = feedback.is_submission_updated(submission_id, submission_feedback_total)
-    feedback_metrics = {}
+
+    feedback_metrics = {
+        'thumbs_up_ratio': binomial_tools.get_ratio(submission_data['thumbs_up'], submission_data['thumbs_down']),
+        'thumbs_up_ratio_se': binomial_tools.get_ratio_se(submission_data['thumbs_up'], submission_data['thumbs_down']),
+        'total_feedback_count': submission_data['thumbs_up'] + submission_data['thumbs_down'],
+    }
     if fetch_feedback:
         feedback_metrics = get_submission_metrics(
             submission_id, 

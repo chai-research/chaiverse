@@ -69,7 +69,10 @@ def test_get_leaderboard_without_feedback(get_submissions_mock):
         "size": None,
         "thumbs_up_ratio": None,
         "total_feedback_count": None,
-        "repetition": None
+        "repetition": None,
+        'thumbs_up_ratio': 0.47058823529411764,
+        'thumbs_up_ratio_se': 0.06042410035507257,
+        'total_feedback_count': 17,
     },
     {
         "submission_id": "jondurbin-nontoxic-bagel-34b-_v6",
@@ -95,6 +98,9 @@ def test_get_leaderboard_without_feedback(get_submissions_mock):
         "thumbs_up_ratio": None,
         "total_feedback_count": None,
         "repetition": None,
+        'thumbs_up_ratio': float('nan'),
+        'thumbs_up_ratio_se': float('nan'),
+        'total_feedback_count': 0,
     },
     {
         "submission_id": "anhnv125-osprey_v6",
@@ -119,7 +125,10 @@ def test_get_leaderboard_without_feedback(get_submissions_mock):
         "size": None,
         "thumbs_up_ratio": None,
         "total_feedback_count": None,
-        "repetition": None
+        "repetition": None,
+        'thumbs_up_ratio': float('nan'),
+        'thumbs_up_ratio_se': float('nan'),
+        'total_feedback_count': 0,
     }]
     np.testing.assert_equal(expected_data, df.to_dict('records'))
     get_submissions_mock.assert_called_once_with('key', submission_date_range)
@@ -149,7 +158,7 @@ def test_get_leaderboard_with_submission_ids_filter(get_submissions_mock):
         "model_name": "anhnv125-osprey_v6",
         "model_repo": "anhnv125/Osprey",
         "reward_repo": "anhnv125/reward-model-v2",
-        "model_num_parameters": 34388945920.0,
+        "model_num_parameters": 34388945920,
         "timestamp": "2024-01-19T07:59:42+00:00",
         "developer_uid": "vietanh",
         "status": "inactive",
@@ -165,20 +174,23 @@ def test_get_leaderboard_with_submission_ids_filter(get_submissions_mock):
         "num_battles": None,
         "num_wins": None,
         "size": None,
-        "thumbs_up_ratio": None,
-        "total_feedback_count": None,
+        'thumbs_up_ratio': float('nan'),
+        'thumbs_up_ratio_se': float('nan'),
+        'total_feedback_count': 0,
         "repetition": None
     }]
     np.testing.assert_equal(expected_data, df.to_dict('records'))
     get_submissions_mock.assert_called_once_with('key', submission_date_range)
 
 
+TEST_GET_LEADBOARD_FETCH_CALC_FEEDBACK_SUBMISSION_DATE_RANGE = {
+    'start_date': '2024-01-02T13:00:00+00:00',
+    'end_date': '2024-01-02T14:00:00+00:00',
+}
+
 @vcr.use_cassette(os.path.join(RESOURCE_DIR, 'test_get_leaderboard_fetch_feedback.yaml'))
 def test_get_leaderboard_fetch_and_calc_feedback_for_specific_submission():
-    submission_date_range = {
-        'start_date': '2024-01-02T13',
-        'end_date': '2024-01-02T14',
-    }
+    submission_date_range = TEST_GET_LEADBOARD_FETCH_CALC_FEEDBACK_SUBMISSION_DATE_RANGE
     df = get_leaderboard(
         max_workers=1, 
         developer_key="key", 
@@ -209,10 +221,7 @@ def test_get_leaderboard_fetch_and_calc_feedback_for_specific_submission():
 
 @vcr.use_cassette(os.path.join(RESOURCE_DIR, 'test_get_leaderboard_fetch_feedback.yaml'))
 def test_get_leaderboard_fetch_and_calc_feedback_for_specific_submission_with_feedback_time_range():
-    submission_date_range = {
-        'start_date': '2024-01-02T13',
-        'end_date': '2024-01-02T14',
-    }
+    submission_date_range = TEST_GET_LEADBOARD_FETCH_CALC_FEEDBACK_SUBMISSION_DATE_RANGE
     evaluation_date_range = {
         'start_date': '2024-01-02T13:24:04+00:00',
         'end_date': '2024-01-02T13:29:00+00:00'

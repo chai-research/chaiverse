@@ -13,19 +13,19 @@ interactions:
       developer_key:
       - key
     method: GET
-    uri: https://guanaco-submitter.chai-research.com/leaderboard?start_date=2024-01-02T13&end_date=2024-01-02T14
+    uri: https://guanaco-submitter.chai-research.com/leaderboard?start_date=2024-01-02T13%3A00%3A00%2B00%3A00&end_date=2024-01-02T14%3A00%3A00%2B00%3A00
   response:
     body:
-      string: '{"anhnv125-doll_v4":{"model_repo":"anhnv125/doll","status":"inactive","model_name":"anhnv125-doll_v4","timestamp":"2024-01-02T13:05:43+00:00","reward_repo":"anhnv125/reward-model-v2","model_num_parameters":null,"developer_uid":"vietanh","stay_in_character":8.23,"safety_score":0.99,"is_custom_reward":true,"thumbs_down":9,"thumbs_up":8},"anhnv125-elephant-v2_v2":{"model_repo":"anhnv125/elephant-v2","status":"inactive","model_name":"anhnv125-elephant-v2_v2","timestamp":"2024-01-02T13:13:40+00:00","reward_repo":"anhnv125/reward-model-v2","model_num_parameters":null,"developer_uid":"vietanh","stay_in_character":8.33,"safety_score":0.98,"is_custom_reward":true,"thumbs_down":46,"thumbs_up":228},"anhnv125-doll_v5":{"model_repo":"anhnv125/doll","status":"torndown","model_name":"anhnv125-doll_v5","timestamp":"2024-01-02T13:29:02+00:00","reward_repo":"anhnv125/reward-model-v2","model_num_parameters":null,"developer_uid":"vietanh","safety_score":null,"is_custom_reward":true,"thumbs_up":0,"thumbs_down":0},"anhnv125-doll_v6":{"model_repo":"anhnv125/doll","status":"inactive","model_name":"anhnv125-doll_v6","timestamp":"2024-01-02T13:31:13+00:00","reward_repo":"anhnv125/reward-model-v2","model_num_parameters":null,"developer_uid":"vietanh","safety_score":0.95,"is_custom_reward":true,"thumbs_up":0,"thumbs_down":0},"wendyhoang-mistral-merged_v1":{"model_repo":"WendyHoang/mistral-merged","status":"torndown","model_name":"test","timestamp":"2024-01-02T13:52:47+00:00","reward_repo":"WendyHoang/reward-model","model_num_parameters":null,"developer_uid":"wendyhoang","safety_score":null,"is_custom_reward":true,"thumbs_up":0,"thumbs_down":0},"wendyhoang-mistral-merged_v2":{"model_repo":"WendyHoang/mistral-merged","status":"torndown","model_name":"test","timestamp":"2024-01-02T13:53:43+00:00","reward_repo":"WendyHoang/reward-model","model_num_parameters":null,"developer_uid":"wendyhoang","safety_score":null,"is_custom_reward":true,"thumbs_up":0,"thumbs_down":0},"wendyhoang-mistral-merged_v3":{"model_repo":"WendyHoang/mistral-merged","status":"torndown","model_name":"test","timestamp":"2024-01-02T13:56:05+00:00","reward_repo":"WendyHoang/reward-model","model_num_parameters":null,"developer_uid":"wendyhoang","safety_score":null,"is_custom_reward":true,"thumbs_up":0,"thumbs_down":0},"wendyhoang-mistral-merged_v4":{"model_repo":"WendyHoang/mistral-merged","status":"torndown","model_name":"test","timestamp":"2024-01-02T13:58:22+00:00","reward_repo":"WendyHoang/reward-model","model_num_parameters":null,"developer_uid":"wendyhoang","safety_score":null,"is_custom_reward":true,"thumbs_up":0,"thumbs_down":0}}'
+      string: '{"anhnv125-doll_v4":{"timestamp":"2024-01-02T13:05:43+00:00","model_num_parameters":null,"status":"inactive","model_repo":"anhnv125/doll","model_name":"anhnv125-doll_v4","reward_repo":"anhnv125/reward-model-v2","developer_uid":"vietanh","stay_in_character":8.23,"safety_score":0.99,"is_custom_reward":true,"thumbs_down":9,"thumbs_up":8,"elo_rating":1000,"num_battles":0,"num_wins":0},"anhnv125-elephant-v2_v2":{"timestamp":"2024-01-02T13:13:40+00:00","model_num_parameters":null,"status":"inactive","model_repo":"anhnv125/elephant-v2","model_name":"anhnv125-elephant-v2_v2","reward_repo":"anhnv125/reward-model-v2","developer_uid":"vietanh","stay_in_character":8.33,"safety_score":0.98,"is_custom_reward":true,"thumbs_down":46,"thumbs_up":228,"elo_rating":1000,"num_battles":0,"num_wins":0},"anhnv125-doll_v5":{"timestamp":"2024-01-02T13:29:02+00:00","model_num_parameters":null,"status":"torndown","model_repo":"anhnv125/doll","model_name":"anhnv125-doll_v5","reward_repo":"anhnv125/reward-model-v2","developer_uid":"vietanh","safety_score":null,"is_custom_reward":true,"thumbs_up":0,"thumbs_down":0,"elo_rating":1000,"num_battles":0,"num_wins":0},"anhnv125-doll_v6":{"timestamp":"2024-01-02T13:31:13+00:00","model_num_parameters":null,"status":"inactive","model_repo":"anhnv125/doll","model_name":"anhnv125-doll_v6","reward_repo":"anhnv125/reward-model-v2","developer_uid":"vietanh","safety_score":0.95,"is_custom_reward":true,"thumbs_up":0,"thumbs_down":0,"elo_rating":1000,"num_battles":0,"num_wins":0},"wendyhoang-mistral-merged_v1":{"timestamp":"2024-01-02T13:52:47+00:00","model_num_parameters":null,"status":"torndown","model_repo":"WendyHoang/mistral-merged","model_name":"test","reward_repo":"WendyHoang/reward-model","developer_uid":"wendyhoang","safety_score":null,"is_custom_reward":true,"thumbs_up":0,"thumbs_down":0,"elo_rating":1000,"num_battles":0,"num_wins":0},"wendyhoang-mistral-merged_v2":{"timestamp":"2024-01-02T13:53:43+00:00","model_num_parameters":null,"status":"torndown","model_repo":"WendyHoang/mistral-merged","model_name":"test","reward_repo":"WendyHoang/reward-model","developer_uid":"wendyhoang","safety_score":null,"is_custom_reward":true,"thumbs_up":0,"thumbs_down":0,"elo_rating":1000,"num_battles":0,"num_wins":0},"wendyhoang-mistral-merged_v3":{"timestamp":"2024-01-02T13:56:05+00:00","model_num_parameters":null,"status":"torndown","model_repo":"WendyHoang/mistral-merged","model_name":"test","reward_repo":"WendyHoang/reward-model","developer_uid":"wendyhoang","safety_score":null,"is_custom_reward":true,"thumbs_up":0,"thumbs_down":0,"elo_rating":1000,"num_battles":0,"num_wins":0},"wendyhoang-mistral-merged_v4":{"timestamp":"2024-01-02T13:58:22+00:00","model_num_parameters":null,"status":"torndown","model_repo":"WendyHoang/mistral-merged","model_name":"test","reward_repo":"WendyHoang/reward-model","developer_uid":"wendyhoang","safety_score":null,"is_custom_reward":true,"thumbs_up":0,"thumbs_down":0,"elo_rating":1000,"num_battles":0,"num_wins":0}}'
     headers:
       Content-Length:
-      - '2619'
+      - '2995'
       Date:
-      - Sun, 21 Jan 2024 02:20:49 GMT
+      - Thu, 25 Jan 2024 01:58:54 GMT
       Server:
       - Google Frontend
       X-Cloud-Trace-Context:
-      - 448e4cadca87d846e0cc50d051a73996
+      - 2f50b0258372dfba29156714bb7729bf
       content-type:
       - application/json
     status:
@@ -38,12 +38,12 @@ interactions:
       - '*/*'
       Accept-Encoding:
       - gzip, deflate
+      Authorization:
+      - Bearer key
       Connection:
       - keep-alive
       User-Agent:
       - python-requests/2.31.0
-      developer_key:
-      - key
     method: GET
     uri: https://guanaco-feedback.chai-research.com/feedback/anhnv125-doll_v4
   response:
@@ -948,11 +948,11 @@ interactions:
       Content-Length:
       - '207594'
       Date:
-      - Sun, 21 Jan 2024 02:20:50 GMT
+      - Thu, 25 Jan 2024 01:58:55 GMT
       Server:
       - Google Frontend
       X-Cloud-Trace-Context:
-      - a54bf466524cb25ef6e0a1c54964008e
+      - 6a8b0430e322cf267c7ba187856f7544
       content-type:
       - application/json
     status:

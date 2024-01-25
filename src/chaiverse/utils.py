@@ -48,7 +48,7 @@ def get_submissions(developer_key=None, params=None):
     headers = {"developer_key": developer_key}
     url = get_url(LEADERBOARD_ENDPOINT)
     resp = requests.get(url, headers=headers, params=params)
-    assert resp.status_code == 200, resp.json()
+    assert resp.status_code == 200, resp.text
     return resp.json()
 
 

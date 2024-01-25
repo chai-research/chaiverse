@@ -31,6 +31,7 @@ def display_leaderboard(
         'type': 'default',
         'submission_start_date': None,
         'submission_end_date': None,
+        'leaderboard_should_use_feedback': False
     }
 
     df = display_competition_leaderboard(
@@ -52,7 +53,7 @@ def display_competition_leaderboard(
 ):
     competition = competition if competition else get_competitions()[-1]
     competition_type = competition.get('type') or 'submission_closed_feedback_round_robin'
-    fetch_feedback = competition_type != 'default'
+    fetch_feedback = competition.get('leaderboard_should_use_feedback', False)
 
     submission_date_range = competition.get('submission_date_range')
     evaluation_date_range = competition.get('evaluation_date_range')

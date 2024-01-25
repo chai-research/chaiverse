@@ -26,6 +26,7 @@ COMPETITION_TYPE_CONFIGURATION['default'] = {
         'elo_rating',
         'num_battles',
         'num_wins',
+        'thumbs_up_ratio',
         'size',
         'status',
         'submission_id',
