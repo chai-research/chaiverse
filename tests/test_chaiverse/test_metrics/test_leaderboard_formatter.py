@@ -11,6 +11,7 @@ from chaiverse.metrics.leaderboard_formatter import (
     _get_isoformatted_timestamp,
     _get_model_size,
     _get_ranked_leaderboard,
+    _get_deduped_leaderboard,
     _sort,
 )
 
@@ -42,6 +43,20 @@ def test_get_ranked_leaderboard_will_sort_by_rank_for_same_model_repo_but_differ
     })
     result = _get_ranked_leaderboard(df, sort_params=dict(by='overall_rank'))
     assert list(result['submission_id']) == ['submission-2', 'submission-1']
+
+
+def test_get_ranked_leaderboard_will_sort_by_rank_for_same_model_repo_and_same_reward_repo_but_different_developer_uid_if_not_in_detailed_mode():
+    df = make_unique_submissions(4)
+    df.update({
+        'developer_uid': ['developer_uid-2', 'developer_uid-1', 'developer_uid-2', 'developer_uid-3'],
+        'submission_id': ['submission-2-bad', 'submission-1', 'submission-2-top2', 'submission-3-top1'],
+        'model_repo': ['mock-model-repo-bad', 'random-mock-model-repo', 'mock-model-repo', 'mock-model-repo'],
+        'reward_repo': ['mock-reward-repo-bad', 'random-mock-reward-repo', 'mock-reward-repo', 'mock-reward-repo'],
+        'stay_in_character': [1, 7, 8, 9]
+    })
+    result = _get_ranked_leaderboard(df, sort_params=dict(by='overall_rank'))
+    result = _get_deduped_leaderboard(result)
+    assert list(result['submission_id']) == ['submission-3-top1', 'submission-2-top2', 'submission-1']
 
 
 def test_get_isoformatted_timestamp():
