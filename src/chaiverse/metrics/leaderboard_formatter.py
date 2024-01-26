@@ -65,7 +65,7 @@ def _get_model_size(num_parameters):
 
 
 def _get_submissions_with_unique_model(df):
-    df = df.drop_duplicates(subset=['model_repo', 'reward_repo'], keep='first')
+    df = df.drop_duplicates(subset=['developer_uid', 'model_repo', 'reward_repo'], keep='first')
     return df
 
 
