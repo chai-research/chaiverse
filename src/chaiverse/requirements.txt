@@ -1,7 +1,7 @@
 click
 numpy
 pandas
-pydantic
+pydantic==1.*
 requests
 tqdm
 tabulate
