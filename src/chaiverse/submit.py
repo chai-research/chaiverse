@@ -71,8 +71,9 @@ class ModelSubmitter:
 
     def _preprocess_submission(self, submission_params):
         if submission_params.get("formatter", None):
-            submission_params = submission_params.copy()
             submission_params["formatter"] = submission_params["formatter"].dict()
+        if submission_params.get("reward_formatter", None):
+            submission_params["reward_formatter"] = submission_params["reward_formatter"].dict()
         return submission_params
 
     def _wait_for_model_submission(self, submission_id):
