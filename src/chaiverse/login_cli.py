@@ -25,12 +25,13 @@ def logout():
     print('Logged out!')
 
 
-def developer_login():
+def developer_login(developer_key=None):
     cached_key_path = _get_cached_key_path()
-    text = f"""Welcome to Chaiverse 🚀!
-By logging in, we will create a file under {cached_key_path}.
-Please enter your developer key: """
-    developer_key = input(text)
+    if not developer_key:
+        text = f"""Welcome to Chaiverse 🚀!
+        By logging in, we will create a file under {cached_key_path}.
+        Please enter your developer key: """
+        developer_key = input(text)
     with open(cached_key_path, 'w') as file:
         file.write(developer_key)
 
