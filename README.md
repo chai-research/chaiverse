@@ -46,6 +46,6 @@ It's the world's first open community challenge with real-user evaluations. You 
 |💬 [Example Conversations](https://huggingface.co/datasets/ChaiML/100_example_conversations)     | Here you can find 100 example conversations from the Chai Platform     |
 | ⚒️ [Build with us](https://www.chai-research.com/#careers)| If you think what we are building is cool, join us!|
 | ❗ [Competition EULA](https://www.chai-research.com/competition-eula.html)| Covers terms of use and competition agreements|
-
+| 📚 [Documentation](https://co0.gitbook.io/chai/)| Covers the chaiverse python documentation|
 
 [CHAI RESEARCH CORP. COMPETITION END USER LICENSE AGREEMENT (EULA)](https://www.chai-research.com/competition-eula.html)
